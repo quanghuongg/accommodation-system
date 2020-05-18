@@ -1,7 +1,6 @@
 package com.accommodation.system.mapper;
 
 import com.accommodation.system.entity.*;
-import com.api.user.entity.*;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

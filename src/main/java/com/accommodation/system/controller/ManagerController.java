@@ -6,7 +6,6 @@ import com.accommodation.system.entity.Feedback;
 import com.accommodation.system.entity.Skill;
 import com.accommodation.system.entity.User;
 import com.accommodation.system.entity.model.*;
-import com.api.user.entity.model.*;
 import com.accommodation.system.entity.request.RevenueRequest;
 import com.accommodation.system.entity.response.ListContract;
 import com.accommodation.system.entity.response.ListFeedback;

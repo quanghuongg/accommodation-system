@@ -1,7 +1,6 @@
 package com.accommodation.system.service.impl;
 
 import com.accommodation.system.entity.*;
-import com.api.user.entity.*;
 import com.accommodation.system.mapper.ManageMapper;
 import com.accommodation.system.mapper.UserMapper;
 import com.accommodation.system.service.UserService;

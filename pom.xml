@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>final.project.web</groupId>
-    <artifactId>api-user</artifactId>
+    <artifactId>accommodation-system</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>api-user</name>
-    <description>Demo project for Spring Boot</description>
+    <name>accommodation-system</name>
+    <description>Accommodation Information System</description>
 
     <properties>
         <java.version>1.8</java.version>

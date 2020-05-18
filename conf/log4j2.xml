@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG">
+    <Properties>
+        <Property name="patternLayout">%d{yyyy-MM-dd HH:mm:ss a} %-5level %logger{20}.%M : %msg%n</Property>
+        <Property name="patternLayoutApp">%d{yyyy-MM-dd HH:mm:ss a} %-5level : %msg%n</Property>
+        <Property name="maxSize">10 MB</Property>
+        <Property name="maxFile">10</Property>
+        <Property name="logPath">logs</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${patternLayout}"/>
+        </Console>
+        <RollingFile name="FileApp" fileName="${logPath}/app.log"
+                     filePattern="${logPath}/$${date:yyyy-MM}/%d{dd}/app.%i.log">
+            <PatternLayout pattern="${patternLayoutApp}"/>
+            <LevelRangeFilter minLevel="INFO" maxLevel="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="${maxSize}"/>
+            </Policies>
+            <DefaultRolloverStrategy max="${maxFile}"/>
+        </RollingFile>
+        <RollingFile name="FileFull" fileName="${logPath}/full.log"
+                     filePattern="${logPath}/$${date:yyyy-MM}/%d{dd}/full.%i.log">
+            <PatternLayout pattern="${patternLayout}"/>
+            <LevelRangeFilter maxLevel="ALL" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="${maxSize}"/>
+            </Policies>
+            <DefaultRolloverStrategy max="${maxFile}"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="org.springframework.boot" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileApp"/>
+            <AppenderRef ref="FileFull"/>
+        </Logger>
+        <Logger name="org.springframework.core" level="trace" additivity="false">
+            <AppenderRef ref="FileApp"/>
+            <AppenderRef ref="FileFull"/>
+        </Logger>
+        <Logger name="org.springframework.beans" level="trace" additivity="false">
+            <AppenderRef ref="FileApp"/>
+            <AppenderRef ref="FileFull"/>
+        </Logger>
+        <Root level="all">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="FileApp"/>
+            <AppenderRef ref="FileFull"/>
+        </Root>
+
+    </Loggers>
+</Configuration>

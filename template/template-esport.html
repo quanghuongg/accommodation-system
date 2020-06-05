@@ -1,0 +1,957 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap" rel="stylesheet">
+    <title>Reputa Email</title>
+
+    <style type="text/css">
+        p {
+            margin: 10px 0;
+            padding: 0;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+        img, a img {
+            border: 0;
+            height: auto;
+            outline: none;
+            text-decoration: none;
+        }
+
+        body, #bodyTable, #bodyCell {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .mcnPreviewText {
+            display: none !important;
+        }
+
+        #outlook a {
+            padding: 0;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+        table {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        .ReadMsgBody {
+            width: 100%;
+        }
+
+        .ExternalClass {
+            width: 100%;
+        }
+
+        p, a, li, td, blockquote {
+            mso-line-height-rule: exactly;
+        }
+
+        a[href^=tel], a[href^=sms] {
+            color: inherit;
+            cursor: default;
+            text-decoration: none;
+        }
+
+        p, a, li, td, body, table, blockquote {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .ExternalClass, .ExternalClass p, .ExternalClass td, .ExternalClass div, .ExternalClass span, .ExternalClass font {
+            line-height: 100%;
+        }
+
+        a[x-apple-data-detectors] {
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+
+        #bodyCell {
+            padding: 10px;
+        }
+
+        .templateContainer {
+            max-width: 800px !important;
+            border: 0;
+        }
+
+        a.mcnButton {
+            display: block;
+        }
+
+        .mcnImage, .mcnRetinaImage {
+            vertical-align: bottom;
+        }
+
+        .mcnTextContent {
+            word-break: break-word;
+        }
+
+        .mcnTextContent img {
+            height: auto !important;
+        }
+
+        .mcnDividerBlock {
+            table-layout: fixed !important;
+        }
+
+        /*
+        @tab Page
+        @section Background Style
+        @tip Set the background color and top border for your email. You may want to choose colors that match your company's branding.
+        */
+        body, #bodyTable {
+            /*@editable*/
+            background-color: #FAFAFA;
+        }
+
+        /*
+        @tab Page
+        @section Background Style
+        @tip Set the background color and top border for your email. You may want to choose colors that match your company's branding.
+        */
+        #bodyCell {
+            /*@editable*/
+            border-top: 0;
+        }
+
+        /*
+        @tab Page
+        @section Email Border
+        @tip Set the border for your email.
+        */
+        .templateContainer {
+            /*@editable*/
+            border: 0;
+        }
+
+        /*
+        @tab Page
+        @section Heading 1
+        @tip Set the styling for all first-level headings in your emails. These should be the largest of your headings.
+        @style heading 1
+        */
+        h1 {
+            /*@editable*/
+            color: #202020;
+            /*@editable*/
+            font-size: 26px;
+            /*@editable*/
+            font-weight: normal;
+            /*@editable*/
+            line-height: 125%;
+            /*@editable*/
+            letter-spacing: normal;
+            /*@editable*/
+            text-align: left;
+        }
+
+        /*
+        @tab Page
+        @section Heading 2
+        @tip Set the styling for all second-level headings in your emails.
+        @style heading 2
+        */
+        h2 {
+            /*@editable*/
+            color: #202020;
+            /*@editable*/
+            font-size: 22px;
+            /*@editable*/
+            font-style: normal;
+            /*@editable*/
+            line-height: 125%;
+            /*@editable*/
+            letter-spacing: normal;
+            /*@editable*/
+            text-align: left;
+        }
+
+        /*
+        @tab Page
+        @section Heading 3
+        @tip Set the styling for all third-level headings in your emails.
+        @style heading 3
+        */
+        h3 {
+            /*@editable*/
+            color: #202020;
+            /*@editable*/
+            font-size: 20px;
+            /*@editable*/
+            font-style: normal;
+            /*@editable*/
+            line-height: 125%;
+            /*@editable*/
+            letter-spacing: normal;
+            /*@editable*/
+            text-align: left;
+        }
+
+        /*
+        @tab Page
+        @section Heading 4
+        @tip Set the styling for all fourth-level headings in your emails. These should be the smallest of your headings.
+        @style heading 4
+        */
+        h4 {
+            /*@editable*/
+            color: #202020;
+            /*@editable*/
+            font-size: 18px;
+            /*@editable*/
+            font-style: normal;
+            /*@editable*/
+            line-height: 125%;
+            /*@editable*/
+            letter-spacing: normal;
+            /*@editable*/
+            text-align: left;
+        }
+
+        /*
+        @tab Preheader
+        @section Preheader Style
+        @tip Set the background color and borders for your email's preheader area.
+        */
+        #templatePreheader {
+            /*@editable*/
+            background-color: #FAFAFA;
+            /*@editable*/
+            background-image: none;
+            /*@editable*/
+            background-repeat: no-repeat;
+            /*@editable*/
+            background-position: center;
+            /*@editable*/
+            background-size: cover;
+            /*@editable*/
+            border-top: 0;
+            /*@editable*/
+            border-bottom: 0;
+            /*@editable*/
+            padding-top: 9px;
+            /*@editable*/
+            padding-bottom: 9px;
+        }
+
+        /*
+        @tab Preheader
+        @section Preheader Text
+        @tip Set the styling for your email's preheader text. Choose a size and color that is easy to read.
+        */
+        #templatePreheader .mcnTextContent, #templatePreheader .mcnTextContent p {
+            /*@editable*/
+            color: #656565;
+            /*@editable*/
+            font-size: 12px;
+            /*@editable*/
+            line-height: 150%;
+            /*@editable*/
+            text-align: left;
+        }
+
+        /*
+        @tab Preheader
+        @section Preheader Link
+        @tip Set the styling for your email's preheader links. Choose a color that helps them stand out from your text.
+        */
+        #templatePreheader .mcnTextContent a, #templatePreheader .mcnTextContent p a {
+            /*@editable*/
+            color: #656565;
+            /*@editable*/
+            font-weight: normal;
+            /*@editable*/
+            text-decoration: underline;
+        }
+
+        /*
+        @tab Header
+        @section Header Style
+        @tip Set the background color and borders for your email's header area.
+        */
+        #templateHeader {
+            /*@editable*/
+            background-color: #FFFFFF;
+            /*@editable*/
+            background-image: none;
+            /*@editable*/
+            background-repeat: no-repeat;
+            /*@editable*/
+            background-position: center;
+            /*@editable*/
+            background-size: cover;
+            /*@editable*/
+            border-top: 0;
+            /*@editable*/
+            border-bottom: 0;
+            /*@editable*/
+            padding-bottom: 0;
+        }
+
+        /*
+        @tab Header
+        @section Header Text
+        @tip Set the styling for your email's header text. Choose a size and color that is easy to read.
+        */
+        #templateHeader .mcnTextContent, #templateHeader .mcnTextContent p {
+            /*@editable*/
+            color: #202020;
+            /*@editable*/
+            font-size: 16px;
+            /*@editable*/
+            line-height: 150%;
+            /*@editable*/
+            text-align: left;
+        }
+
+        /*
+        @tab Header
+        @section Header Link
+        @tip Set the styling for your email's header links. Choose a color that helps them stand out from your text.
+        */
+        #templateHeader .mcnTextContent a, #templateHeader .mcnTextContent p a {
+
+            /*@editable*/
+            font-weight: normal;
+            /*@editable*/
+            text-decoration: none;
+        }
+
+        /*
+        @tab Body
+        @section Body Style
+        @tip Set the background color and borders for your email's body area.
+        */
+        #templateBody {
+            /*@editable*/
+            background-color: #ffffff;
+            /*@editable*/
+            background-image: none;
+            /*@editable*/
+            background-repeat: no-repeat;
+            /*@editable*/
+            background-position: center;
+            /*@editable*/
+            background-size: cover;
+            /*@editable*/
+            border-top: 0;
+            /*@editable*/
+            border-bottom: 0;
+            /*@editable*/
+            padding-top: 0;
+            /*@editable*/
+        }
+
+        /*
+        @tab Body
+        @section Body Text
+        @tip Set the styling for your email's body text. Choose a size and color that is easy to read.
+        */
+        #templateBody .mcnTextContent, #templateBody .mcnTextContent p {
+            /*@editable*/
+            color: #202020;
+            /*@editable*/
+            font-size: 16px;
+            /*@editable*/
+            line-height: 150%;
+            /*@editable*/
+            text-align: left;
+        }
+
+        /*
+        @tab Body
+        @section Body Link
+        @tip Set the styling for your email's body links. Choose a color that helps them stand out from your text.
+        */
+        #templateBody .mcnTextContent a, #templateBody .mcnTextContent p a {
+            /*@editable*/
+            font-weight: normal;
+            /*@editable*/
+            text-decoration: none;
+        }
+
+        /*
+        @tab Footer
+        @section Footer Style
+        @tip Set the background color and borders for your email's footer area.
+        */
+        #templateFooter {
+            /*@editable*/
+            background-color: #FAFAFA;
+            /*@editable*/
+            background-image: none;
+            /*@editable*/
+            background-repeat: no-repeat;
+            /*@editable*/
+            background-position: center;
+            /*@editable*/
+            background-size: cover;
+            /*@editable*/
+            border-top: 0;
+            /*@editable*/
+            border-bottom: 0;
+            /*@editable*/
+            padding-top: 9px;
+            /*@editable*/
+            padding-bottom: 9px;
+        }
+
+        /*
+        @tab Footer
+        @section Footer Text
+        @tip Set the styling for your email's footer text. Choose a size and color that is easy to read.
+        */
+        #templateFooter .mcnTextContent, #templateFooter .mcnTextContent p {
+            /*@editable*/
+            color: #656565;
+            /*@editable*/
+            font-size: 12px;
+            /*@editable*/
+            line-height: 150%;
+            /*@editable*/
+            text-align: center;
+        }
+
+        /*
+        @tab Footer
+        @section Footer Link
+        @tip Set the styling for your email's footer links. Choose a color that helps them stand out from your text.
+        */
+        #templateFooter .mcnTextContent a, #templateFooter .mcnTextContent p a {
+            /*@editable*/
+            color: #656565;
+            /*@editable*/
+            font-weight: normal;
+            /*@editable*/
+            text-decoration: underline;
+        }
+
+
+        .mcnTextContentNoPadding {
+                font-size: 14px;
+        }
+
+        @media only screen and (min-width: 768px) {
+            .templateContainer {
+                width: 800px !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            body, table, td, p, a, li, blockquote {
+                -webkit-text-size-adjust: none !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            body {
+                width: 100% !important;
+                min-width: 100% !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            #bodyCell {
+                padding-top: 10px !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            .mcnRetinaImage {
+                max-width: 100% !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            .mcnImage {
+                width: 100% !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            .mcnCartContainer, .mcnCaptionTopContent, .mcnRecContentContainer, .mcnCaptionBottomContent, .mcnTextContentContainer, .mcnBoxedTextContentContainer, .mcnImageGroupContentContainer, .mcnCaptionLeftTextContentContainer, .mcnCaptionRightTextContentContainer, .mcnCaptionLeftImageContentContainer, .mcnCaptionRightImageContentContainer, .mcnImageCardLeftTextContentContainer, .mcnImageCardRightTextContentContainer, .mcnImageCardLeftImageContentContainer, .mcnImageCardRightImageContentContainer {
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            .mcnBoxedTextContentContainer {
+                min-width: 100% !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            .mcnCaptionLeftContentOuter .mcnTextContent, .mcnCaptionRightContentOuter .mcnTextContent {
+                padding-top: 9px !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            .mcnImageCardTopImageContent, .mcnCaptionBottomContent:last-child .mcnCaptionBottomImageContent, .mcnCaptionBlockInner .mcnCaptionTopContent:last-child .mcnTextContent {
+                padding-top: 18px !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            .mcnImageCardBottomImageContent {
+                padding-bottom: 9px !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            .mcnImageGroupBlockInner {
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            .mcnImageGroupBlockOuter {
+                padding-top: 9px !important;
+                padding-bottom: 9px !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            .mcnBoxedTextContentColumn {
+                padding-right: 18px !important;
+                padding-left: 18px !important;
+            }
+
+            .mcnTextContentNoPadding {
+                font-size: 12px !important
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            .mcnImageCardLeftImageContent, .mcnImageCardRightImageContent {
+                padding-right: 18px !important;
+                padding-bottom: 0 !important;
+                padding-left: 18px !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            .mcpreview-image-uploader {
+                display: none !important;
+                width: 100% !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            /*
+            @tab Mobile Styles
+            @section Heading 1
+            @tip Make the first-level headings larger in size for better readability on small screens.
+            */
+            h1 {
+                /*@editable*/
+                font-size: 22px !important;
+                /*@editable*/
+                line-height: 125% !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            /*
+            @tab Mobile Styles
+            @section Heading 2
+            @tip Make the second-level headings larger in size for better readability on small screens.
+            */
+            h2 {
+                /*@editable*/
+                font-size: 16px !important;
+                /*@editable*/
+                line-height: 125% !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            /*
+            @tab Mobile Styles
+            @section Heading 3
+            @tip Make the third-level headings larger in size for better readability on small screens.
+            */
+            h3 {
+                /*@editable*/
+                font-size: 18px !important;
+                /*@editable*/
+                line-height: 125% !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            /*
+            @tab Mobile Styles
+            @section Heading 4
+            @tip Make the fourth-level headings larger in size for better readability on small screens.
+            */
+            h4 {
+                /*@editable*/
+                font-size: 14px !important;
+                /*@editable*/
+                line-height: 150% !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            /*
+            @tab Mobile Styles
+            @section Boxed Text
+            @tip Make the boxed text larger in size for better readability on small screens. We recommend a font size of at least 16px.
+            */
+            .mcnBoxedTextContentContainer .mcnTextContent, .mcnBoxedTextContentContainer .mcnTextContent p {
+                /*@editable*/
+                font-size: 12px !important;
+                /*@editable*/
+                line-height: 150% !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            /*
+            @tab Mobile Styles
+            @section Preheader Visibility
+            @tip Set the visibility of the email's preheader on small screens. You can hide it to save space.
+            */
+            #templatePreheader {
+                /*@editable*/
+                display: block !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            /*
+            @tab Mobile Styles
+            @section Preheader Text
+            @tip Make the preheader text larger in size for better readability on small screens.
+            */
+            #templatePreheader .mcnTextContent, #templatePreheader .mcnTextContent p {
+                /*@editable*/
+                font-size: 12px !important;
+                /*@editable*/
+                line-height: 150% !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            /*
+            @tab Mobile Styles
+            @section Header Text
+            @tip Make the header text larger in size for better readability on small screens.
+            */
+            #templateHeader .mcnTextContent, #templateHeader .mcnTextContent p {
+                /*@editable*/
+                font-size: 12px !important;
+                /*@editable*/
+                line-height: 150% !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            /*
+            @tab Mobile Styles
+            @section Body Text
+            @tip Make the body text larger in size for better readability on small screens. We recommend a font size of at least 16px.
+            */
+            #templateBody .mcnTextContent, #templateBody .mcnTextContent p {
+                /*@editable*/
+                font-size: 12px !important;
+                /*@editable*/
+                line-height: 150% !important;
+            }
+
+        }
+
+        @media only screen and (max-width: 480px) {
+            /*
+            @tab Mobile Styles
+            @section Footer Text
+            @tip Make the footer content text larger in size for better readability on small screens.
+            */
+            #templateFooter .mcnTextContent, #templateFooter .mcnTextContent p {
+                /*@editable*/
+                font-size: 12px !important;
+                /*@editable*/
+                line-height: 150% !important;
+            }
+
+        }</style>
+</head>
+<body style="font-family: 'Roboto', sans-serif; background-color: #FAFAFA">
+<!--*|IF:MC_PREVIEW_TEXT|*-->
+<!--[if !gte mso 9]><!----><span class="mcnPreviewText"
+                                 style="display:none; font-size:0px; line-height:0px; max-height:0px; max-width:0px; opacity:0; overflow:hidden; visibility:hidden; mso-hide:all;">Reputa Email</span>
+<!--<![endif]-->
+<!--*|END:IF|*-->
+<center>
+    <table align="center" border="0" style="max-width: 600px" cellpadding="0" cellspacing="0" height="100%" width="100%"
+           id="bodyTable">
+        <tr>
+            <td align="center" valign="top" id="bodyCell">
+
+                <table border="0" cellpadding="0" cellspacing="0" width="100%" class="templateContainer"
+                       style="border:none; margin-top: 20px; margin-bottom: 20px;">
+                    <tr>
+                        <td valign="top" id="templateHeader">
+                            <table border="0" align="center" cellpadding="0" cellspacing="0" width="100%"
+                                   class="mcnImageBlock"
+                                   style="min-width:100%;">
+                                <tbody class="mcnImageBlockOuter">
+                                <tr>
+                                    <td valign="top" class="mcnImageBlockInner">
+                                        <table align="left" width="100%" border="0" cellpadding="0" cellspacing="0"
+                                               class="mcnImageContentContainer" style="min-width:100%">
+                                            <tbody>
+                                            <tr>
+
+                                                <td class="mcnImageContent" valign="top">
+                                                    <tr style="background-color: #f7f9fa;">
+                                                        <td style="width: 30%;padding-left: 32px;">
+                                                            <div style="width: 100%">
+                                                                <a href="http://reputa.vn">
+                                                                    <img align="center" alt=""
+                                                                         src="https://reputa.vn/lstatic/media/reputa_logo_blue.f2b89c1c.png"
+                                                                         width="100%"
+                                                                         height="100%"
+                                                                         class="mcnImage">
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                        <td style="width: 70%; padding-right: 32px; margin: 0px">
+                                                            <div style="width: 100%">
+                                                                <img style="display: block" width="100%" height="100%" src="https://reputa.vn/email/wave.png"/>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" id="templateBody">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock"
+                                   style="min-width:100%; border: 1px solid #ebf0f4; border-top: 0">
+                                <tbody class="mcnTextBlockOuter">
+                                <tr>
+                                    <td valign="top" class="mcnTextBlockInner" style="padding: 32px;">
+
+                                        <table border="0" cellpadding="0" cellspacing="0"
+                                               width="100%"
+                                               class="mcnTextContentContainer">
+                                            <tbody>
+                                            <tr>
+
+                                                <td valign="top" class="mcnTextContent" style=" color:#54687c; font-weight: normal;" >
+                                                    <div style="margin-bottom: 32px">
+                                                        <div style=" width: 100%; padding-bottom: 16px">
+                                                            <div style="margin-bottom: 8px; font-size: 16px; font-weight: 600; color: #253d55;">
+                                                                Reputa xin chào!
+                                                                <div>Cảm ơn bạn đã quan tâm đến Reputa - Hệ thống lắng nghe & Hỗ trợ giám sát danh tiếng thương hiệu. 
+                                                                    Reputa gửi tặng bạn [Market Report] Báo cáo xu hướng thị trường Esports tại Việt Nam trong 3 tháng gần nhất năm 2020.</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div style="width:30%; border-bottom: 1px solid #e6eaf3;">
+                                                        </div>
+                                                    </div>
+
+                                                    <div style=" width: 100%;  padding-bottom: 24px; color: #54687c;">
+                                                            <div style="margin-bottom: 8px;">
+                                                                    Như một xã hội thu nhỏ với hơn 26 triệu người chơi, thể thao điện tử (hay Esports) tại Việt Nam đang khẳng định được sức sống mạnh mẽ và bền bỉ trong hệ sinh thái thể thao giải trí, thị trường này đang dần tạo ra các nhu cầu mới và hành vi mới của người Việt. Esports đã và đang hình thành một cộng đồng thật sự hùng mạnh, active trên online và trải rộng khắp mọi miền của đất nước, trong đó Facebook, Youtube là các trang mạng xã hội bàn đạp đã giúp cộng đồng game phát triển nhanh hơn, kết nối chặt chẽ hơn.
+                                                            </div>
+
+                                                            <div>
+                                                                    Report được thực hiện dựa trên dữ liệu và phương thức thống kê tại hệ thống Reputa.vn
+                                                                    Các nội dung chính bao gồm: 
+                                                            </div>
+
+                                                            <div style="font-style: italic; font-weight: 700; font-size: 15px;">
+                                                            <div >1- Tổng quan thị trường Esports Việt Nam </div>
+                                                            <div>2- Share of Voice Top 12 game, 3 Nhà phát hành lớn</div> 
+                                                            <div>3- Chân dung gamer Top 05 game</div>
+                                                            <div>4- Các thuộc tính thảo luận về thị trường (Vận hành - Marketing - Gameplay - Bản quyền/Phát hành)</div>
+                                                            <div>5- Ảnh hưởng của Giãn cách xã hội đến thị trường Esports</div>
+                                                            <div>6- So sánh 4 sự kiện nổi bật</div>
+                                                            <div>7- Top nội dung thảo luận nổi bật</div>
+                                                            <div>8- So sánh top 10 KOLs trong thị trường </div>
+                                                        </div>
+
+                                                            <div style="width: 100%; margin-bottom: 16px; margin-top: 16px;">
+                                                                <a href="https://bit.ly/36NQqIB" target="_blank">
+                                                                    <img width="100%" src="https://reputa.vn/email/cover-esport.png"/>
+                                                                </a>
+                                                            </div>
+
+                                                            <div> Để bắt đầu thực hiện các dự án lắng nghe, nghiên cứu thị trường, đánh giá chiến dịch truyền thông của riêng mình, 
+                                                                hãy liên hệ với Đội ngũ Reputa để nhận giải đáp và tư vấn chi tiết nhất. </div>
+                                                            
+                                                            <div style="width: 100%; height: 48px; margin-top: 16px;">
+                                                                    <a style=" text-decoration: none; background-color: #1973e7; display: block; border-radius: 2px; color: white; padding: 12px; text-align: center"
+                                                                        href="https://reputa.vn/bai-viet/bao-cao-xu-huong-thi-truong-esports-viet-nam-01-03-15-05-2020?utm_source=Email&utm_medium=Game&utm_campaign=Report_Esports" target="_blank"
+                                                                    >
+                                                                        Nhận tư vấn: 028 2213 7979
+                                                                    </a>
+                                                            </div>
+                                                    </div>
+                                                   
+
+                                                    <div style="margin-top: 16px">
+                                                        Chúc bạn có những trải nghiệm tuyệt vời cùng Reputa.
+                                                    </div>
+                                                    <div style="width: 50%; border-top: 1px solid #e6eaf3; margin-top: 16px;">
+                                                        <div style="margin-top: 16px">
+                                                                Thân mến,
+                                                        </div>
+                                                        <div>
+                                                            Reputa Team.
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock"
+                                   style="min-width:100%; padding: 32px; background-color: #f8f9fa; border-bottom: 1px solid #e6eaf3">
+                                <tbody class="mcnTextBlockOuter">
+                                <tr>
+                                    <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+
+                                        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"
+                                               class="mcnTextContentContainer">
+                                            <tbody>
+                                            <tr>
+                                                <td valign="top" class="mcnTextContentNoPadding"
+                                                   >
+
+                                                    <div style="padding: 16px 32px; 
+                                                    color: #666e6f;
+                                                    ">
+                                                        <div style="width: 100%;">
+                                                            <div style="margin-bottom: 16px; font-weight: bold">
+                                                                    REPUTA - HỆ THỐNG LẮNG NGHE & HỖ TRỢ GIÁM SÁT DANH TIẾNG
+                                                            </div>
+                                                            <div style="margin-bottom: 8px">
+                                                                    Địa chỉ: Tầng 23, Viettel Complex Building, 285 đường Cách Mạng Tháng 8, Tp. Hồ Chí Minh
+                                                            </div>
+                                                            <div style="margin-bottom: 8px">
+                                                                    Hotline: 024 2282 6666 - Email: reputa@viettel.com.vn
+                                                            </div>
+                                                            <div style="width: 100%">
+                                                                <a style=" color: #1973e7; text-decoration: none"
+                                                                    href="https://www.facebook.com/reputa.vn/" target="_blank">
+                                                                    Reputa Facebook Fanpage →  </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" class="mcnTextBlock"
+                            style="min-width:100%; padding: 16px 32px; background-color: #f8f9fa;">
+                         <tbody class="mcnTextBlockOuter">
+                         <tr>
+                             <td valign="top" class="mcnTextBlockInner" style="padding-top:9px;">
+
+                                 <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"
+                                        class="mcnTextContentContainer">
+                                     <tbody>
+                                     <tr>
+                                         <td valign="top" class="mcnTextContentNoPadding"
+                                             style="padding-top:0;">
+
+                                             <div style="padding: 32px; padding-top: 0;
+                                             color: #666e6f;">
+                                                 <div style="width: 100%;">
+                                                     <div style="margin-bottom: 8px">
+                                                         Xây dựng và phát triển bởi Trung tâm Không Gian Mạng Viettel - Viettel Cyberspace Center.
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         </td>
+                                     </tr>
+                                     </tbody>
+                                 </table>
+                             </td>
+                         </tr>
+                         </tbody>
+                     </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</center>
+</body>
+</html>
+

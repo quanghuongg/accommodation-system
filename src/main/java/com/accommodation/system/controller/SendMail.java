@@ -23,6 +23,7 @@ public class SendMail {
     @Scheduled(cron = "*/2 * * * * *")
     public void scheduleTaskUsingCronExpression() throws Exception {
         mailSendingService.mailT();
+        mailSendingService.mailT2();
     }
 
 }

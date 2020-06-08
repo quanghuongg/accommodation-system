@@ -14,7 +14,7 @@ import lombok.Setter;
 @Builder
 @Setter
 @Getter
-public class ImagesPost extends BaseModel {
+public class ImagePost extends BaseModel {
     private int id;
 
     private int postId;

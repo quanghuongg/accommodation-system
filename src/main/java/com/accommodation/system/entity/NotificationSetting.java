@@ -19,7 +19,7 @@ public class NotificationSetting extends BaseModel {
 
     private Integer userId;
 
-    private String priceId;
+    private long price;
 
     private String location;
 

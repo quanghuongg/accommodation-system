@@ -64,6 +64,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public int save(RegisterRequest registerInfo) {
         User user = User.builder()
+                .username(registerInfo.getUsername())
                 .address(registerInfo.getAddress())
                 .avatar(registerInfo.getAvatar())
                 .createdAt(System.currentTimeMillis())
@@ -75,7 +76,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .build();
 
         user.setPassword(ServiceUtils.encodePassword(registerInfo.getPassword()));
-        user.setCreatedAt(System.currentTimeMillis());
         userMapper.insertUser(user);
         Role role = userMapper.findRoleById(registerInfo.getRoleId());
         UserRole userRole = new UserRole(user.getId(), role.getId());
@@ -144,6 +144,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .avatar(user.getAvatar())
                 .email(user.getEmail())
                 .username(user.getUsername())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
                 .build();
         Role role = findRoleByUserId(user.getId());
         userFullInfo.setRoleId(role.getId());

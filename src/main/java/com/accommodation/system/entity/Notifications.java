@@ -1,5 +1,6 @@
 package com.accommodation.system.entity;
 
+import com.accommodation.system.entity.base.BaseModel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,10 +14,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class Notifications {
+public class Notifications extends BaseModel {
     private String id;
 
     private Integer userId;
+
+    private Integer postId;
 
     private String info;
 
@@ -27,7 +30,4 @@ public class Notifications {
     private long createdAt;
 
     private long updatedAt;
-
-    private String type;
-
 }

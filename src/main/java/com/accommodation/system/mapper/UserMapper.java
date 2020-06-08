@@ -32,15 +32,17 @@ public interface UserMapper {
     @ResultMap("UserObject")
     User findUserByName(String username);
 
-    @Update("UPDATE user SET  password = #{password}, display_name =#{display_name}, phone =#{phone}, status = #{status} " +
-            ", email =#{email}, address =#{address}, avatar =#{avatar} , description =#{description} ,updated_at = #{updated_at} WHERE id = #{id}")
+    @Update("UPDATE user SET  password = #{password}, display_name =#{displayName}, phone =#{phone}, status = #{status} " +
+            ", email =#{email}, address =#{address}, avatar =#{avatar} , description =#{description} ,updated_at = #{updatedAt} WHERE id = #{id}")
+    @ResultMap("UserObject")
     void update(User user);
 
 
     @Insert("insert into user(username,display_name,password,status,phone,email,address,avatar,expired_at,created_at,updated_at) " +
-            "values(#{username},#{display_name},#{password},#{status},#{phone},#{email},#{address},#{avatar},#{expired_at},#{created_at},#{updated_at})")
+            "values(#{username},#{displayName},#{password},#{status},#{phone},#{email},#{address},#{avatar},#{expiredAt},#{createdAt},#{updatedAt})")
     @SelectKey(statement = "SELECT LAST_INSERT_ID()", keyProperty = "id",
             before = false, resultType = Integer.class)
+    @ResultMap("UserObject")
     void insertUser(User user);
 
 
@@ -61,9 +63,11 @@ public interface UserMapper {
 
 
     @Select("SELECT * FROM user WHERE id = #{userId}")
+    @ResultMap("UserObject")
     User findByUserId(int userId);
 
     @Select("SELECT * FROM user WHERE email = #{email} limit 1")
+    @ResultMap("UserObject")
     User findByEmail(String email);
 
     @Select("SELECT email FROM user")

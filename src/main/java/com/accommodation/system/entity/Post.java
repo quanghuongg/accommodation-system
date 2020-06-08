@@ -15,11 +15,11 @@ import lombok.Setter;
 @Setter
 @Builder
 public class Post extends BaseModel {
-    private String id;
+    private int id;
 
-    private Integer userId;
+    private int userId;
 
-    private String price;
+    private long price;
 
     private String location;
 

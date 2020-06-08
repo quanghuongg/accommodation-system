@@ -121,6 +121,7 @@ public class SwaggerConfig {
         return or(
                 regex("/social-login.*"),
                 regex("/manager.*"),
+                regex("/post.*"),
                 regex("/user.*"));
     }
 }

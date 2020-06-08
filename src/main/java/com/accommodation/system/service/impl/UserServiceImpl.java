@@ -30,11 +30,7 @@ import java.util.List;
 @Slf4j
 @Service(value = "userService")
 public class UserServiceImpl implements UserService, UserDetailsService {
-
-
     private UserMapper userMapper;
-
-
     public UserServiceImpl(UserMapper userMapper) {
         this.userMapper = userMapper;
     }

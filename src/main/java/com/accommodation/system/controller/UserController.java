@@ -3,10 +3,12 @@ package com.accommodation.system.controller;
 import com.accommodation.system.define.Constant;
 import com.accommodation.system.entity.User;
 import com.accommodation.system.entity.model.Response;
+import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.RegisterRequest;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.security.TokenProvider;
 import com.accommodation.system.service.MailSendingService;
+import com.accommodation.system.service.PostService;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.AESUtil;
 import com.accommodation.system.uitls.ServiceUtils;
@@ -41,7 +43,9 @@ public class UserController extends EzContext {
     private TokenProvider jwtTokenProvider;
 
     @Autowired
+    PostService postService;
 
+    @Autowired
     public UserController(MailSendingService mailSendingService, UserService userService) {
         this.mailSendingService = mailSendingService;
         this.userService = userService;
@@ -180,7 +184,7 @@ public class UserController extends EzContext {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @RequestMapping(value = {"/upload-avatar"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {"/upload-avatar"}, method = RequestMethod.POST, produces = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity<?> uploadUserAvatar(@RequestParam("avatar") MultipartFile file) throws Exception {
         String userName = getUsername();

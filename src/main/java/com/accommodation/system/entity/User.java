@@ -1,10 +1,7 @@
 package com.accommodation.system.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class User {
     private Integer id;
 
@@ -39,18 +37,11 @@ public class User {
 
     private long updated;
 
-    private double hourly_wage;
-
     private String description;
 
-    //Add  more
     private int role_id;
 
-    private Role role;
-
-    private List<Skill> skills;
-
-    public User(Integer id, String username, String display_name, String password, String email, String address, String phone, String avatar, long expired, int status, long created, long updated, double hourly_wage, String description, int role_id, Role role, List<Skill> skills) {
+    public User(Integer id, String username, String display_name, String password, String email, String address, String phone, String avatar, long expired, int status, long created, long updated, String description) {
         this.id = id;
         this.username = username;
         this.display_name = display_name;
@@ -63,11 +54,7 @@ public class User {
         this.status = status;
         this.created = created;
         this.updated = updated;
-        this.hourly_wage = hourly_wage;
         this.description = description;
-        this.role_id = role_id;
-        this.role = role;
-        this.skills = skills;
     }
 
     private String list_skill;

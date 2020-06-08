@@ -1,7 +1,7 @@
 package com.accommodation.system.service.impl;
 
 import com.accommodation.system.entity.*;
-import com.accommodation.system.mapper.ManageMapper;
+import com.accommodation.system.entity.request.RegisterRequest;
 import com.accommodation.system.mapper.UserMapper;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.ServiceUtils;
@@ -11,11 +11,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service(value = "userService")
@@ -24,11 +23,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private UserMapper userMapper;
 
-    private ManageMapper manageMapper;
 
-    public UserServiceImpl(UserMapper userMapper, ManageMapper manageMapper) {
+    public UserServiceImpl(UserMapper userMapper) {
         this.userMapper = userMapper;
-        this.manageMapper = manageMapper;
     }
 
     @Override
@@ -40,13 +37,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), user.getPassword(), getAuthorities(user));
+                user.getUsername(), user.getPassword(), Collections.singleton(getAuthorities(user)));
     }
 
-    private Set<SimpleGrantedAuthority> getAuthorities(User user) {
-        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + userMapper.findRoleByUserId(user.getId()).getName()));
-        return authorities;
+    private SimpleGrantedAuthority getAuthorities(User user) {
+        return (new SimpleGrantedAuthority("ROLE_" + userMapper.findRoleByUserId(user.getId()).getName()));
     }
 
     @Override
@@ -56,13 +51,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     @Override
-    public int save(User user) {
-        user.setPassword(ServiceUtils.encodePassword(user.getPassword()));
-        user.setStatus(0);
+    public int save(RegisterRequest registerInfo) {
+        User user = User.builder()
+                .address(registerInfo.getAddress())
+                .avatar(registerInfo.getAvatar())
+                .created(System.currentTimeMillis())
+                .description(registerInfo.getDescription())
+                .display_name(registerInfo.getDisplayName())
+                .email(registerInfo.getEmail())
+                .phone(registerInfo.getPhone())
+                .status(0)
+                .build();
+
+        user.setPassword(ServiceUtils.encodePassword(registerInfo.getPassword()));
         user.setCreated(System.currentTimeMillis());
         userMapper.insertUser(user);
-        user.setRole(userMapper.findRoleById(user.getRole_id()));
-        UserRole userRole = new UserRole(user.getId(), user.getRole_id());
+        Role role =userMapper.findRoleById(registerInfo.getRoleId());
+        UserRole userRole = new UserRole(user.getId(), role.getId());
         userMapper.insertUserRole(userRole);
         log.info("Create user {} success!", user.getUsername());
         return user.getId();
@@ -77,17 +82,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User findByUsername(String username) {
         User user = userMapper.findUserByName(username);
-        //Get list Skill
-        if (ServiceUtils.isNotEmpty(user))
-            user.setSkills(userMapper.listSkillByUser(user.getId()));
         return user;
     }
 
     @Override
     public User findByUserId(int userId) {
         User user = userMapper.findByUserId(userId);
-        if (ServiceUtils.isNotEmpty(user))
-            user.setSkills(userMapper.listSkillByUser(user.getId()));
         return user;
     }
 
@@ -109,16 +109,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void addSkill(int userId, List<Integer> skillIds) {
-        List<Skill> list = manageMapper.listAllSkill();
-        List<Skill> userSkills = userMapper.listSkillByUser(userId);
-        if (skillIds.size() > 0) {
-            for (int skillId : skillIds) {
-                if (list.stream().map(trans -> trans.getId()).collect(Collectors.toList()).contains(skillId) &&
-                        !userSkills.stream().map(trans -> trans.getId()).collect(Collectors.toList()).contains(skillId)) {
-                    userMapper.insertUserSkill(new UserSkill(userId, skillId));
-                }
-            }
-        }
+    public String uploadAvatar(int userId, MultipartFile file) {
+        return null;
     }
 }

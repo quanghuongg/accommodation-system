@@ -57,18 +57,6 @@ public interface UserMapper {
     @Select("SELECT email FROM user")
     List<String> listEmail();
 
-    @Insert("insert into user_skill(user_id,skill_id) values(#{user_id},#{skill_id})")
-    @SelectKey(statement = "SELECT LAST_INSERT_ID()", keyProperty = "id",
-            before = false, resultType = Integer.class)
-    void insertUserSkill(UserSkill userSkill);
-
-    @Select("SELECT skill.* FROM user_skill, skill WHERE user_skill.user_id =#{userId} AND user_skill.skill_id = skill.id ")
-    List<Skill> listSkillByUser(int userId);
-
-
-    @Select("SELECT distinct user.* FROM user, user_skill WHERE user_skill.skill_id =#{skill_id} AND user_skill.user_id = user.id   ")
-    List<User> findUserBySkillId(@Param("skill_id") int skill_id);
-
     @Select("SELECT  user.* FROM user WHERE user.display_name LIKE '%' #{username} '%'  AND  user.address LIKE '%' #{address} '%' ")
     List<User> findUserNameAndAddress(@Param("username") String username, @Param("address") String address);
 

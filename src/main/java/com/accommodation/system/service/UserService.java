@@ -2,6 +2,8 @@ package com.accommodation.system.service;
 
 import com.accommodation.system.entity.Role;
 import com.accommodation.system.entity.User;
+import com.accommodation.system.entity.request.RegisterRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -9,7 +11,7 @@ public interface UserService {
 
     List<User> getAll();
 
-    int save(User user);
+    int save(RegisterRequest user);
 
     void update(User user);
 
@@ -23,5 +25,5 @@ public interface UserService {
 
     boolean checkEmailExisted(String email);
 
-    void addSkill(int id, List<Integer> skillIds);
+    String uploadAvatar(int userId, MultipartFile file);
 }

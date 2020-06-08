@@ -1,14 +1,9 @@
 package com.accommodation.system.service.impl;
 
-import com.accommodation.system.entity.Contract;
 import com.accommodation.system.entity.Role;
-import com.accommodation.system.entity.Skill;
 import com.accommodation.system.entity.User;
 import com.accommodation.system.entity.model.RequestInfo;
-import com.accommodation.system.mapper.ContractMapper;
-import com.accommodation.system.mapper.ManageMapper;
 import com.accommodation.system.mapper.UserMapper;
-import com.accommodation.system.service.ManagerService;
 import com.accommodation.system.uitls.ServiceUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

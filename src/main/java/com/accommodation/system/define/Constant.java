@@ -64,4 +64,21 @@ public class Constant {
             public static final String ID_TOKEN = "id_token";
         }
     }
+    public static final class Jwt {
+        public static final String SECRET_KEY = "thangnd36@reputa(1994)";
+        public static final String EMAIL_CONFIRM_SECRET_KEY = "clq5HJ3UnL4DfOnL1TJK";
+        public static final String TOKEN_PREFIX = "Bearer ";
+        public static final String TOKEN_PREFIX_SSO = "VTCCSSO ";
+        public static final String HEADER_STRING = "Authorization";
+
+        public static final String SECRET_SSO_KEY = ConfigurationLoader.getInstance().getAsString("secret.sso.key", "@#abc@vtcc@#");
+
+        public static final String SSO_URL = ConfigurationLoader.getInstance().getAsString("vtcc.sso.url", "http://192.168.102.11:9806/api");
+        public static final String OLD_SSO_URL = ConfigurationLoader.getInstance().getAsString("vtcc.oldsso.url", "http://dev.reputa.vn/sso/api");
+
+        public static final class SSO {
+            public static final String USER = ConfigurationLoader.getInstance().getAsString("vtcc.sso.path.user", "/user");
+            public static final String CREATE_USER = ConfigurationLoader.getInstance().getAsString("vtcc.sso.path.create.user", "/create-user");
+        }
+    }
 }

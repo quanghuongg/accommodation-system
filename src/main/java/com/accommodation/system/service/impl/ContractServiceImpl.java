@@ -1,19 +1,8 @@
 package com.accommodation.system.service.impl;
 
-import com.accommodation.system.service.ContractService;
-import com.accommodation.system.entity.Contract;
 import com.accommodation.system.entity.Feedback;
-import com.accommodation.system.entity.Skill;
 import com.accommodation.system.entity.User;
-import com.accommodation.system.entity.info.ContractInfo;
 import com.accommodation.system.entity.model.RequestInfo;
-import com.accommodation.system.entity.model.StatisticRevenue;
-import com.accommodation.system.entity.model.StatisticSkill;
-import com.accommodation.system.entity.model.StatisticTutor;
-import com.accommodation.system.entity.request.RevenueRequest;
-import com.accommodation.system.mapper.ContractMapper;
-import com.accommodation.system.mapper.FeedbackMapper;
-import com.accommodation.system.mapper.ManageMapper;
 import com.accommodation.system.mapper.UserMapper;
 import com.accommodation.system.uitls.ServiceUtils;
 import lombok.extern.slf4j.Slf4j;

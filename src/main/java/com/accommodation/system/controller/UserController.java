@@ -2,15 +2,12 @@ package com.accommodation.system.controller;
 
 import com.accommodation.system.define.Constant;
 import com.accommodation.system.entity.Role;
-import com.accommodation.system.entity.Skill;
 import com.accommodation.system.entity.User;
-import com.accommodation.system.entity.model.RequestInfo;
+import com.accommodation.system.entity.request.RegisterRequest;
 import com.accommodation.system.entity.model.Response;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.security.TokenProvider;
-import com.accommodation.system.service.ContractService;
 import com.accommodation.system.service.MailSendingService;
-import com.accommodation.system.service.ManagerService;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.AESUtil;
 import com.accommodation.system.uitls.ServiceUtils;
@@ -24,7 +21,6 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -34,12 +30,10 @@ import java.util.List;
 @RestController
 @RequestMapping(value = {"/user"})
 @Api(tags = {"UserController API"})
-public class UserController {
+public class UserController extends EzContext {
 
     private final MailSendingService mailSendingService;
     private final UserService userService;
-    private final ManagerService managerService;
-    private final ContractService contractService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -49,12 +43,9 @@ public class UserController {
 
     @Autowired
 
-    public UserController(MailSendingService mailSendingService, UserService userService, ContractService contractService
-            , ManagerService managerService) {
+    public UserController(MailSendingService mailSendingService, UserService userService) {
         this.mailSendingService = mailSendingService;
         this.userService = userService;
-        this.managerService = managerService;
-        this.contractService = contractService;
     }
 
     @RequestMapping(value = {"/get-all"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -72,20 +63,16 @@ public class UserController {
     @RequestMapping(value = {"/info"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> getInfo() throws ApiServiceException, HttpMessageNotReadableException {
-        Response response;
-        Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
-        if (authUser.getName().isEmpty()) {
-            throw new ApiServiceException("Token invalid");
-        }
-        User user = userService.findByUsername(authUser.getName());
+        String userName = getUsername();
+        User user = userService.findByUsername(userName);
         if (ServiceUtils.isEmpty(user)) {
             throw new ApiServiceException("User not existed");
         }
         Role role = userService.findRoleByUserId(user.getId());
-        user.setRole(userService.findRoleByUserId(user.getId()));
-        user.setRole_id(role.getId());
+//        user.setRole(userService.findRoleByUserId(user.getId()));
+//        user.setRole_id(role.getId());
 
-        response = Response.builder()
+        Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)
                 .data(user)
@@ -132,31 +119,31 @@ public class UserController {
 
     @RequestMapping(value = {"/register"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> registerUser(@RequestBody User user) throws Exception {
-        if (user.getUsername().isEmpty() || user.getPassword().isEmpty() || user.getRole_id() == 0 || ServiceUtils.isEmpty(user.getEmail())
-                || ServiceUtils.isEmpty(user.getEmail())
+    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerInfo) throws Exception {
+        if (registerInfo.getUsername().isEmpty() || registerInfo.getPassword().isEmpty() || registerInfo.getRoleId() == 0 || ServiceUtils.isEmpty(registerInfo.getEmail())
+                || ServiceUtils.isEmpty(registerInfo.getEmail())
         ) {
             throw new ApiServiceException(Constant.OBJECT_EMPTY_FIELD);
         }
 
-        if (!ServiceUtils.isValidMail(user.getEmail())) {
+        if (!ServiceUtils.isValidMail(registerInfo.getEmail())) {
             throw new ApiServiceException("email invalid");
         }
-        if (userService.checkEmailExisted(user.getEmail())) {
+        if (userService.checkEmailExisted(registerInfo.getEmail())) {
             throw new ApiServiceException("email existed");
         }
-        if (user.getPhone() != null) {
-            if (!ServiceUtils.isValidPhone(user.getPhone())) {
+        if (registerInfo.getPhone() != null) {
+            if (!ServiceUtils.isValidPhone(registerInfo.getPhone())) {
                 throw new ApiServiceException("phone invalid");
             }
         }
 
-        User existedUser = userService.findByUsername(user.getUsername());
+        User existedUser = userService.findByUsername(registerInfo.getUsername());
         if (ServiceUtils.isNotEmpty(existedUser)) {
             throw new ApiServiceException(Constant.USER_CREATE_EXISTING);
         }
-        userService.save(user);
-        mailSendingService.mailConfirmRegister(user.getEmail(), user.getDisplay_name(), user.getId());
+        int userId = userService.save(registerInfo);
+        mailSendingService.mailConfirmRegister(registerInfo.getEmail(), registerInfo.getDisplayName(), userId);
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)
@@ -175,48 +162,13 @@ public class UserController {
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-    @PostMapping(value = {"/list-skill"})
-    public ResponseEntity<?> getListKill() throws HttpMessageNotReadableException {
-        List<Skill> list = managerService.listSkill();
-        Response response = Response.builder()
-                .code(Constant.SUCCESS_CODE)
-                .message(Constant.SUCCESS_MESSAGE)
-                .data(list)
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = {"/add-skill"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<?> addSkill(@RequestBody RequestInfo requestInfo) throws ApiServiceException {
-        if (requestInfo.getSkillIds().size() == 0) {
-            throw new ApiServiceException("skillIds null ");
-        }
-        Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
-        if (authUser.getName().isEmpty()) {
-            throw new ApiServiceException("Token invalid");
-        }
-        User user = userService.findByUsername(authUser.getName());
-        if (ServiceUtils.isEmpty(user)) {
-            throw new ApiServiceException("User not existed");
-        }
-        userService.addSkill(user.getId(), requestInfo.getSkillIds());
-        Response response = Response.builder()
-                .code(Constant.SUCCESS_CODE)
-                .message(Constant.SUCCESS_MESSAGE)
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+    
 
     @RequestMapping(value = {"/update"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> updateUser(@RequestBody User user) throws ApiServiceException {
-        Authentication authUser = SecurityContextHolder.getContext().getAuthentication();
-        if (authUser.getName().isEmpty()) {
-            throw new ApiServiceException("Token invalid");
-        }
-        User existedUser = userService.findByUsername(authUser.getName());
+        String userName = getUsername();
+        User existedUser = userService.findByUsername(userName);
         if (ServiceUtils.isEmpty(existedUser)) {
             throw new ApiServiceException("User not existed");
         }
@@ -244,9 +196,6 @@ public class UserController {
         if (ServiceUtils.isNotEmpty(user.getAvatar())) {
             existedUser.setAvatar(user.getAvatar());
         }
-        if (ServiceUtils.isNotEmpty(user.getHourly_wage()) && user.getHourly_wage() != 0) {
-            existedUser.setHourly_wage(user.getHourly_wage());
-        }
         if (ServiceUtils.isNotEmpty(user.getStatus()) && user.getStatus() != 0) {
             existedUser.setStatus(user.getStatus());
         }
@@ -263,7 +212,7 @@ public class UserController {
 
     @RequestMapping(value = {"/logout"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> logout()  {
+    public ResponseEntity<?> logout() {
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)

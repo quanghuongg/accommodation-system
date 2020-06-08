@@ -25,13 +25,6 @@ import java.util.Map;
 
 @Component
 public class CustomUsernamePasswordFilter extends UsernamePasswordAuthenticationFilter {
-//    @Bean
-//    public FilterRegistrationBean registration(HiddenHttpMethodFilter filter) {
-//        FilterRegistrationBean registration = new FilterRegistrationBean(filter);
-//        registration.setEnabled(false);
-//        return registration;
-//    }
-
     @Autowired
     private AuthenticationManager authenticationManager;
 

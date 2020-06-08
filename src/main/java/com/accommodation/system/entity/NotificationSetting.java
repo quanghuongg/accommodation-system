@@ -1,4 +1,4 @@
-package com.accommodation.system.entity.info;
+package com.accommodation.system.entity;
 
 import com.accommodation.system.entity.base.BaseModel;
 import lombok.Builder;
@@ -8,27 +8,25 @@ import lombok.Setter;
 /**
  * User: huongnq4
  * Date:  08/06/2020
- * Time: 13 :46
+ * Time: 14 :42
  * To change this template use File | Settings | File and Code Templates.
  */
-@Getter
-@Setter
 @Builder
-public class UserFullInfo extends BaseModel {
+@Setter
+@Getter
+public class NotificationSetting extends BaseModel {
+    private int id;
 
-    private long userId;
+    private Integer userId;
 
-    private String username;
+    private String priceId;
 
-    private String email;
+    private String location;
 
-    private String displayName;
+    private long roomTypeId;
 
     private long createdAt;
 
     private long updatedAt;
 
-    private String avatar;
-
-    private int roleId;
 }

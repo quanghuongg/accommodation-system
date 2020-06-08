@@ -5,8 +5,4 @@ public interface MailSendingService {
 
     void mailResetPassword(String email, String display_name, String newPassword) throws Exception;
 
-    void mailT() throws Exception;
-    void mailT2() throws Exception;
-
-
 }

@@ -3,6 +3,8 @@ package com.accommodation.system.define;
 import com.accommodation.system.uitls.ConfigurationLoader;
 
 public class Constant {
+
+    public static final String STORAGE_PATH = ConfigurationLoader.getInstance().getAsString("storage.path", "data");
     public static final String SDF_FORMAT = "yyyy/MM/dd HH:mm:ss";
     public static final int FAILED_CODE = 1;
     public static final String LOGIN_FAIL = "login fail";
@@ -43,7 +45,6 @@ public class Constant {
             public static final String ROLE_ID = "role_id";
         }
     }
-
     public static final class UserInfo {
 
         public static final String DEFAULT_AVATAR = "http://icons.iconarchive.com/icons/papirus-team/papirus-status/256/avatar-default-icon.png";
@@ -64,21 +65,17 @@ public class Constant {
             public static final String ID_TOKEN = "id_token";
         }
     }
-    public static final class Jwt {
-        public static final String SECRET_KEY = "thangnd36@reputa(1994)";
-        public static final String EMAIL_CONFIRM_SECRET_KEY = "clq5HJ3UnL4DfOnL1TJK";
-        public static final String TOKEN_PREFIX = "Bearer ";
-        public static final String TOKEN_PREFIX_SSO = "VTCCSSO ";
-        public static final String HEADER_STRING = "Authorization";
+    public static final class FileUploader {
+        public static final String PATH_CDN = ConfigurationLoader.getInstance().getAsString("path.cdn", "http://172.16.5.16:10000");
+        public static final String PATH_UPLOAD = ConfigurationLoader.getInstance().getAsString("path.upload", "/upload");
+        public static final String PATH_AVATARS = ConfigurationLoader.getInstance().getAsString("path.avatars", "/avatars");
 
-        public static final String SECRET_SSO_KEY = ConfigurationLoader.getInstance().getAsString("secret.sso.key", "@#abc@vtcc@#");
-
-        public static final String SSO_URL = ConfigurationLoader.getInstance().getAsString("vtcc.sso.url", "http://192.168.102.11:9806/api");
-        public static final String OLD_SSO_URL = ConfigurationLoader.getInstance().getAsString("vtcc.oldsso.url", "http://dev.reputa.vn/sso/api");
-
-        public static final class SSO {
-            public static final String USER = ConfigurationLoader.getInstance().getAsString("vtcc.sso.path.user", "/user");
-            public static final String CREATE_USER = ConfigurationLoader.getInstance().getAsString("vtcc.sso.path.create.user", "/create-user");
+        public static final class MediaType {
+            public static final String IMAGE = "image";
+            public static final String IMAGE_EXTENSION = ".jpg";
+            public static final int IMAGE_MAX_WIDTH = 2048;
+            public static final String IMAGE_FORMAT = "JPEG";
         }
     }
+
 }

@@ -30,7 +30,6 @@ public class RegisterRequest extends BaseModel {
 
     private String avatar;
 
-
     private int status;
 
     private int roleId;
@@ -40,6 +39,4 @@ public class RegisterRequest extends BaseModel {
     private long updatedAt;
 
     private String description;
-
-
 }

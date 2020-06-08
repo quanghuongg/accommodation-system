@@ -62,16 +62,4 @@ public class MailSendingServiceImpl implements MailSendingService {
         log.info("Sent mail reset password to {} success!", email);
     }
 
-    @Override
-    public void mailT() throws Exception {
-        String content = HtmlUtil.createReportMailTemplate("template/template-esport.html", null);
-        MailUtil.send("abc","loc.nt.1604@gmail.com",null,null,content,null);
-
-    }
-
-    @Override
-    public void mailT2() throws Exception {
-        String content = HtmlUtil.createReportMailTemplate("template/template-esport-news.html", null);
-        MailUtil.send("abc","loc.nt.1604@gmail.com",null,null,content,null);
-    }
 }

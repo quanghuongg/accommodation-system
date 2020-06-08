@@ -1,10 +1,9 @@
 package com.accommodation.system.controller;
 
 import com.accommodation.system.define.Constant;
-import com.accommodation.system.entity.Role;
 import com.accommodation.system.entity.User;
-import com.accommodation.system.entity.request.RegisterRequest;
 import com.accommodation.system.entity.model.Response;
+import com.accommodation.system.entity.request.RegisterRequest;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.security.TokenProvider;
 import com.accommodation.system.service.MailSendingService;
@@ -22,9 +21,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -62,20 +61,12 @@ public class UserController extends EzContext {
 
     @RequestMapping(value = {"/info"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getInfo() throws ApiServiceException, HttpMessageNotReadableException {
+    public ResponseEntity<?> getInfo() throws ApiServiceException {
         String userName = getUsername();
-        User user = userService.findByUsername(userName);
-        if (ServiceUtils.isEmpty(user)) {
-            throw new ApiServiceException("User not existed");
-        }
-        Role role = userService.findRoleByUserId(user.getId());
-//        user.setRole(userService.findRoleByUserId(user.getId()));
-//        user.setRole_id(role.getId());
-
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)
-                .data(user)
+                .data(userService.findByName(userName))
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -109,7 +100,7 @@ public class UserController extends EzContext {
         log.info("New password: {}", newPassword);
         user.setPassword(ServiceUtils.encodePassword(newPassword));
         userService.update(user);
-        mailSendingService.mailResetPassword(user.getEmail(), user.getDisplay_name(), newPassword);
+        mailSendingService.mailResetPassword(user.getEmail(), user.getDisplayName(), newPassword);
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)
@@ -120,6 +111,10 @@ public class UserController extends EzContext {
     @RequestMapping(value = {"/register"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerInfo) throws Exception {
+        User existedUser = userService.findByUsername(registerInfo.getUsername());
+        if (ServiceUtils.isNotEmpty(existedUser)) {
+            throw new ApiServiceException(Constant.USER_CREATE_EXISTING);
+        }
         if (registerInfo.getUsername().isEmpty() || registerInfo.getPassword().isEmpty() || registerInfo.getRoleId() == 0 || ServiceUtils.isEmpty(registerInfo.getEmail())
                 || ServiceUtils.isEmpty(registerInfo.getEmail())
         ) {
@@ -136,11 +131,6 @@ public class UserController extends EzContext {
             if (!ServiceUtils.isValidPhone(registerInfo.getPhone())) {
                 throw new ApiServiceException("phone invalid");
             }
-        }
-
-        User existedUser = userService.findByUsername(registerInfo.getUsername());
-        if (ServiceUtils.isNotEmpty(existedUser)) {
-            throw new ApiServiceException(Constant.USER_CREATE_EXISTING);
         }
         int userId = userService.save(registerInfo);
         mailSendingService.mailConfirmRegister(registerInfo.getEmail(), registerInfo.getDisplayName(), userId);
@@ -162,7 +152,7 @@ public class UserController extends EzContext {
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    
+
 
     @RequestMapping(value = {"/update"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -172,37 +162,7 @@ public class UserController extends EzContext {
         if (ServiceUtils.isEmpty(existedUser)) {
             throw new ApiServiceException("User not existed");
         }
-        if (ServiceUtils.isNotEmpty(user.getDisplay_name())) {
-            existedUser.setDisplay_name(user.getDisplay_name());
-        }
-        if (ServiceUtils.isNotEmpty(user.getEmail())) {
-            if (!ServiceUtils.isValidMail(user.getEmail())) {
-                throw new ApiServiceException("email invalid");
-            }
-            existedUser.setEmail(user.getEmail());
-        }
-        if (ServiceUtils.isNotEmpty(user.getPassword())) {
-            existedUser.setPassword(ServiceUtils.encodePassword(user.getPassword()));
-        }
-        if (ServiceUtils.isNotEmpty(user.getPhone())) {
-            if (!ServiceUtils.isValidPhone(user.getPhone())) {
-                throw new ApiServiceException("phone invalid");
-            }
-            existedUser.setPhone(user.getPhone());
-        }
-        if (ServiceUtils.isNotEmpty(user.getAddress())) {
-            existedUser.setAddress(user.getAddress());
-        }
-        if (ServiceUtils.isNotEmpty(user.getAvatar())) {
-            existedUser.setAvatar(user.getAvatar());
-        }
-        if (ServiceUtils.isNotEmpty(user.getStatus()) && user.getStatus() != 0) {
-            existedUser.setStatus(user.getStatus());
-        }
-        if (ServiceUtils.isNotEmpty(user.getDescription())) {
-            existedUser.setDescription(user.getDescription());
-        }
-        userService.update(existedUser);
+        userService.update(existedUser, user);
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)
@@ -218,6 +178,22 @@ public class UserController extends EzContext {
                 .message(Constant.SUCCESS_MESSAGE)
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {"/upload-avatar"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> uploadUserAvatar(@RequestParam("avatar") MultipartFile file) throws Exception {
+        String userName = getUsername();
+        User user = userService.findByUsername(userName);
+        if (ServiceUtils.isEmpty(user)) {
+            throw new ApiServiceException("User not existed");
+        }
+        Response responseObject = Response.builder()
+                .code(Constant.SUCCESS_CODE)
+                .message(Constant.SUCCESS_MESSAGE)
+                .data(userService.uploadAvatar(user.getId(), file))
+                .build();
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
     }
 
 }

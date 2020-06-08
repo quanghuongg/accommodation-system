@@ -1,41 +1,51 @@
 package com.accommodation.system.mapper;
 
-import com.accommodation.system.entity.*;
+import com.accommodation.system.entity.Role;
+import com.accommodation.system.entity.User;
+import com.accommodation.system.entity.UserRole;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
+
 @Mapper
 public interface UserMapper {
     @Select("SELECT * FROM user")
+    @Results(id = "UserObject", value = {
+            @Result(column = "id", property = "id", id = true),
+            @Result(column = "username", property = "username"),
+            @Result(column = "password", property = "password"),
+            @Result(column = "display_name", property = "displayName"),
+            @Result(column = "status", property = "status"),
+            @Result(column = "phone", property = "phone"),
+            @Result(column = "email", property = "email"),
+            @Result(column = "address", property = "address"),
+            @Result(column = "avatar", property = "avatar"),
+            @Result(column = "expired_at", property = "expiredAt"),
+            @Result(column = "updated_at", property = "updatedAt"),
+            @Result(column = "created_at", property = "createdAt"),
+            @Result(column = "description", property = "description"),
+    })
     List<User> findUserAll();
 
-    @Select("SELECT user.* FROM user,user_role WHERE user.id = user_role.user_id AND user_role.role_id =2")
-    List<User> findTutorAll();
-
     @Select("SELECT * FROM user WHERE username = #{username} AND status=1 ")
+    @ResultMap("UserObject")
     User findUserByName(String username);
 
-
     @Update("UPDATE user SET  password = #{password}, display_name =#{display_name}, phone =#{phone}, status = #{status} " +
-            ", email =#{email}, address =#{address}, avatar =#{avatar} , hourly_wage =#{hourly_wage}, description =#{description} ,updated = #{updated} WHERE id = #{id}")
+            ", email =#{email}, address =#{address}, avatar =#{avatar} , description =#{description} ,updated_at = #{updated_at} WHERE id = #{id}")
     void update(User user);
 
 
-    @Insert("insert into user(username,display_name,password,status,phone,email,address,avatar,expired,created,updated) " +
-            "values(#{username},#{display_name},#{password},#{status},#{phone},#{email},#{address},#{avatar},#{expired},#{created},#{updated})")
+    @Insert("insert into user(username,display_name,password,status,phone,email,address,avatar,expired_at,created_at,updated_at) " +
+            "values(#{username},#{display_name},#{password},#{status},#{phone},#{email},#{address},#{avatar},#{expired_at},#{created_at},#{updated_at})")
     @SelectKey(statement = "SELECT LAST_INSERT_ID()", keyProperty = "id",
             before = false, resultType = Integer.class)
     void insertUser(User user);
 
-    @Select("SELECT * FROM role WHERE name = #{name}")
-    Role findRoleByName(String name);
 
     @Select("SELECT * FROM role WHERE id = #{id}")
     Role findRoleById(Integer id);
-
-    @Delete("delete FROM user_role WHERE user_id = #{user_id}")
-    void deleteUserRole(Integer user_id);
 
     @Select("SELECT  role.* FROM user_role , role WHERE user_id = #{user_id} and user_role.role_id = role.id limit 1 ")
     Role findRoleByUserId(Integer user_id);
@@ -45,8 +55,10 @@ public interface UserMapper {
             before = false, resultType = Integer.class)
     void insertUserRole(UserRole userRole);
 
+
     @Select("SELECT * FROM user_role WHERE user_id = #{user_id} limit 1")
     UserRole getUserRole(Integer user_id);
+
 
     @Select("SELECT * FROM user WHERE id = #{userId}")
     User findByUserId(int userId);
@@ -57,12 +69,4 @@ public interface UserMapper {
     @Select("SELECT email FROM user")
     List<String> listEmail();
 
-    @Select("SELECT  user.* FROM user WHERE user.display_name LIKE '%' #{username} '%'  AND  user.address LIKE '%' #{address} '%' ")
-    List<User> findUserNameAndAddress(@Param("username") String username, @Param("address") String address);
-
-    @Select("SELECT  user.* FROM user WHERE user.address LIKE '%' #{address} '%'  ")
-    List<User> findUserAddress(@Param("address") String address);
-
-    @Select("SELECT  user.* FROM user WHERE user.display_name LIKE '%' #{username} '%' ")
-    List<User> findListUserByName(@Param("username") String username);
 }

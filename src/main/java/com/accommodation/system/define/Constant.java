@@ -4,6 +4,14 @@ import com.accommodation.system.uitls.ConfigurationLoader;
 
 public class Constant {
 
+    public static final class EsConfiguration {
+        public static final String ELASTICSEARCH_CLUSTER_NAME = ConfigurationLoader.getInstance().getAsString("elasticsearch.cluster.name", "accommodation-system");
+        public static final String ELASTICSEARCH_HOST = ConfigurationLoader.getInstance().getAsString("elasticsearch.host", "192.168.101.9:9300;192.168.101.10:9300;192.168.101.11:9300");
+
+        public EsConfiguration() {
+        }
+    }
+
     public static final String STORAGE_PATH = ConfigurationLoader.getInstance().getAsString("storage.path", "data");
     public static final String SDF_FORMAT = "yyyy/MM/dd HH:mm:ss";
     public static final int FAILED_CODE = 1;

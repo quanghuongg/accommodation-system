@@ -179,27 +179,6 @@
         </dependency>
 
 
-        <!-- https://mvnrepository.com/artifact/com.graphql-java/graphql-java -->
-        <dependency>
-            <groupId>com.graphql-java</groupId>
-            <artifactId>graphql-java</artifactId>
-            <version>11.0</version>
-        </dependency>
-
-        <!-- ____ MONGO ____ -->
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.6.3</version>
-        </dependency>
-
-        <!--================REDIS=======================-->
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>3.2.0</version>
-        </dependency>
-
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-hikaricp</artifactId>

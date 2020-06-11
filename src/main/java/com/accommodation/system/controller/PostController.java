@@ -40,10 +40,10 @@ public class PostController extends EzContext {
                 ServiceUtils.isEmpty(postRequest.getRoomTypeId())) {
             throw new ApiServiceException(Constant.OBJECT_EMPTY_FIELD);
         }
-        postService.createPost(user.getId(), postRequest);
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)
+                .data(postService.createPost(user.getId(), postRequest))
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

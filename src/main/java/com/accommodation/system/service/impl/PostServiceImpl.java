@@ -1,5 +1,6 @@
 package com.accommodation.system.service.impl;
 
+import com.accommodation.system.dao.PostDao;
 import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.mapper.PostMapper;
@@ -14,8 +15,11 @@ public class PostServiceImpl implements PostService {
     @Autowired
     PostMapper postMapper;
 
+    @Autowired
+    PostDao postDao;
+
     @Override
-    public void createPost(Integer userId, PostRequest postRequest) {
+    public String createPost(Integer userId, PostRequest postRequest) {
         Post post = Post.builder()
                 .description(postRequest.getDescription())
                 .createdAt(System.currentTimeMillis())
@@ -25,7 +29,7 @@ public class PostServiceImpl implements PostService {
                 .roomTypeId(postRequest.getRoomTypeId())
                 .userId(userId)
                 .build();
-        postMapper.insertPost(post);
+        return postDao.createPost(post);
     }
 
     @Override

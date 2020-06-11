@@ -17,7 +17,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class Post extends BaseModel {
-    private int id;
+    private String id;
 
     private int userId;
 

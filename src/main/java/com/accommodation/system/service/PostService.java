@@ -5,7 +5,7 @@ import com.accommodation.system.entity.request.PostRequest;
 
 public interface PostService {
 
-    void createPost(Integer userId, PostRequest postRequest);
+    String createPost(Integer userId, PostRequest postRequest);
 
     Post findPost(int userId, int postId);
 

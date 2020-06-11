@@ -24,7 +24,7 @@ public class ElasticSearchConfiguration {
                     .put("transport.tcp.connect_timeout", "5s")
                     .build();
             TransportClient client = new PreBuiltTransportClient(settings);
-            client.addTransportAddress(new TransportAddress(InetAddress.getByName(host), 9200));
+            client.addTransportAddress(new TransportAddress(InetAddress.getByName(host), 9300));
             return client;
         } catch (Exception e) {
             log.error(e.getMessage(), e);

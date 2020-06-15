@@ -1,17 +1,21 @@
 package com.accommodation.system.controller;
 
 import com.accommodation.system.define.Constant;
+import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.User;
+import com.accommodation.system.entity.UserPin;
 import com.accommodation.system.entity.model.Response;
-import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.RegisterRequest;
+import com.accommodation.system.entity.request.SearchInput;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.security.TokenProvider;
+import com.accommodation.system.service.AmazonS3Service;
 import com.accommodation.system.service.MailSendingService;
 import com.accommodation.system.service.PostService;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.AESUtil;
 import com.accommodation.system.uitls.ServiceUtils;
+import com.accommodation.system.utils2.Utils;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +29,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -35,6 +42,7 @@ public class UserController extends EzContext {
 
     private final MailSendingService mailSendingService;
     private final UserService userService;
+
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -196,6 +204,55 @@ public class UserController extends EzContext {
                 .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)
                 .data(userService.uploadAvatar(user.getId(), file))
+                .build();
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {"/upload-images"}, method = RequestMethod.POST, produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> uploadImage(@RequestParam("images") MultipartFile file, @RequestParam("post_id") String postId) throws Exception {
+        String userName = getUsername();
+        User user = userService.findByUsername(userName);
+        if (ServiceUtils.isEmpty(user)) {
+            throw new ApiServiceException("User not existed");
+        }
+        Response responseObject = Response.builder()
+                .code(Constant.SUCCESS_CODE)
+                .message(Constant.SUCCESS_MESSAGE)
+                .data(userService.uploadAvatar(user.getId(), file))
+                .build();
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {"/add-user-pin"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> addUserPin(@RequestParam String post_id) throws ApiServiceException, IOException {
+        int userId = getUserId();
+        Post post = postService.findPost(post_id);
+        if (Utils.isEmpty(post)) {
+            throw new ApiServiceException("Post not existed");
+        }
+        Response responseObject = Response.builder()
+                .code(0)
+                .data(userService.addUserPin(userId, post_id))
+                .message("success")
+                .build();
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
+
+    }
+
+    @RequestMapping(value = {"/list-user-pin"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> addUserPin() throws IOException, ApiServiceException {
+        int userId = getUserId();
+        List<UserPin> userPins = userService.listUserPin(userId);
+        SearchInput requestInput = new SearchInput();
+        requestInput.setIds(userPins.stream().map(UserPin::getPostId).collect(Collectors.toList()));
+        postService.loadByIds(requestInput);
+        Response responseObject = Response.builder()
+                .code(0)
+                .data(postService.loadByIds(requestInput))
+                .message("success")
                 .build();
         return new ResponseEntity<>(responseObject, HttpStatus.OK);
     }

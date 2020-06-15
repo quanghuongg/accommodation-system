@@ -5,6 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * User: huongnq4
@@ -34,4 +39,14 @@ public class Post extends BaseModel {
     private long createdAt;
 
     private long updatedAt;
+
+    private int districtId;
+
+    private int wardId;
+
+    private int area;
+
+    List<File> images = new LinkedList<>();
+
+
 }

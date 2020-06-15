@@ -3,16 +3,21 @@ package com.accommodation.system.service.impl;
 import com.accommodation.system.define.Constant;
 import com.accommodation.system.entity.Role;
 import com.accommodation.system.entity.User;
+import com.accommodation.system.entity.UserPin;
 import com.accommodation.system.entity.UserRole;
 import com.accommodation.system.entity.info.UserFullInfo;
 import com.accommodation.system.entity.request.RegisterRequest;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.mapper.UserMapper;
+import com.accommodation.system.mapper.UserPinMapper;
+import com.accommodation.system.service.AmazonS3Service;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.ServiceUtils;
 import com.accommodation.system.utils2.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.imgscalr.Scalr;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,17 +25,30 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service(value = "userService")
 public class UserServiceImpl implements UserService, UserDetailsService {
+
+    @Autowired
+    AmazonS3Service amazonS3Service;
+
+    @Autowired
+    UserPinMapper userPinMapper;
+
     private UserMapper userMapper;
+
     public UserServiceImpl(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
@@ -210,6 +228,73 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             e.printStackTrace();
             log.error("[Service] [upload avatar] cannot save avatar file (exception)", e);
             throw new ApiServiceException("[Service] [upload avatar] cannot save avatar file (exception)");
+        }
+    }
+
+    @Override
+    public int addUserPin(int userId, String postId) {
+        UserPin userPin = UserPin.builder()
+                .userId(userId)
+                .postId(postId)
+                .createdAt(System.currentTimeMillis())
+                .enable(1).build();
+        userPinMapper.insertUserPin(userPin);
+        return userPin.getId();
+    }
+
+    @Override
+    public List<UserPin> listUserPin(int userId) {
+        return userPinMapper.listUserPin(userId);
+    }
+
+
+    private BufferedImage handleImage(InputStream image) throws Exception {
+        BufferedImage bufferedImage = null;
+        BufferedImage requestBufferedImage = null;
+        try {
+            requestBufferedImage = ImageIO.read(image);
+        } catch (Exception e) {
+            throw new ApiServiceException("An error occurred while converting image to JPEG format");
+        }
+
+        BufferedImage resizeImage = requestBufferedImage;
+        if (requestBufferedImage.getWidth() > 2048) {
+            log.info("Image with: {}, bigger than 2048px. Resize image", requestBufferedImage.getWidth());
+            resizeImage = Scalr.resize(requestBufferedImage, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.AUTOMATIC, 2048);
+        }
+
+        bufferedImage = new BufferedImage(resizeImage.getWidth(), resizeImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+        bufferedImage.createGraphics().drawImage(resizeImage, 0, 0, Color.WHITE, null);
+
+        return bufferedImage;
+    }
+
+    @Override
+    public void uploadImages(int userId, String postId, MultipartFile[] files) throws ApiServiceException {
+        try {
+            String strPath = Constant.FileUploader.PATH_IMAGES + "/" + postId.replaceAll("-","");
+//            Path path = Paths.get(strPath);
+//            if (!Files.exists(path)) {
+//                try {
+//                    Files.createDirectories(path);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+            int count =1;
+            for (MultipartFile file : files) {
+                String fileName = count + Constant.FileUploader.MediaType.IMAGE_EXTENSION;
+//                Path pathFile = Paths.get(strPath + "/" + fileName);
+//                Path pathFile = Paths.get(strPath + "/" + fileName);
+//                Files.write(pathFile, file.getBytes());
+                amazonS3Service.uploadFile(strPath + "/" + fileName, ServiceUtils.multipartToFile(file));
+//                ImageIO.write(handleImage(file.getInputStream()), "jpg", new File(pathFile.toString()));
+                count++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -67,7 +67,7 @@ public class ManagerController {
 
     @RequestMapping(value = {"/view-detail"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> viewInfoDetailUser(@RequestParam int userId) throws ApiServiceException {
+    public ResponseEntity<?> viewInfoDetailUser(@RequestParam("user_id") int userId) throws ApiServiceException {
         if (ServiceUtils.isEmpty(userId)) {
             throw new ApiServiceException("empty field");
         }
@@ -81,7 +81,7 @@ public class ManagerController {
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = {"/block"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> blockUser(@RequestParam int userId) throws ApiServiceException {
+    public ResponseEntity<?> blockUser(@RequestParam("user_id") int userId) throws ApiServiceException {
         if (userId <= 0) {
             throw new ApiServiceException("userId not found");
         }
@@ -101,7 +101,7 @@ public class ManagerController {
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = {"/un-block"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> unBlockUser(@RequestParam int userId) throws ApiServiceException {
+    public ResponseEntity<?> unBlockUser(@RequestParam("user_id") int userId) throws ApiServiceException {
         if (userId <= 0) {
             throw new ApiServiceException("userId not found");
         }

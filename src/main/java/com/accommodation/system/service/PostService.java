@@ -1,12 +1,19 @@
 package com.accommodation.system.service;
 
 import com.accommodation.system.entity.Post;
+import com.accommodation.system.entity.model.SearchResult;
 import com.accommodation.system.entity.request.PostRequest;
+import com.accommodation.system.entity.request.SearchInput;
+
+import java.io.IOException;
 
 public interface PostService {
 
     String createPost(Integer userId, PostRequest postRequest);
 
-    Post findPost(int userId, int postId);
+    Post findPost(String postId) throws IOException;
 
+    SearchResult loadByIds(SearchInput requestInput) throws IOException;
+
+    SearchResult doSearch(SearchInput searchInput) throws IOException;
 }

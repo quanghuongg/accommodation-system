@@ -2,8 +2,8 @@ package com.accommodation.system.service;
 
 import com.accommodation.system.entity.Role;
 import com.accommodation.system.entity.User;
+import com.accommodation.system.entity.UserPin;
 import com.accommodation.system.entity.info.UserFullInfo;
-import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.RegisterRequest;
 import com.accommodation.system.exception.ApiServiceException;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,4 +34,9 @@ public interface UserService {
 
     String uploadAvatar(int userId, MultipartFile file) throws ApiServiceException;
 
+    int addUserPin(int userId, String postId);
+
+    List<UserPin> listUserPin(int userId);
+
+    void uploadImages(int userId, String postId, MultipartFile[] files) throws ApiServiceException;
 }

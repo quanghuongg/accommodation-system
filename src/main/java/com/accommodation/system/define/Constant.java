@@ -4,13 +4,19 @@ import com.accommodation.system.uitls.ConfigurationLoader;
 
 public class Constant {
 
+    public static final String FIREBASE_SEND_MESSAGE_ADDRESS = ConfigurationLoader.getInstance().getAsString("firebase.send.message.address", "https://fcm.googleapis.com/fcm/send");
+    public static final String FIREBASE_LEGACY_SERVER_KEY = ConfigurationLoader.getInstance().getAsString("firebase.legacy.server.key", "AIzaSyBcI9ITmB4AyXOfbZFDKasLDp0ULeJjkVo");
+    public static final String FIREBASE_TOPIC_SUBSCRIBE_ADDRESS = ConfigurationLoader.getInstance().getAsString("firebase.topic.subscribe.address", "https://iid.googleapis.com/iid/v1:batchAdd");
+    public static final String FIREBASE_TOPIC_UNSUBSCRIBE_ADDRESS = ConfigurationLoader.getInstance().getAsString("firebase.topic.unsubscribe.address", "https://iid.googleapis.com/iid/v1:batchRemove");
+    public static final String FIREBASE_USER_TOPIC_PATTERN = ConfigurationLoader.getInstance().getAsString("firebase_user_topic_pattern", "/topics/orm.notification.user.%s");
+
     public static final boolean IGNORE_UNAVAILABLE = true;
     public static final boolean ALLOW_NO_INDICES = false;
     public static final boolean EXPAND_TO_OPEN_INDICES = true;
     public static final boolean EXPAND_TO_CLOSED_INDICES = true;
 
 
-
+    public static final String STORAGE_PATH_2  ="http://huongnq.s3-website-ap-southeast-1.amazonaws.com/data";
 
     public static final String STORAGE_PATH = ConfigurationLoader.getInstance().getAsString("storage.path", "data");
     public static final String SDF_FORMAT = "yyyy/MM/dd HH:mm:ss";
@@ -53,30 +59,12 @@ public class Constant {
             public static final String ROLE_ID = "role_id";
         }
     }
-    public static final class UserInfo {
-
-        public static final String DEFAULT_AVATAR = "http://icons.iconarchive.com/icons/papirus-team/papirus-status/256/avatar-default-icon.png";
-
-        public static final class JsonField {
-
-            public static final String USER_ID = "user_id";
-            public static final String USERNAME = "username";
-            public static final String FACEBOOK_UID = "facebookUid";
-            public static final String GOOGLE_UID = "googleUid";
-            public static final String PASSWORD = "password";
-            public static final String EMAIL = "email";
-            public static final String CREATED_AT = "created_at";
-            public static final String UPDATED_AT = "updated_at";
-            public static final String FULL_NAME = "full_name";
-            public static final String AVATAR = "avatar";
-            public static final String ROLE_ID = "role_id";
-            public static final String ID_TOKEN = "id_token";
-        }
-    }
     public static final class FileUploader {
         public static final String PATH_CDN = ConfigurationLoader.getInstance().getAsString("path.cdn", "http://172.16.5.16:10000");
         public static final String PATH_UPLOAD = ConfigurationLoader.getInstance().getAsString("path.upload", "/upload");
         public static final String PATH_AVATARS = ConfigurationLoader.getInstance().getAsString("path.avatars", "/avatars");
+        public static final String PATH_IMAGES = ConfigurationLoader.getInstance().getAsString("path.avatars", "images");
+
 
         public static final class MediaType {
             public static final String IMAGE = "image";
@@ -86,4 +74,40 @@ public class Constant {
         }
     }
 
+    public static final class NotificationMessage {
+        public static final class EntityType {
+            public static final String SUBSCRIBE = "/subscribe";
+            public static final String UNSUBSCRIBE = "/unsubscribe";
+        }
+        public static final class ReadType {
+            public static final int READ = 1;
+            public static final int UNREAD = 0;
+            public static final int ALL = 2;
+        }
+
+    }
+
+
+    public static final class Order {
+        public static final class Type {
+            public static final int CREATE_TIME_ASC = 0;
+            public static final int CREATE_TIME_DESC = 1;
+            public static final int PRICE_ASC = 2;
+            public static final int PRICE_DESC = 3;
+            public static final int AREA_ASC = 4;
+            public static final int AREA_DESC = 5;
+        }
+    }
+
+    public static class Post {
+        public static class JsonField {
+            public static final String DISTRICT_ID = "district_id";
+            public static final String WARD_ID = "ward_id";
+            public static final String AREA = "area";
+            public static final String ROOM_TYPE_ID = "room_type_id";
+            public static final String LOCATION = "location";
+            public static final String CREATED_AT = "created_at";
+            public static final String PRICE = "price";
+        }
+    }
 }

@@ -32,11 +32,11 @@ public interface UserService {
 
     boolean checkEmailExisted(String email);
 
-    String uploadAvatar(int userId, MultipartFile file) throws ApiServiceException;
-
     int addUserPin(int userId, String postId);
 
     List<UserPin> listUserPin(int userId);
+
+    String uploadAvatar(int userId, MultipartFile file) throws Exception;
 
     void uploadImages(int userId, String postId, MultipartFile[] files) throws ApiServiceException;
 }

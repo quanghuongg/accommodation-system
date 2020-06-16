@@ -1,6 +1,7 @@
 package com.accommodation.system.controller;
 
 import com.accommodation.system.define.Constant;
+import com.accommodation.system.define.ContextPath;
 import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.User;
 import com.accommodation.system.entity.UserPin;
@@ -9,7 +10,6 @@ import com.accommodation.system.entity.request.RegisterRequest;
 import com.accommodation.system.entity.request.SearchInput;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.security.TokenProvider;
-import com.accommodation.system.service.AmazonS3Service;
 import com.accommodation.system.service.MailSendingService;
 import com.accommodation.system.service.PostService;
 import com.accommodation.system.service.UserService;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@RequestMapping(value = {"/user"})
+@RequestMapping(value = {ContextPath.User.USER})
 @Api(tags = {"UserController API"})
 public class UserController extends EzContext {
 
@@ -59,19 +59,19 @@ public class UserController extends EzContext {
         this.userService = userService;
     }
 
-    @RequestMapping(value = {"/get-all"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {ContextPath.User.GET_ALL}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> getAllUser() {
         Response responseObject = Response.builder()
-                .code(0)
+                .code(Constant.SUCCESS_CODE)
                 .data(userService.getAll())
-                .message("success")
+                .message(Constant.SUCCESS_MESSAGE)
                 .build();
         return new ResponseEntity<>(responseObject, HttpStatus.OK);
 
     }
 
-    @RequestMapping(value = {"/info"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {ContextPath.User.INFO_GET}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> getInfo() throws ApiServiceException {
         String userName = getUsername();
@@ -84,7 +84,7 @@ public class UserController extends EzContext {
 
     }
 
-    @RequestMapping(value = {"/confirm-register"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {ContextPath.User.CONFIRM}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> confirmRegister(@RequestParam String id) throws ApiServiceException {
         String userId = AESUtil.decrypt(id);
@@ -101,7 +101,7 @@ public class UserController extends EzContext {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @RequestMapping(value = {"/reset-password"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {ContextPath.User.USER_RESET_PASSWORD}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> resetPassword(@RequestParam String email) throws Exception {
         User user = userService.findByEmail(email);
@@ -120,7 +120,7 @@ public class UserController extends EzContext {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @RequestMapping(value = {"/register"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {ContextPath.User.REGISTER}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerInfo) throws Exception {
         User existedUser = userService.findByUsername(registerInfo.getUsername());
@@ -166,7 +166,7 @@ public class UserController extends EzContext {
     }
 
 
-    @RequestMapping(value = {"/update"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {ContextPath.User.UPDATE_USER_INFO}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> updateUser(@RequestBody User user) throws ApiServiceException {
         String userName = getUsername();
@@ -182,7 +182,7 @@ public class UserController extends EzContext {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @RequestMapping(value = {"/logout"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {ContextPath.User.LOGOUT}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> logout() {
         Response response = Response.builder()
@@ -192,39 +192,21 @@ public class UserController extends EzContext {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @RequestMapping(value = {"/upload-avatar"}, method = RequestMethod.POST, produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(value = {ContextPath.User.UPLOAD_AVATAR}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> uploadUserAvatar(@RequestParam("avatar") MultipartFile file) throws Exception {
-        String userName = getUsername();
-        User user = userService.findByUsername(userName);
-        if (ServiceUtils.isEmpty(user)) {
-            throw new ApiServiceException("User not existed");
+        if (Utils.isEmpty(file) || file.isEmpty()) {
+            throw new ApiServiceException("File not found");
         }
         Response responseObject = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)
-                .data(userService.uploadAvatar(user.getId(), file))
+                .data(userService.uploadAvatar(getUserId(), file))
                 .build();
         return new ResponseEntity<>(responseObject, HttpStatus.OK);
     }
 
-    @RequestMapping(value = {"/upload-images"}, method = RequestMethod.POST, produces = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseBody
-    public ResponseEntity<?> uploadImage(@RequestParam("images") MultipartFile file, @RequestParam("post_id") String postId) throws Exception {
-        String userName = getUsername();
-        User user = userService.findByUsername(userName);
-        if (ServiceUtils.isEmpty(user)) {
-            throw new ApiServiceException("User not existed");
-        }
-        Response responseObject = Response.builder()
-                .code(Constant.SUCCESS_CODE)
-                .message(Constant.SUCCESS_MESSAGE)
-                .data(userService.uploadAvatar(user.getId(), file))
-                .build();
-        return new ResponseEntity<>(responseObject, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = {"/add-user-pin"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {ContextPath.User.ADD_USER_PIN}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> addUserPin(@RequestParam String post_id) throws ApiServiceException, IOException {
         int userId = getUserId();
@@ -235,13 +217,13 @@ public class UserController extends EzContext {
         Response responseObject = Response.builder()
                 .code(0)
                 .data(userService.addUserPin(userId, post_id))
-                .message("success")
+                .message(Constant.SUCCESS_MESSAGE)
                 .build();
         return new ResponseEntity<>(responseObject, HttpStatus.OK);
 
     }
 
-    @RequestMapping(value = {"/list-user-pin"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {ContextPath.User.LIST_USER_PIN}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> addUserPin() throws IOException, ApiServiceException {
         int userId = getUserId();
@@ -252,7 +234,7 @@ public class UserController extends EzContext {
         Response responseObject = Response.builder()
                 .code(0)
                 .data(postService.loadByIds(requestInput))
-                .message("success")
+                .message(Constant.SUCCESS_MESSAGE)
                 .build();
         return new ResponseEntity<>(responseObject, HttpStatus.OK);
     }

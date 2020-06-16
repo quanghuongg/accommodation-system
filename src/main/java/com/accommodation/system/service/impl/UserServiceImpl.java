@@ -13,9 +13,7 @@ import com.accommodation.system.mapper.UserPinMapper;
 import com.accommodation.system.service.AmazonS3Service;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.ServiceUtils;
-import com.accommodation.system.utils2.Utils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,14 +26,11 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Service(value = "userService")
@@ -86,7 +81,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .displayName(registerInfo.getDisplayName())
                 .email(registerInfo.getEmail())
                 .phone(registerInfo.getPhone())
-                .status(0)
+                .status(1)
                 .build();
 
         user.setPassword(ServiceUtils.encodePassword(registerInfo.getPassword()));
@@ -190,43 +185,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public String uploadAvatar(int userId, MultipartFile file) throws ApiServiceException {
-        if (Utils.isEmpty(file) || file.isEmpty()) {
-            throw new ApiServiceException("File not found");
-        }
+    public String uploadAvatar(int userId, MultipartFile file) throws Exception {
         User currentUser = userMapper.findByUserId(userId);
-        if (Utils.isEmpty(currentUser)) {
-            throw new ApiServiceException("user not found");
-        }
         try {
-            //Build Path
-            String fileName = DigestUtils.sha1Hex(String.valueOf(userId)) + Constant.FileUploader.MediaType.IMAGE_EXTENSION;
-            String strPath = Constant.STORAGE_PATH + Constant.FileUploader.PATH_UPLOAD + Constant.FileUploader.PATH_AVATARS;
-            log.info("[Service] [upload avatar] userId = {}, fileName = {}, strPath = {}", userId, fileName, strPath);
-            //Create directory
-            Path path = Paths.get(strPath);
-            if (!Files.exists(path)) {
-                try {
-                    Files.createDirectories(path);
-                } catch (IOException e) {
-                    //fail to create directory
-                    e.printStackTrace();
-                }
-            }
-            // Get the file and save it somewhere
-            byte[] bytes = file.getBytes();
-            Path pathFile = Paths.get(strPath + "/" + fileName);
-            Files.write(pathFile, bytes);
-
-            String avatarPathToSave = Constant.FileUploader.PATH_UPLOAD + Constant.FileUploader.PATH_AVATARS + "/" + fileName;
-            log.info("[Service] [upload avatar] avatarPath = {}", avatarPathToSave);
-            // update mysql
+            String strPath = Constant.FileUploader.PATH_AVATARS;
+            String fileName = userId + Constant.FileUploader.MediaType.IMAGE_EXTENSION;
+            File fileUpload = new File(fileName);
+            ImageIO.write(handleImage(file.getInputStream()), "jpg", fileUpload);
+            amazonS3Service.uploadFile(strPath + "/" + fileName, fileUpload);
+            String avatarPathToSave = "https://huongnq.s3-ap-southeast-1.amazonaws.com/avatars/" + fileName;
             currentUser.setAvatar(avatarPathToSave);
             userMapper.update(currentUser);
-            return Constant.FileUploader.PATH_CDN + avatarPathToSave;
+            return avatarPathToSave;
         } catch (IOException e) {
             e.printStackTrace();
-            log.error("[Service] [upload avatar] cannot save avatar file (exception)", e);
             throw new ApiServiceException("[Service] [upload avatar] cannot save avatar file (exception)");
         }
     }
@@ -272,7 +244,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void uploadImages(int userId, String postId, MultipartFile[] files) throws ApiServiceException {
         try {
-            String strPath = Constant.FileUploader.PATH_IMAGES + "/" + postId.replaceAll("-","");
+            String strPath = Constant.FileUploader.PATH_IMAGES + "/" + postId.replaceAll("-", "");
 //            Path path = Paths.get(strPath);
 //            if (!Files.exists(path)) {
 //                try {
@@ -281,14 +253,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 //                    e.printStackTrace();
 //                }
 //            }
-            int count =1;
+            int count = 1;
             for (MultipartFile file : files) {
                 String fileName = count + Constant.FileUploader.MediaType.IMAGE_EXTENSION;
 //                Path pathFile = Paths.get(strPath + "/" + fileName);
 //                Path pathFile = Paths.get(strPath + "/" + fileName);
 //                Files.write(pathFile, file.getBytes());
-                amazonS3Service.uploadFile(strPath + "/" + fileName, ServiceUtils.multipartToFile(file));
-//                ImageIO.write(handleImage(file.getInputStream()), "jpg", new File(pathFile.toString()));
+//                amazonS3Service.uploadFile(strPath + "/" + fileName, ServiceUtils.multipartToFile(file));
+                File fileUpload = new File(fileName);
+                ImageIO.write(handleImage(file.getInputStream()), "jpg", fileUpload);
+                amazonS3Service.uploadFile(strPath + "/" + fileName, fileUpload);
                 count++;
             }
         } catch (IOException e) {

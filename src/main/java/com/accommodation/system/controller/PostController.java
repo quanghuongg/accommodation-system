@@ -1,12 +1,12 @@
 package com.accommodation.system.controller;
 
 import com.accommodation.system.define.Constant;
+import com.accommodation.system.define.ContextPath;
 import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.model.Response;
 import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
 import com.accommodation.system.exception.ApiServiceException;
-import com.accommodation.system.service.AmazonS3Service;
 import com.accommodation.system.service.PostService;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.ServiceUtils;
@@ -24,7 +24,7 @@ import java.io.IOException;
 
 @Slf4j
 @RestController
-@RequestMapping(value = {"/post"})
+@RequestMapping(value = {ContextPath.Post.POST})
 @Api(tags = {"Post API"})
 public class PostController extends EzContext {
     @Autowired
@@ -32,7 +32,7 @@ public class PostController extends EzContext {
     @Autowired
     PostService postService;
 
-    @RequestMapping(value = {"/create"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {ContextPath.Post.CREATE}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> createPost(@RequestBody PostRequest postRequest) throws ApiServiceException {
         int userId = getUserId();
@@ -48,7 +48,7 @@ public class PostController extends EzContext {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @RequestMapping(value = {"/upload-image"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {ContextPath.Post.UPLOAD_IMAGES}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> uploadImages(@RequestParam("post_id") String postId, @RequestParam("files") MultipartFile[] files) throws ApiServiceException, IOException {
         if (Utils.isEmpty(files)) {
@@ -69,10 +69,7 @@ public class PostController extends EzContext {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @Autowired
-    AmazonS3Service amazonS3Service;
-
-    @RequestMapping(value = {"/search"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {ContextPath.Post.SEARCH}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> doSearch(@RequestBody SearchInput searchInput) throws IOException {
         Response response = Response.builder()
@@ -83,10 +80,10 @@ public class PostController extends EzContext {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @RequestMapping(value = {"/detail"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {ContextPath.Post.VIEW_DETAIL}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> findDetail(@RequestParam("post_id") String postId) throws IOException {
-        Post post = postService.findPost(postId);
+    public ResponseEntity<?> viewDetail(@RequestParam("post_id") String postId) throws IOException {
+        Post post = postService.viewDetail(postId);
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .data(post)

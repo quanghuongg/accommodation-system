@@ -22,9 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = {"ManagerController API"})
 public class ManagerController {
 
-
     private final UserService userService;
-
 
     public ManagerController( UserService userService) {
         this.userService = userService;
@@ -118,18 +116,4 @@ public class ManagerController {
         return new ResponseEntity<>(responseObject, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(value = {"/list-feedback"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<?> listFeedBack(@RequestBody RequestInfo requestInfo) {
-        if (requestInfo.getPage() == 0) {
-            requestInfo.setPage(1);
-        }
-        Response responseObject = Response.builder()
-                .code(0)
-                .message(Constant.SUCCESS_MESSAGE)
-                .build();
-        return new ResponseEntity<>(responseObject, HttpStatus.OK);
-
-    }
 }

@@ -37,7 +37,7 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 public class SwaggerConfig {
 
     public static final ApiInfo DEFAULT_API_INFO = new ApiInfo(
-            "API-USER", "API Description", "1.0",
+            "ACCOMMODATION-SYSTEM", "API Description", "1.0",
             "urn:tos", "SBTC01",
             "Apache 2.0", "http://www.apache.org/licenses/LICENSE-2.0");
 

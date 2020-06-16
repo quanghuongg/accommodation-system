@@ -19,11 +19,6 @@ import java.util.regex.Pattern;
 @Slf4j
 public class ServiceUtils {
 
-    public  static File multipartToFile1(MultipartFile multipart, String fileName) throws IllegalStateException, IOException {
-        File convFile = new File(System.getProperty("java.io.tmpdir")+"/"+fileName);
-        multipart.transferTo(convFile);
-        return convFile;
-    }
     public static File multipartToFile(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());
         convFile.createNewFile();

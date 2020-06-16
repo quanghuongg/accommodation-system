@@ -1,7 +1,6 @@
 package com.accommodation.system.service.impl;
 
 import com.accommodation.system.dao.PostDao;
-import com.accommodation.system.define.Constant;
 import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.model.SearchResult;
 import com.accommodation.system.entity.request.PostRequest;
@@ -9,28 +8,20 @@ import com.accommodation.system.entity.request.SearchInput;
 import com.accommodation.system.mapper.DistrictMapper;
 import com.accommodation.system.mapper.PostMapper;
 import com.accommodation.system.mapper.WardMapper;
+import com.accommodation.system.service.AmazonS3Service;
 import com.accommodation.system.service.PostService;
-import com.google.api.client.util.Base64;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Service(value = "postService")
 public class PostServiceImpl implements PostService {
+    @Autowired
+    AmazonS3Service amazonS3Service;
+
     @Autowired
     PostMapper postMapper;
 
@@ -76,21 +67,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post findPost(String postId) throws IOException {
-        Post post = postDao.find(postId);
-        //load image
-        try (Stream<Path> walk = Files.walk(Paths.get( Constant.FileUploader.PATH_IMAGES + "/" + postId))) {
-            List<String> result = walk.filter(Files::isRegularFile)
-                    .map(x -> x.toString()).collect(Collectors.toList());
-            List<File> images = new ArrayList<>();
-            for (String path : result) {
-                File file = new File(path);
-                images.add(file);
-            }
-            post.setImages(images);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return post;
+        return postDao.find(postId);
     }
 
     @Override
@@ -102,5 +79,12 @@ public class PostServiceImpl implements PostService {
     @Override
     public SearchResult doSearch(SearchInput searchInput) throws IOException {
         return postDao.loadBySearchRequest(searchInput);
+    }
+
+    @Override
+    public Post viewDetail(String postId) throws IOException {
+        Post post = postDao.find(postId);
+        post.setImages(amazonS3Service.listFileImages(postId));
+        return post;
     }
 }

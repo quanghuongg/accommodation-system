@@ -16,9 +16,9 @@ public class Constant {
     public static final boolean EXPAND_TO_CLOSED_INDICES = true;
 
 
-    public static final String STORAGE_PATH_2  ="http://huongnq.s3-website-ap-southeast-1.amazonaws.com/data";
+    public static final String HOST_STATIC_WEB  ="http://huongnq.s3-website-ap-southeast-1.amazonaws.com/";
+    public static final String BUCKET_NAME ="huongnq";
 
-    public static final String STORAGE_PATH = ConfigurationLoader.getInstance().getAsString("storage.path", "data");
     public static final String SDF_FORMAT = "yyyy/MM/dd HH:mm:ss";
     public static final int FAILED_CODE = 1;
     public static final String LOGIN_FAIL = "login fail";
@@ -60,17 +60,13 @@ public class Constant {
         }
     }
     public static final class FileUploader {
-        public static final String PATH_CDN = ConfigurationLoader.getInstance().getAsString("path.cdn", "http://172.16.5.16:10000");
-        public static final String PATH_UPLOAD = ConfigurationLoader.getInstance().getAsString("path.upload", "/upload");
-        public static final String PATH_AVATARS = ConfigurationLoader.getInstance().getAsString("path.avatars", "/avatars");
+        public static final String PATH_AVATARS = ConfigurationLoader.getInstance().getAsString("path.avatars", "avatars");
         public static final String PATH_IMAGES = ConfigurationLoader.getInstance().getAsString("path.avatars", "images");
 
 
         public static final class MediaType {
-            public static final String IMAGE = "image";
             public static final String IMAGE_EXTENSION = ".jpg";
             public static final int IMAGE_MAX_WIDTH = 2048;
-            public static final String IMAGE_FORMAT = "JPEG";
         }
     }
 

@@ -16,4 +16,6 @@ public interface PostService {
     SearchResult loadByIds(SearchInput requestInput) throws IOException;
 
     SearchResult doSearch(SearchInput searchInput) throws IOException;
+
+    Post viewDetail(String postId) throws IOException;
 }

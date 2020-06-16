@@ -34,9 +34,5 @@ public class RegisterRequest extends BaseModel {
 
     private int roleId;
 
-    private long createdAt;
-
-    private long updatedAt;
-
     private String description;
 }

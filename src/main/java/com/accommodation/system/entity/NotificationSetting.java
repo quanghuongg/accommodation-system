@@ -21,6 +21,12 @@ public class NotificationSetting extends BaseModel {
 
     private long price;
 
+    private int wardId;
+
+    private int districtId;
+
+    private int area;
+
     private String location;
 
     private long roomTypeId;

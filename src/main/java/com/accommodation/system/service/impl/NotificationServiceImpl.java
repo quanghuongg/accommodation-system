@@ -1,5 +1,6 @@
 package com.accommodation.system.service.impl;
 
+import com.accommodation.system.entity.Notifications;
 import com.accommodation.system.entity.model.NotificationMessage;
 import com.accommodation.system.service.NotificationService;
 import com.accommodation.system.utils2.FirebaseUtil;
@@ -18,11 +19,15 @@ import java.io.IOException;
 public class NotificationServiceImpl implements NotificationService {
     @Override
     public void saveNotification(NotificationMessage notificationMessage)  {
-        //mappper
     }
 
     @Override
     public void sendBatchNotifications(NotificationMessage notificationMessages, boolean isSend) throws IOException {
         FirebaseUtil.send(notificationMessages);
+    }
+
+    @Override
+    public Notifications getNotifications(int userId) {
+        return null;
     }
 }

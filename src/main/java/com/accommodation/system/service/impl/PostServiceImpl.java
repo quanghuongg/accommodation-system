@@ -7,7 +7,6 @@ import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.mapper.DistrictMapper;
-import com.accommodation.system.mapper.PostMapper;
 import com.accommodation.system.mapper.WardMapper;
 import com.accommodation.system.service.AmazonS3Service;
 import com.accommodation.system.service.PostService;
@@ -23,9 +22,6 @@ import java.io.IOException;
 public class PostServiceImpl implements PostService {
     @Autowired
     AmazonS3Service amazonS3Service;
-
-    @Autowired
-    PostMapper postMapper;
 
     @Autowired
     PostDao postDao;

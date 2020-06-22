@@ -1,8 +1,10 @@
 package com.accommodation.system.service.impl;
 
 import com.accommodation.system.entity.District;
+import com.accommodation.system.entity.RoomType;
 import com.accommodation.system.entity.Ward;
 import com.accommodation.system.mapper.DistrictMapper;
+import com.accommodation.system.mapper.RoomTypeMapper;
 import com.accommodation.system.mapper.WardMapper;
 import com.accommodation.system.service.LocationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class LocationServiceImpl implements LocationService {
     @Autowired
     WardMapper wardMapper;
 
+    @Autowired
+    RoomTypeMapper roomTypeMapper;
+
     @Override
     public List<District> listDistrict() {
         return districtMapper.listDistrict();
@@ -42,5 +47,10 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Ward findWard(int id) {
         return wardMapper.findWard(id);
+    }
+
+    @Override
+    public List<RoomType> listRoomType() {
+        return roomTypeMapper.listRoomType();
     }
 }

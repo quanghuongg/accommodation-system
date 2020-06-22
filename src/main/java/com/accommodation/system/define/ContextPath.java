@@ -6,6 +6,7 @@ public class ContextPath {
         public static final String HOME = "/home";
         public static final String DISTRICTS = "/districts";
         public static final String WARDS = "/wards";
+        public static final String ROOM_TYPES = "/room-types";
     }
 
     public static class User {

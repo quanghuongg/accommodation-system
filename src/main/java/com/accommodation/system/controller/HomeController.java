@@ -44,4 +44,15 @@ public class HomeController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @RequestMapping(value = {ContextPath.Home.ROOM_TYPES}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> listRoomType() {
+        Response response = Response.builder()
+                .code(Constant.SUCCESS_CODE)
+                .data(locationService.listRoomType())
+                .message(Constant.SUCCESS_MESSAGE)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }

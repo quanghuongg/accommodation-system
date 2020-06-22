@@ -1,4 +1,4 @@
-package com.accommodation.system.utils2;
+package com.accommodation.system.uitls;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;

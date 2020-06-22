@@ -4,7 +4,7 @@ package com.accommodation.system.service.impl;
 import com.accommodation.system.service.MailSendingService;
 import com.accommodation.system.uitls.AESUtil;
 import com.accommodation.system.uitls.HtmlUtil;
-import com.accommodation.system.utils2.MailUtil;
+import com.accommodation.system.uitls.MailUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;

@@ -1,9 +1,8 @@
-package com.accommodation.system.utils2;
+package com.accommodation.system.uitls;
 
 
 import com.accommodation.system.define.Constant;
 import com.accommodation.system.entity.model.NotificationMessage;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

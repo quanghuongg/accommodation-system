@@ -6,7 +6,7 @@ import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.model.SearchResult;
 import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
-import com.accommodation.system.utils2.Utils;
+import com.accommodation.system.uitls.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.index.IndexRequest;

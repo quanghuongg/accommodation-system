@@ -1,4 +1,4 @@
-package com.accommodation.system.utils2;
+package com.accommodation.system.uitls;
 import com.accommodation.system.uitls.ConfigurationLoader;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;

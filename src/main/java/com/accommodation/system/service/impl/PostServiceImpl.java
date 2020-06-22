@@ -10,7 +10,7 @@ import com.accommodation.system.mapper.DistrictMapper;
 import com.accommodation.system.mapper.WardMapper;
 import com.accommodation.system.service.AmazonS3Service;
 import com.accommodation.system.service.PostService;
-import com.accommodation.system.utils2.Utils;
+import com.accommodation.system.uitls.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

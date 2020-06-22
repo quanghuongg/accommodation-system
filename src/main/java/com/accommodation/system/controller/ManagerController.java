@@ -2,6 +2,7 @@ package com.accommodation.system.controller;
 
 import com.accommodation.system.define.Constant;
 import com.accommodation.system.entity.User;
+import com.accommodation.system.entity.model.ListUser;
 import com.accommodation.system.entity.model.RequestInfo;
 import com.accommodation.system.entity.model.Response;
 import com.accommodation.system.entity.request.RegisterRequest;
@@ -15,6 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -56,8 +59,18 @@ public class ManagerController {
     @RequestMapping(value = {"/list-user"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> getAllUser(@RequestBody RequestInfo requestInfo) {
+        List<User> list = userService.getAll();
+        int total = list.size();
+        list = ServiceUtils.paging(list, requestInfo.getPage(), requestInfo.getSize());
+        ListUser result = ListUser.builder()
+                .page(requestInfo.getPage())
+                .size(requestInfo.getSize())
+                .total(total)
+                .users(list).build();
+
         Response responseObject = Response.builder()
                 .code(0)
+                .data(result)
                 .message(Constant.SUCCESS_MESSAGE)
                 .build();
         return new ResponseEntity<>(responseObject, HttpStatus.OK);
@@ -71,6 +84,7 @@ public class ManagerController {
         }
         Response responseObject = Response.builder()
                 .code(0)
+                .data(userService.findByUserId(userId))
                 .message(Constant.SUCCESS_MESSAGE)
                 .build();
         return new ResponseEntity<>(responseObject, HttpStatus.OK);

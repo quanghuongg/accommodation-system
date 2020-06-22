@@ -1,6 +1,6 @@
 package com.accommodation.system.logs;
 
-import com.accommodation.system.utils2.Utils;
+import com.accommodation.system.uitls.Utils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

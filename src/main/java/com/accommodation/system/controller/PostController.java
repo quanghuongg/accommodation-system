@@ -10,7 +10,7 @@ import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.service.PostService;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.ServiceUtils;
-import com.accommodation.system.utils2.Utils;
+import com.accommodation.system.uitls.Utils;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

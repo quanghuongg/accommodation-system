@@ -3,7 +3,7 @@ package com.accommodation.system.service.impl;
 import com.accommodation.system.entity.Notifications;
 import com.accommodation.system.entity.model.NotificationMessage;
 import com.accommodation.system.service.NotificationService;
-import com.accommodation.system.utils2.FirebaseUtil;
+import com.accommodation.system.uitls.FirebaseUtil;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

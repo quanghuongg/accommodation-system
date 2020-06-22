@@ -3,7 +3,7 @@ package com.accommodation.system.controller;
 import com.accommodation.system.entity.User;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.service.UserService;
-import com.accommodation.system.utils2.Utils;
+import com.accommodation.system.uitls.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

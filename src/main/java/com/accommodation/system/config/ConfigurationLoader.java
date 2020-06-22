@@ -1,7 +1,7 @@
 package com.accommodation.system.config;
 
 
-import com.accommodation.system.utils2.Utils;
+import com.accommodation.system.uitls.Utils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

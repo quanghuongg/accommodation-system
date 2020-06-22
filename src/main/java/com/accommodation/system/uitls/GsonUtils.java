@@ -1,4 +1,4 @@
-package com.accommodation.system.utils2;
+package com.accommodation.system.uitls;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;

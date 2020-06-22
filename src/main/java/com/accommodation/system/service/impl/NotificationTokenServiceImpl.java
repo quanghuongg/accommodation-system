@@ -4,7 +4,7 @@ import com.accommodation.system.define.Constant;
 import com.accommodation.system.entity.model.NotificationMessage;
 import com.accommodation.system.entity.model.NotificationTokenInfo;
 import com.accommodation.system.service.NotificationTokenService;
-import com.accommodation.system.utils2.FirebaseUtil;
+import com.accommodation.system.uitls.FirebaseUtil;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

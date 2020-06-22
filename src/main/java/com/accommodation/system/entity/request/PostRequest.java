@@ -7,6 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostRequest extends BaseModel {
+
+    private String postId;
+
     private long price;
 
     private String location;

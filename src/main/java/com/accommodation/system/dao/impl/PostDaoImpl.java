@@ -4,6 +4,7 @@ import com.accommodation.system.dao.PostDao;
 import com.accommodation.system.define.Constant;
 import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.model.SearchResult;
+import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
 import com.accommodation.system.utils2.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.support.IndicesOptions;
+import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -31,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
+
 
 /**
  * User: huongnq4
@@ -44,7 +48,7 @@ import java.util.UUID;
 public class PostDaoImpl implements PostDao {
     private final Client esClient;
     private final ObjectMapper objectMapper;
-    public final String indexNames = "post";
+    public final String indexName = "post";
 
     @Autowired
     public PostDaoImpl(ObjectMapper objectMapper, Client esClient) {
@@ -89,7 +93,7 @@ public class PostDaoImpl implements PostDao {
     private SearchRequest buildSearchRequest(SearchInput searchInput) {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indicesOptions(IndicesOptions.fromOptions(Constant.IGNORE_UNAVAILABLE, Constant.ALLOW_NO_INDICES, Constant.EXPAND_TO_OPEN_INDICES, Constant.EXPAND_TO_CLOSED_INDICES));
-        searchRequest.indices(indexNames);
+        searchRequest.indices(indexName);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.trackTotalHits(true);
         BoolQueryBuilder mainQueryBuilder = new BoolQueryBuilder();
@@ -156,11 +160,36 @@ public class PostDaoImpl implements PostDao {
     public Post find(String id) throws IOException {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indicesOptions(IndicesOptions.fromOptions(Constant.IGNORE_UNAVAILABLE, Constant.ALLOW_NO_INDICES, Constant.EXPAND_TO_OPEN_INDICES, Constant.EXPAND_TO_CLOSED_INDICES));
-        searchRequest.indices(indexNames);
+        searchRequest.indices(indexName);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.trackTotalHits(true);
         BoolQueryBuilder mainQueryBuilder = QueryBuilders.boolQuery();
         mainQueryBuilder.filter(QueryBuilders.matchPhraseQuery("id", id));
+        searchSourceBuilder.query(mainQueryBuilder);
+        searchRequest.source(searchSourceBuilder);
+        org.elasticsearch.action.search.SearchResponse response = this.esClient.search(searchRequest).actionGet();
+        SearchHits searchHits = response.getHits();
+        long count = searchHits.getTotalHits().value;
+        if (count == 0) {
+            return null;
+        } else {
+            String message = searchHits.getAt(0).getSourceAsString();
+            Post post = this.objectMapper.readValue(message, Post.class);
+            return post;
+        }
+    }
+
+    @Override
+    public Post findByUser(String id, int userId) throws IOException {
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indicesOptions(IndicesOptions.fromOptions(Constant.IGNORE_UNAVAILABLE, Constant.ALLOW_NO_INDICES, Constant.EXPAND_TO_OPEN_INDICES, Constant.EXPAND_TO_CLOSED_INDICES));
+        searchRequest.indices(indexName);
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.trackTotalHits(true);
+        BoolQueryBuilder mainQueryBuilder = QueryBuilders.boolQuery();
+        mainQueryBuilder.filter(QueryBuilders.matchPhraseQuery("id", id));
+        mainQueryBuilder.filter(QueryBuilders.matchPhraseQuery("user_id", userId));
+
         searchSourceBuilder.query(mainQueryBuilder);
         searchRequest.source(searchSourceBuilder);
         org.elasticsearch.action.search.SearchResponse response = this.esClient.search(searchRequest).actionGet();
@@ -225,7 +254,7 @@ public class PostDaoImpl implements PostDao {
     public SearchResult loadByIds(SearchInput requestInput) throws IOException {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indicesOptions(IndicesOptions.fromOptions(Constant.IGNORE_UNAVAILABLE, Constant.ALLOW_NO_INDICES, Constant.EXPAND_TO_OPEN_INDICES, Constant.EXPAND_TO_CLOSED_INDICES));
-        searchRequest.indices(indexNames);
+        searchRequest.indices(indexName);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.trackTotalHits(true);
 
@@ -253,5 +282,24 @@ public class PostDaoImpl implements PostDao {
         log.info("took: {}", response.getTook().getMillis());
         SearchResult ormSearchResponse = this.getSearchResponse(searchInput, response.getHits());
         return ormSearchResponse;
+    }
+
+    @Override
+    public void deletePost(String postId) {
+        this.esClient.prepareDelete(indexName, "_doc", postId).get();
+    }
+
+    @Override
+    public void updatePost(PostRequest postRequest) throws IOException {
+        UpdateRequest updateRequest = new UpdateRequest();
+        updateRequest.index(indexName);
+        updateRequest.type("_doc");
+        updateRequest.id(postRequest.getPostId());
+        updateRequest.doc(jsonBuilder()
+                .startObject()
+                .field("price", postRequest.getPrice())
+                .field("description", postRequest.getDescription())
+                .endObject());
+        this.esClient.update(updateRequest).actionGet();
     }
 }

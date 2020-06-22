@@ -5,11 +5,13 @@ import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.model.SearchResult;
 import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
+import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.mapper.DistrictMapper;
 import com.accommodation.system.mapper.PostMapper;
 import com.accommodation.system.mapper.WardMapper;
 import com.accommodation.system.service.AmazonS3Service;
 import com.accommodation.system.service.PostService;
+import com.accommodation.system.utils2.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,7 +86,29 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post viewDetail(String postId) throws IOException {
         Post post = postDao.find(postId);
+        if (Utils.isEmpty(post)) {
+            return null;
+        }
         post.setImages(amazonS3Service.listFileImages(postId));
         return post;
+    }
+
+    @Override
+    public void updatePost(int userId, PostRequest postRequest) throws ApiServiceException, IOException {
+        String postId = postRequest.getPostId();
+        Post post = postDao.findByUser(postId, userId);
+        if (Utils.isEmpty(post)) {
+            throw new ApiServiceException("post not found");
+        }
+        postDao.updatePost(postRequest);
+    }
+
+    @Override
+    public void deletePost(int userId, String postId) throws IOException, ApiServiceException {
+        Post post = postDao.findByUser(postId, userId);
+        if (Utils.isEmpty(post)) {
+            throw new ApiServiceException("post not found");
+        }
+        postDao.deletePost(postId);
     }
 }

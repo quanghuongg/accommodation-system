@@ -1,9 +1,7 @@
 package com.accommodation.system.entity;
 
 import com.accommodation.system.entity.base.BaseModel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * User: huongnq4
@@ -14,6 +12,8 @@ import lombok.Setter;
 @Builder
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class NotificationSetting extends BaseModel {
     private int id;
 

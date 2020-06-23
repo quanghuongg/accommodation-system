@@ -26,18 +26,12 @@ public class ContextPath {
     public static class Notification {
         public static final String NOTIFICATION = "/notification";
         public static final String GET = "/get";
-        public static final String TOPIC_GET = "/topic-get";
         public static final String UPDATE_READ_AT = "/update-read-at";
         public static class Setting {
             public static final String SETTING = "/setting";
             public static final String UPDATE = "/update";
             public static final String GET = "/get";
-            public static final String SAVE = "/save";
-            public static final String TOPIC_GET = "/topic/get";
-        }
-        public static final class Token {
-            public static final String TOKEN = "/token";
-            public static final String SAVE = "/save";
+            public static final String CREATE = "/create";
         }
     }
     public static class Post {

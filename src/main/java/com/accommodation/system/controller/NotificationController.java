@@ -2,6 +2,7 @@ package com.accommodation.system.controller;
 
 import com.accommodation.system.define.Constant;
 import com.accommodation.system.define.ContextPath;
+import com.accommodation.system.entity.NotificationSetting;
 import com.accommodation.system.entity.model.Response;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.service.NotificationService;
@@ -11,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * User: huongnq4
@@ -33,10 +31,45 @@ public class NotificationController extends EzContext {
 
     @RequestMapping(value = {ContextPath.Notification.GET}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getAllUser() throws ApiServiceException {
+    public ResponseEntity<?> getNotifications() throws ApiServiceException {
         Response responseObject = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .data(notificationService.getNotifications(getUserId()))
+                .message(Constant.SUCCESS_MESSAGE)
+                .build();
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {ContextPath.Notification.Setting.SETTING + ContextPath.Notification.Setting.GET}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> getNotificationSetting() throws ApiServiceException {
+        Response responseObject = Response.builder()
+                .code(Constant.SUCCESS_CODE)
+                .data(notificationService.getNotificationSetting(getUserId()))
+                .message(Constant.SUCCESS_MESSAGE)
+                .build();
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {ContextPath.Notification.Setting.SETTING + ContextPath.Notification.Setting.CREATE}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> createNotificationSetting(@RequestBody NotificationSetting notificationSetting) throws ApiServiceException {
+        notificationSetting.setUserId(getUserId());
+        Response responseObject = Response.builder()
+                .code(Constant.SUCCESS_CODE)
+                .data(notificationService.createNotificationSetting(notificationSetting))
+                .message(Constant.SUCCESS_MESSAGE)
+                .build();
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {ContextPath.Notification.Setting.SETTING + ContextPath.Notification.Setting.UPDATE}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> updateNotificationSetting(@RequestBody NotificationSetting notificationSetting) throws ApiServiceException {
+        notificationSetting.setUserId(getUserId());
+        Response responseObject = Response.builder()
+                .code(Constant.SUCCESS_CODE)
+                .data(notificationService.updateNotificationSetting(notificationSetting))
                 .message(Constant.SUCCESS_MESSAGE)
                 .build();
         return new ResponseEntity<>(responseObject, HttpStatus.OK);

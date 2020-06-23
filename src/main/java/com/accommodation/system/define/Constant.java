@@ -5,9 +5,7 @@ import com.accommodation.system.uitls.ConfigurationLoader;
 public class Constant {
 
     public static final String FIREBASE_SEND_MESSAGE_ADDRESS = ConfigurationLoader.getInstance().getAsString("firebase.send.message.address", "https://fcm.googleapis.com/fcm/send");
-    public static final String FIREBASE_LEGACY_SERVER_KEY = ConfigurationLoader.getInstance().getAsString("firebase.legacy.server.key", "AIzaSyBcI9ITmB4AyXOfbZFDKasLDp0ULeJjkVo");
-    public static final String FIREBASE_TOPIC_SUBSCRIBE_ADDRESS = ConfigurationLoader.getInstance().getAsString("firebase.topic.subscribe.address", "https://iid.googleapis.com/iid/v1:batchAdd");
-    public static final String FIREBASE_TOPIC_UNSUBSCRIBE_ADDRESS = ConfigurationLoader.getInstance().getAsString("firebase.topic.unsubscribe.address", "https://iid.googleapis.com/iid/v1:batchRemove");
+    public static final String FIREBASE_LEGACY_SERVER_KEY = ConfigurationLoader.getInstance().getAsString("firebase.legacy.server.key", "AAAArG3WICw:APA91bF5w6MgDfwP91POgHlX6tHxDNb4MfIP1gioR1ZHKKTMZF16zAicsCVmabBedBiOHdthZpRHlFnG4FY5ktU1DB5xR1s7WdsQpzZlmhH6a98b0cTdcnNMfjp6VYVzxRLSO-o5NN80");
     public static final String FIREBASE_USER_TOPIC_PATTERN = ConfigurationLoader.getInstance().getAsString("firebase_user_topic_pattern", "/topics/orm.notification.user.%s");
 
     public static final boolean IGNORE_UNAVAILABLE = true;

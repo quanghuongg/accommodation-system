@@ -19,8 +19,6 @@ public class NotificationMessage implements Serializable {
 
     private String to;
 
-    private String createdBy;
-
     @JsonProperty(value = "content_available")
     @Builder.Default
     boolean contentAvailable = true;
@@ -45,8 +43,6 @@ public class NotificationMessage implements Serializable {
 
         private String title;
 
-        private String subtitle;
-
         private String color;
 
         private String priority;
@@ -68,6 +64,7 @@ public class NotificationMessage implements Serializable {
 
         private int vibrate;
 
+        @JsonProperty("post_id")
         private String postId;
 
     }
@@ -81,37 +78,30 @@ public class NotificationMessage implements Serializable {
     public static class Data implements Serializable {
         private static final long serialVersionUID = -1889469923634042793L;
 
-        @JsonProperty("notification_info")
-        private NotificationInfo notificationInfo;
+        @JsonProperty("post_id")
+        private String postId;
 
         @JsonProperty("click_action")
         @Builder.Default
         private String clickAction = "FLUTTER_NOTIFICATION_CLICK";
     }
 
-    @Setter
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @EqualsAndHashCode
-    @Builder
-    public static class NotificationInfo implements Serializable {
-        private static final long serialVersionUID = -3428679414098243648L;
-
-        @JsonProperty("index_name")
-        private List<String> indexNames;
-
-        private List<String> ids;
-
-        @JsonProperty("entity_type")
-        private String entityType;
-
-        private String content;
-
-        private String status;
-
-        @JsonProperty("notification_id")
-        private String notificationId;
-
-    }
+//    @Setter
+//    @Getter
+//    @NoArgsConstructor
+//    @AllArgsConstructor
+//    @EqualsAndHashCode
+//    @Builder
+//    public static class NotificationInfo implements Serializable {
+//        private static final long serialVersionUID = -3428679414098243648L;
+//
+//        private String content;
+//
+//        @JsonProperty("notification_id")
+//        private String notificationId;
+//
+//        @JsonProperty("post_id")
+//        private String postId;
+//
+//    }
 }

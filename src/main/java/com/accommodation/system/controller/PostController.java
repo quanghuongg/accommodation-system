@@ -7,6 +7,7 @@ import com.accommodation.system.entity.model.Response;
 import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
 import com.accommodation.system.exception.ApiServiceException;
+import com.accommodation.system.service.NotificationService;
 import com.accommodation.system.service.PostService;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.ServiceUtils;
@@ -32,18 +33,23 @@ public class PostController extends EzContext {
     @Autowired
     PostService postService;
 
+    @Autowired
+    NotificationService notificationService;
+
     @RequestMapping(value = {ContextPath.Post.CREATE}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> createPost(@RequestBody PostRequest postRequest) throws ApiServiceException {
+    public ResponseEntity<?> createPost(@RequestBody PostRequest postRequest) throws ApiServiceException, IOException {
         int userId = getUserId();
         if (ServiceUtils.isEmpty(postRequest.getLocation()) || ServiceUtils.isEmpty(postRequest.getPrice()) ||
                 ServiceUtils.isEmpty(postRequest.getRoomTypeId())) {
             throw new ApiServiceException(Constant.OBJECT_EMPTY_FIELD);
         }
+        String postId = postService.createPost(userId, postRequest);
+        notificationService.pushNotificationsMatching(postRequest, postId);
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)
-                .data(postService.createPost(userId, postRequest))
+                .data(postId)
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

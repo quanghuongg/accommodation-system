@@ -46,6 +46,8 @@ public class Post extends BaseModel {
 
     private int area;
 
+    private String image;
+
     List<String> images = new LinkedList<>();
 
 

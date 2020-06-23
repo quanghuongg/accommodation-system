@@ -302,4 +302,20 @@ public class PostDaoImpl implements PostDao {
                 .endObject());
         this.esClient.update(updateRequest).actionGet();
     }
+
+    @Override
+    public void updateImage(String postId) throws IOException {
+        String path = "https://huongnq.s3-ap-southeast-1.amazonaws.com/images/__POSTID__/1.jpg";
+        String post = postId.replaceAll("-", "");
+        path = path.replaceAll("__POSTID__", post);
+        UpdateRequest updateRequest = new UpdateRequest();
+        updateRequest.index(indexName);
+        updateRequest.type("_doc");
+        updateRequest.id(postId);
+        updateRequest.doc(jsonBuilder()
+                .startObject()
+                .field("image", path)
+                .endObject());
+        this.esClient.update(updateRequest).actionGet();
+    }
 }

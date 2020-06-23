@@ -85,9 +85,9 @@ public class NotificationServiceImpl implements NotificationService {
                         .postId(postId)
                         .build())
                 .notification(NotificationMessage.Notification.builder()
-                        .body("Địa chỉ " + postRequest.getLocation())
-                        .color("red")
-                        .priority("green")
+                        .body("Mô tả: " + postRequest.getDescription())
+                        .color("green")
+                        .priority("high")
                         .title("Có thông tin phòng trọ phù hợp với bạn!")
                         .build()).build();
         FirebaseUtil.send(notificationMessage);

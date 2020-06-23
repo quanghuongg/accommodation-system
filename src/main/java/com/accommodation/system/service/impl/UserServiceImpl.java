@@ -1,5 +1,6 @@
 package com.accommodation.system.service.impl;
 
+import com.accommodation.system.dao.PostDao;
 import com.accommodation.system.define.Constant;
 import com.accommodation.system.entity.Role;
 import com.accommodation.system.entity.User;
@@ -43,6 +44,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     UserPinMapper userPinMapper;
 
     private UserMapper userMapper;
+
+    @Autowired
+    PostDao postDao;
 
     public UserServiceImpl(UserMapper userMapper) {
         this.userMapper = userMapper;
@@ -245,26 +249,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void uploadImages(int userId, String postId, MultipartFile[] files) throws ApiServiceException {
         try {
             String strPath = Constant.FileUploader.PATH_IMAGES + "/" + postId.replaceAll("-", "");
-//            Path path = Paths.get(strPath);
-//            if (!Files.exists(path)) {
-//                try {
-//                    Files.createDirectories(path);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
             int count = 1;
             for (MultipartFile file : files) {
                 String fileName = count + Constant.FileUploader.MediaType.IMAGE_EXTENSION;
-//                Path pathFile = Paths.get(strPath + "/" + fileName);
-//                Path pathFile = Paths.get(strPath + "/" + fileName);
-//                Files.write(pathFile, file.getBytes());
-//                amazonS3Service.uploadFile(strPath + "/" + fileName, ServiceUtils.multipartToFile(file));
                 File fileUpload = new File(fileName);
                 ImageIO.write(handleImage(file.getInputStream()), "jpg", fileUpload);
                 amazonS3Service.uploadFile(strPath + "/" + fileName, fileUpload);
                 count++;
             }
+            postDao.updateImage(postId);
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {

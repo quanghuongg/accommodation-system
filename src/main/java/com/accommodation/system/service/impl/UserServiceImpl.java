@@ -219,6 +219,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public void unUserPin(int userId, String post_id) {
+        userPinMapper.unUserPin(userId, post_id);
+    }
+
+    @Override
     public List<UserPin> listUserPin(int userId) {
         return userPinMapper.listUserPin(userId);
     }

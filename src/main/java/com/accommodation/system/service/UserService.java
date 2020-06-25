@@ -39,4 +39,6 @@ public interface UserService {
     String uploadAvatar(int userId, MultipartFile file) throws Exception;
 
     void uploadImages(int userId, String postId, MultipartFile[] files) throws ApiServiceException;
+
+    void unUserPin(int userId, String post_id);
 }

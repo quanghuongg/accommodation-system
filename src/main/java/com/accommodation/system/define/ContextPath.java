@@ -20,6 +20,7 @@ public class ContextPath {
         public static final String UPDATE_USER_INFO = "/update";
         public static final String LOGOUT = "/logout";
         public static final String ADD_USER_PIN = "/add-user-pin";
+        public static final String UN_USER_PIN = "/un-user-pin";
         public static final String LIST_USER_PIN = "/list-user-pin";
         public static final String LIST_POST = "/list-post";
 

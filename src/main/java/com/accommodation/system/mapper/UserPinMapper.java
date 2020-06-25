@@ -28,4 +28,8 @@ public interface UserPinMapper {
             before = false, resultType = Integer.class)
     @ResultMap("UserPinObject")
     void insertUserPin(UserPin userPin);
+
+
+    @Delete("delete from user_pin WHERE user_id = #{userId} AND post_id = #{post_id}")
+    void unUserPin(@Param("userId") int userId, @Param("post_id") String post_id);
 }

@@ -222,6 +222,18 @@ public class UserController extends EzContext {
         return new ResponseEntity<>(responseObject, HttpStatus.OK);
 
     }
+    @RequestMapping(value = {ContextPath.User.UN_USER_PIN}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> unUserPin(@RequestParam String post_id) throws ApiServiceException, IOException {
+        int userId = getUserId();
+        userService.unUserPin(userId, post_id);
+        Response responseObject = Response.builder()
+                .code(0)
+                .message(Constant.SUCCESS_MESSAGE)
+                .build();
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
+
+    }
 
     @RequestMapping(value = {ContextPath.User.LIST_USER_PIN}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

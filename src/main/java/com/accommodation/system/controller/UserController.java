@@ -239,5 +239,18 @@ public class UserController extends EzContext {
         return new ResponseEntity<>(responseObject, HttpStatus.OK);
     }
 
+    @RequestMapping(value = {ContextPath.User.LIST_POST}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> listUserPost(@RequestBody SearchInput requestInput) throws IOException, ApiServiceException {
+        int userId = getUserId();
+        requestInput.setUserId(userId);
+        Response responseObject = Response.builder()
+                .code(0)
+                .data(postService.doSearch(requestInput))
+                .message(Constant.SUCCESS_MESSAGE)
+                .build();
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
+    }
+
 }
 

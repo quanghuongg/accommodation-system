@@ -29,7 +29,7 @@ public class NotificationSetting extends BaseModel {
 
     private String location;
 
-    private long roomTypeId;
+    private int roomTypeId;
 
     private long createdAt;
 

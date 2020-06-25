@@ -98,6 +98,10 @@ public class PostDaoImpl implements PostDao {
         searchSourceBuilder.trackTotalHits(true);
         BoolQueryBuilder mainQueryBuilder = new BoolQueryBuilder();
 
+        if (searchInput.getUserId() > 0) {
+            buildUserQuery(searchInput.getUserId(), mainQueryBuilder);
+        }
+
         if (searchInput.getDistrictId() > 0) {
             buildDistrictQuery(searchInput.getDistrictId(), mainQueryBuilder);
         }
@@ -155,6 +159,12 @@ public class PostDaoImpl implements PostDao {
         mainQueryBuilder.filter(QueryBuilders.termQuery(Constant.Post.JsonField.DISTRICT_ID,
                 districtId));
     }
+
+    private void buildUserQuery(int userId, BoolQueryBuilder mainQueryBuilder) {
+        mainQueryBuilder.filter(QueryBuilders.termQuery(Constant.Post.JsonField.USER_ID,
+                userId));
+    }
+
 
     @Override
     public Post find(String id) throws IOException {
@@ -298,6 +308,7 @@ public class PostDaoImpl implements PostDao {
         updateRequest.doc(jsonBuilder()
                 .startObject()
                 .field("price", postRequest.getPrice())
+                .field("title", postRequest.getTitle())
                 .field("description", postRequest.getDescription())
                 .endObject());
         this.esClient.update(updateRequest).actionGet();

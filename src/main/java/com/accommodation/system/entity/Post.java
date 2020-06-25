@@ -24,6 +24,8 @@ import java.util.List;
 public class Post extends BaseModel {
     private String id;
 
+    private String title;
+
     private int userId;
 
     private long price;

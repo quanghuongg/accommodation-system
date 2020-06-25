@@ -40,4 +40,6 @@ public class SearchInput extends BaseModel {
 
     private int wardId;
 
+    private int userId;
+
 }

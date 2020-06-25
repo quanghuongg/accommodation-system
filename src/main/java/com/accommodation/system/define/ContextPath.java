@@ -18,9 +18,11 @@ public class ContextPath {
         public static final String CONFIRM = "/confirm";
         public static final String UPLOAD_AVATAR = "/upload-avatar";
         public static final String UPDATE_USER_INFO = "/update";
-        public static final String LOGOUT = "logout";
-        public static final String ADD_USER_PIN = "add-user-pin";
-        public static final String LIST_USER_PIN = "list-user-pin";
+        public static final String LOGOUT = "/logout";
+        public static final String ADD_USER_PIN = "/add-user-pin";
+        public static final String LIST_USER_PIN = "/list-user-pin";
+        public static final String LIST_POST = "/list-post";
+
     }
 
     public static class Notification {

@@ -2,6 +2,7 @@ package com.accommodation.system.service;
 
 import com.accommodation.system.entity.NotificationSetting;
 import com.accommodation.system.entity.Notifications;
+import com.accommodation.system.entity.info.NotificationSettingInfo;
 import com.accommodation.system.entity.model.NotificationMessage;
 import com.accommodation.system.entity.request.PostRequest;
 
@@ -12,7 +13,7 @@ public interface NotificationService {
 
     Notifications getNotifications(int userId);
 
-    NotificationSetting getNotificationSetting(int userId);
+    NotificationSettingInfo getNotificationSetting(int userId);
 
     boolean createNotificationSetting(NotificationSetting notificationSetting);
 

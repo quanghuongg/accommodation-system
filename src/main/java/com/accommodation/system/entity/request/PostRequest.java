@@ -10,6 +10,8 @@ public class PostRequest extends BaseModel {
 
     private String postId;
 
+    private String title;
+
     private long price;
 
     private String location;

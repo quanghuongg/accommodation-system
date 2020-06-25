@@ -10,4 +10,7 @@ import java.util.List;
 public interface RoomTypeMapper {
     @Select("SELECT * FROM room_type")
     List<RoomType> listRoomType();
+
+    @Select("SELECT * FROM room_type WHERE id =#{id}")
+    RoomType find( int id );
 }

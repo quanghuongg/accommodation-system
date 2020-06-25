@@ -102,6 +102,8 @@ public class Constant {
             public static final String LOCATION = "location";
             public static final String CREATED_AT = "created_at";
             public static final String PRICE = "price";
+            public static final String USER_ID = "user_id";
+
         }
     }
 }

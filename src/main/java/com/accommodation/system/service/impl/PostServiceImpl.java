@@ -59,6 +59,7 @@ public class PostServiceImpl implements PostService {
                 .districtId(postRequest.getDistrictId())
                 .wardId(postRequest.getWardId())
                 .area(postRequest.getArea())
+                .title(postRequest.getTitle())
                 .build();
         return postDao.createPost(post);
     }

@@ -2,9 +2,13 @@ package com.accommodation.system.service.impl;
 
 import com.accommodation.system.entity.NotificationSetting;
 import com.accommodation.system.entity.Notifications;
+import com.accommodation.system.entity.info.NotificationSettingInfo;
 import com.accommodation.system.entity.model.NotificationMessage;
 import com.accommodation.system.entity.request.PostRequest;
+import com.accommodation.system.mapper.DistrictMapper;
 import com.accommodation.system.mapper.NotificationSettingMapper;
+import com.accommodation.system.mapper.RoomTypeMapper;
+import com.accommodation.system.mapper.WardMapper;
 import com.accommodation.system.service.NotificationService;
 import com.accommodation.system.uitls.FirebaseUtil;
 import com.accommodation.system.uitls.Utils;
@@ -26,6 +30,15 @@ public class NotificationServiceImpl implements NotificationService {
     @Autowired
     NotificationSettingMapper notificationSettingMapper;
 
+    @Autowired
+    WardMapper wardMapper;
+
+    @Autowired
+    DistrictMapper districtMapper;
+
+    @Autowired
+    RoomTypeMapper roomTypeMapper;
+
     @Override
     public void saveNotification(NotificationMessage notificationMessage) {
     }
@@ -36,8 +49,20 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public NotificationSetting getNotificationSetting(int userId) {
-        return notificationSettingMapper.findByUser(userId);
+    public NotificationSettingInfo getNotificationSetting(int userId) {
+        NotificationSetting setting = notificationSettingMapper.findByUser(userId);
+        if (setting == null) {
+            return null;
+        }
+        NotificationSettingInfo notificationSettingInfo = NotificationSettingInfo.builder()
+                .id(setting.getId())
+                .ward(wardMapper.findWard(setting.getId()).getName())
+                .district(districtMapper.findDistrict(setting.getId()).getName())
+                .area(setting.getArea())
+                .price(setting.getPrice())
+                .roomType(roomTypeMapper.find(setting.getRoomTypeId()).getName())
+                .build();
+        return notificationSettingInfo;
     }
 
     @Override

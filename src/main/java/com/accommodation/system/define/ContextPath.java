@@ -46,5 +46,10 @@ public class ContextPath {
         public static final String DELETE = "/delete";
         public static final String UPDATE = "/update";
 
+        public static class Comment {
+            public static final String COMMENT = "/comment";
+            public static final String ADD = "/add";
+
+        }
     }
 }

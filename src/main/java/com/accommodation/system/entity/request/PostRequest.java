@@ -18,7 +18,7 @@ public class PostRequest extends BaseModel {
 
     private String description;
 
-    private long roomTypeId;
+    private int roomTypeId;
 
     private int districtId;
 

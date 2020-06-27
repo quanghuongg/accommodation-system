@@ -34,7 +34,7 @@ public class Post extends BaseModel {
 
     private String description;
 
-    private long roomTypeId;
+    private int roomTypeId;
 
     private Integer isVerified;
 

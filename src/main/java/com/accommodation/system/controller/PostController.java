@@ -3,6 +3,7 @@ package com.accommodation.system.controller;
 import com.accommodation.system.define.Constant;
 import com.accommodation.system.define.ContextPath;
 import com.accommodation.system.entity.Post;
+import com.accommodation.system.entity.info.PostFullInfo;
 import com.accommodation.system.entity.model.Response;
 import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
@@ -89,7 +90,7 @@ public class PostController extends EzContext {
     @RequestMapping(value = {ContextPath.Post.VIEW_DETAIL}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> viewDetail(@RequestParam("post_id") String postId) throws IOException {
-        Post post = postService.viewDetail(postId);
+        PostFullInfo post = postService.viewDetail(postId);
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .data(post)

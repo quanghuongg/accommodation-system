@@ -1,12 +1,15 @@
 package com.accommodation.system.service.impl;
 
 import com.accommodation.system.dao.PostDao;
-import com.accommodation.system.entity.Post;
+import com.accommodation.system.entity.*;
+import com.accommodation.system.entity.info.PostFullInfo;
 import com.accommodation.system.entity.model.SearchResult;
 import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.mapper.DistrictMapper;
+import com.accommodation.system.mapper.RoomTypeMapper;
+import com.accommodation.system.mapper.UserMapper;
 import com.accommodation.system.mapper.WardMapper;
 import com.accommodation.system.service.AmazonS3Service;
 import com.accommodation.system.service.PostService;
@@ -31,6 +34,12 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     WardMapper wardMapper;
+
+    @Autowired
+    RoomTypeMapper roomTypeMapper;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Override
     public String createPost(Integer userId, PostRequest postRequest) {
@@ -81,13 +90,37 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post viewDetail(String postId) throws IOException {
+    public PostFullInfo viewDetail(String postId) throws IOException {
         Post post = postDao.find(postId);
         if (Utils.isEmpty(post)) {
             return null;
         }
-        post.setImages(amazonS3Service.listFileImages(postId));
-        return post;
+        PostFullInfo postFullInfo = new PostFullInfo();
+        postFullInfo.setId(postId);
+        postFullInfo.setArea(post.getArea());
+        postFullInfo.setCreatedAt(post.getCreatedAt());
+        postFullInfo.setDescription(post.getDescription());
+//        District district = districtMapper.findDistrict(post.getDistrictId());
+//        if (Utils.isNotEmpty(district))
+//            postFullInfo.setDistrict(district.getName());
+//        Ward ward = wardMapper.findWard(post.getDistrictId());
+//        if (Utils.isNotEmpty(ward))
+//            postFullInfo.setWard(ward.getName());
+        RoomType roomType = roomTypeMapper.find(post.getRoomTypeId());
+        if (Utils.isNotEmpty(roomType))
+            postFullInfo.setRoomType(roomType.getName());
+
+        postFullInfo.setTitle(post.getTitle());
+        postFullInfo.setPrice(post.getPrice());
+        postFullInfo.setImages(amazonS3Service.listFileImages(postId));
+        postFullInfo.setLocation(post.getLocation());
+        User user = userMapper.findByUserId(post.getUserId());
+        if (Utils.isNotEmpty(user)) {
+            postFullInfo.setUsePost(user.getDisplayName());
+            postFullInfo.setPhone(user.getPhone());
+            postFullInfo.setAvatarUserPost(user.getAvatar());
+        }
+        return postFullInfo;
     }
 
     @Override

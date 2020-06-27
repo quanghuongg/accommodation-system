@@ -1,6 +1,7 @@
 package com.accommodation.system.service;
 
 import com.accommodation.system.entity.Post;
+import com.accommodation.system.entity.info.PostFullInfo;
 import com.accommodation.system.entity.model.SearchResult;
 import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
@@ -18,7 +19,7 @@ public interface PostService {
 
     SearchResult doSearch(SearchInput searchInput) throws IOException;
 
-    Post viewDetail(String postId) throws IOException;
+    PostFullInfo viewDetail(String postId) throws IOException;
 
     void updatePost(int userId, PostRequest postRequest) throws ApiServiceException, IOException;
 

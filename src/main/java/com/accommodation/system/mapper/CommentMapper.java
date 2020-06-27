@@ -21,8 +21,8 @@ public interface CommentMapper {
     List<Comment> listCommentByPostId(@Param("postId") String postId);
 
 
-    @Insert("insert into comment(post_id,content,user_id,created_at,updated_at) " +
-            "values(#{post_id},#{content},#{user_id},#{createdAt},#{updatedAt})")
+    @Insert("insert into comment(post_id,content,user_id,create_at,update_at) " +
+            "values(#{postId},#{content},#{userId},#{createdAt},#{updatedAt})")
     @SelectKey(statement = "SELECT LAST_INSERT_ID()", keyProperty = "id",
             before = false, resultType = Integer.class)
     @ResultMap("CommentObject")

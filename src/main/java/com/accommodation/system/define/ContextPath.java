@@ -47,8 +47,9 @@ public class ContextPath {
         public static final String UPDATE = "/update";
 
         public static class Comment {
-            public static final String COMMENT = "/comment";
-            public static final String ADD = "/add";
+            public static final String ADD = "/comment/add";
+            public static final String LIST = "/comment/list";
+
 
         }
     }

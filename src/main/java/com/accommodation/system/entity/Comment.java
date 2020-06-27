@@ -13,8 +13,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@Builder
 public class Comment extends BaseModel {
+    public Comment() {
+    }
+
     private int id;
 
     private String postId;

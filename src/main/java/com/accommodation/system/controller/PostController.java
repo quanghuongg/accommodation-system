@@ -2,12 +2,14 @@ package com.accommodation.system.controller;
 
 import com.accommodation.system.define.Constant;
 import com.accommodation.system.define.ContextPath;
+import com.accommodation.system.entity.Comment;
 import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.info.PostFullInfo;
 import com.accommodation.system.entity.model.Response;
 import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
 import com.accommodation.system.exception.ApiServiceException;
+import com.accommodation.system.service.CommentService;
 import com.accommodation.system.service.NotificationService;
 import com.accommodation.system.service.PostService;
 import com.accommodation.system.service.UserService;
@@ -33,6 +35,8 @@ public class PostController extends EzContext {
     UserService userService;
     @Autowired
     PostService postService;
+    @Autowired
+    CommentService commentService;
 
     @Autowired
     NotificationService notificationService;
@@ -119,6 +123,34 @@ public class PostController extends EzContext {
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {ContextPath.Post.Comment.ADD}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> addComment(@RequestBody Comment comment) throws ApiServiceException {
+        if (comment.getPostId() == null || comment.getContent() == null) {
+            throw new ApiServiceException("object create empty field");
+        }
+        int userId = getUserId();
+        comment.setUserId(userId);
+        comment.setCreatedAt(System.currentTimeMillis());
+        commentService.addComment(comment);
+        Response response = Response.builder()
+                .code(Constant.SUCCESS_CODE)
+                .message(Constant.SUCCESS_MESSAGE)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {ContextPath.Post.Comment.LIST}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> listComment(@RequestParam("post_id") String postId) {
+        Response response = Response.builder()
+                .code(Constant.SUCCESS_CODE)
+                .message(Constant.SUCCESS_MESSAGE)
+                .data(commentService.getListComment(postId))
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

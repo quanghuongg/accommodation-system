@@ -129,7 +129,7 @@ public class PostController extends EzContext {
 
     @RequestMapping(value = {ContextPath.Post.Comment.ADD}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> addComment(@RequestBody Comment comment) throws ApiServiceException {
+    public ResponseEntity<?> addComment(@RequestBody Comment comment) throws ApiServiceException, IOException {
         if (comment.getPostId() == null || comment.getContent() == null) {
             throw new ApiServiceException("object create empty field");
         }

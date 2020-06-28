@@ -1,7 +1,6 @@
 package com.accommodation.system.service.impl;
 
-import com.accommodation.system.entity.NotificationSetting;
-import com.accommodation.system.entity.Notifications;
+import com.accommodation.system.entity.*;
 import com.accommodation.system.entity.info.NotificationSettingInfo;
 import com.accommodation.system.entity.model.NotificationMessage;
 import com.accommodation.system.entity.request.PostRequest;
@@ -17,6 +16,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: huongnq4
@@ -56,12 +57,23 @@ public class NotificationServiceImpl implements NotificationService {
         }
         NotificationSettingInfo notificationSettingInfo = NotificationSettingInfo.builder()
                 .id(setting.getId())
-                .ward(wardMapper.findWard(setting.getId()).getName())
-                .district(districtMapper.findDistrict(setting.getId()).getName())
                 .area(setting.getArea())
+                .location(setting.getLocation())
                 .price(setting.getPrice())
-                .roomType(roomTypeMapper.find(setting.getRoomTypeId()).getName())
+                .enable(setting.getEnable())
                 .build();
+        Ward ward = wardMapper.findWard(setting.getWardId());
+        if (ward != null) {
+            notificationSettingInfo.setWard(ward.getName());
+        }
+        District district = districtMapper.findDistrict(setting.getDistrictId());
+        if (district != null) {
+            notificationSettingInfo.setDistrict(district.getName());
+        }
+        RoomType roomType = roomTypeMapper.find(setting.getRoomTypeId());
+        if (roomType != null) {
+            notificationSettingInfo.setRoomType(roomType.getName());
+        }
         return notificationSettingInfo;
     }
 
@@ -96,6 +108,9 @@ public class NotificationServiceImpl implements NotificationService {
             if (update.getLocation() != null) {
                 record.setLocation(update.getLocation());
             }
+            if (update.getEnable() != null) {
+                record.setEnable(update.getEnable());
+            }
             notificationSettingMapper.updateNotificationSetting(record);
         }
         return true;
@@ -103,9 +118,10 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Async("threadPoolTaskExecutor")
     @Override
-    public void pushNotificationsMatching(PostRequest postRequest, String postId) throws IOException {
+    public void pushNotificationsMatching(PostRequest postRequest, String postId, int userId) throws IOException {
+        List<Integer> userIds = listUserMatching(postRequest);
         NotificationMessage notificationMessage = NotificationMessage.builder()
-                .to("/topics/Test").userId(12)
+                .userId(userId)
                 .data(NotificationMessage.Data.builder()
                         .postId(postId)
                         .build())
@@ -115,6 +131,52 @@ public class NotificationServiceImpl implements NotificationService {
                         .priority("high")
                         .title("Có thông tin phòng trọ phù hợp với bạn!")
                         .build()).build();
-        FirebaseUtil.send(notificationMessage);
+        for (Integer id : userIds) {
+            if (id != userId) {
+                notificationMessage.setTo("/topics/Test");
+                FirebaseUtil.send(notificationMessage);
+            }
+        }
+    }
+
+    List<Integer> listUserMatching(PostRequest postRequest) {
+        List<Integer> userIds = new ArrayList<>();
+        List<NotificationSetting> list = notificationSettingMapper.findNotificationSetting(postRequest.getDistrictId());
+        for (NotificationSetting notificationSetting : list) {
+            if (isMatching(postRequest, notificationSetting)) {
+                userIds.add(notificationSetting.getUserId());
+            }
+        }
+        return userIds;
+    }
+
+    boolean isMatching(PostRequest postRequest, NotificationSetting setting) {
+        if (setting.getWardId() > 0) {
+            if (postRequest.getWardId() != setting.getWardId()) {
+                return false;
+            }
+        }
+        if (setting.getPrice() > 0) {
+            if (postRequest.getPrice() < setting.getPrice() * 0.8 || postRequest.getPrice() > setting.getPrice() * 1.2) {
+                return false;
+            }
+        }
+        if (setting.getArea() > 0) {
+            if (postRequest.getArea() < setting.getArea() * 0.8 || postRequest.getArea() > setting.getArea() * 1.2) {
+                return false;
+            }
+        }
+
+        if (setting.getRoomTypeId() > 0) {
+            if (postRequest.getRoomTypeId() != setting.getRoomTypeId()) {
+                return false;
+            }
+        }
+
+        if (setting.getRoomTypeId() > 0) {
+            return postRequest.getRoomTypeId() == setting.getRoomTypeId();
+        }
+
+        return true;
     }
 }

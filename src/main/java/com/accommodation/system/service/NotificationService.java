@@ -19,5 +19,5 @@ public interface NotificationService {
 
     boolean updateNotificationSetting(NotificationSetting notificationSetting);
 
-    void pushNotificationsMatching(PostRequest postRequest, String postId) throws IOException;
+    void pushNotificationsMatching(PostRequest postRequest, String postId, int userId) throws IOException;
 }

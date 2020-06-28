@@ -7,7 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface NotificationSettingMapper {
-    @Select("SELECT * FROM notification_setting")
+    @Select("SELECT * FROM notification_setting WHERE district_id =#{district_id} AND enable =1")
     @Results(id = "NotificationSettingObject", value = {
             @Result(column = "id", property = "id", id = true),
             @Result(column = "user_id", property = "userId"),
@@ -19,19 +19,20 @@ public interface NotificationSettingMapper {
             @Result(column = "room_type_id", property = "roomTypeId"),
             @Result(column = "created_at", property = "createdAt"),
             @Result(column = "updated_at", property = "updatedAt"),
+            @Result(column = "enable", property = "enable"),
     })
-    List<NotificationSetting> findAllNotificationSetting();
+    List<NotificationSetting> findNotificationSetting(int district_id);
 
 
-    @Insert("insert into notification_setting(user_id,price,ward_id,district_id,area,location,room_type_id,created_at,updated_at) " +
-            "values(#{userId},#{price},#{wardId},#{districtId},#{area},#{location},#{roomTypeId},#{createdAt},#{updatedAt})")
+    @Insert("insert into notification_setting(user_id,price,ward_id,district_id,area,location,room_type_id,created_at,updated_at,enable) " +
+            "values(#{userId},#{price},#{wardId},#{districtId},#{area},#{location},#{roomTypeId},#{createdAt},#{updatedAt},#{enable})")
     @SelectKey(statement = "SELECT LAST_INSERT_ID()", keyProperty = "id",
             before = false, resultType = Integer.class)
     @ResultMap("NotificationSettingObject")
     void createNotificationSetting(NotificationSetting notificationSetting);
 
 
-    @Update("UPDATE notification_setting SET  price = #{price}, ward_id =#{wardId}, district_id =#{districtId}, area =#{area},location = #{location} " +
+    @Update("UPDATE notification_setting SET  price = #{price}, ward_id =#{wardId}, district_id =#{districtId}, area =#{area},location = #{location},enable = #{enable} " +
             ", room_type_id =#{roomTypeId}, created_at =#{createdAt}, updated_at =#{updatedAt} WHERE id = #{id}")
     @ResultMap("NotificationSettingObject")
     void updateNotificationSetting(NotificationSetting notificationSetting);

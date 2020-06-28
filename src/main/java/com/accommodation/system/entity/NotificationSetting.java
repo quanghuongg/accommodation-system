@@ -35,4 +35,6 @@ public class NotificationSetting extends BaseModel {
 
     private long updatedAt;
 
+    private Integer enable;
+
 }

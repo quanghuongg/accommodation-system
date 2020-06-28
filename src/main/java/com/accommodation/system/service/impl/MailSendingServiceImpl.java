@@ -27,7 +27,7 @@ public class MailSendingServiceImpl implements MailSendingService {
     @Override
     public void mailConfirmRegister(String email, String fullName, int userId) throws Exception {
         String content = HtmlUtil.createReportMailTemplate("template/template-confirm.html", null);
-        String link = "http://localhost:9000/user/confirm-register?id=" + AESUtil.encrypt(userId + "");
+        String link = "http://54.169.144.80:3000/user/confirm?id=" + AESUtil.encrypt(userId + "");
         content = content.replaceAll("__link__", link)
                 .replaceAll("__Fullname__ ", fullName);
         MailUtil.send("CONFIRM REGISTER","huongnq4@gmail.com",null,null,content,null);

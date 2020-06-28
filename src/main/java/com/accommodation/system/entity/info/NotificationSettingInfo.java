@@ -1,5 +1,6 @@
 package com.accommodation.system.entity.info;
 
+import com.accommodation.system.entity.base.BaseModel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class NotificationSettingInfo {
+public class NotificationSettingInfo extends BaseModel {
     private int id;
 
     private long price;
@@ -27,5 +28,7 @@ public class NotificationSettingInfo {
     private String location;
 
     private String roomType;
+
+    private  int enable;
 
 }

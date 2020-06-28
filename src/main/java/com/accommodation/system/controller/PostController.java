@@ -50,7 +50,7 @@ public class PostController extends EzContext {
             throw new ApiServiceException(Constant.OBJECT_EMPTY_FIELD);
         }
         String postId = postService.createPost(userId, postRequest);
-        notificationService.pushNotificationsMatching(postRequest, postId);
+        notificationService.pushNotificationsMatching(postRequest, postId, userId);
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)

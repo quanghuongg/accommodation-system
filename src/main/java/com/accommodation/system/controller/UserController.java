@@ -2,6 +2,7 @@ package com.accommodation.system.controller;
 
 import com.accommodation.system.define.Constant;
 import com.accommodation.system.define.ContextPath;
+import com.accommodation.system.entity.NotificationSetting;
 import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.User;
 import com.accommodation.system.entity.UserPin;
@@ -11,6 +12,7 @@ import com.accommodation.system.entity.request.SearchInput;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.security.TokenProvider;
 import com.accommodation.system.service.MailSendingService;
+import com.accommodation.system.service.NotificationService;
 import com.accommodation.system.service.PostService;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.AESUtil;
@@ -43,6 +45,8 @@ public class UserController extends EzContext {
     private final MailSendingService mailSendingService;
     private final UserService userService;
 
+    @Autowired
+    NotificationService notificationService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -94,6 +98,11 @@ public class UserController extends EzContext {
         }
         user.setStatus(1);
         userService.update(user);
+        notificationService.createNotificationSetting(NotificationSetting.builder()
+                .createdAt(System.currentTimeMillis())
+                .enable(0)
+                .userId(user.getId())
+                .build());
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)

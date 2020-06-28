@@ -1,6 +1,7 @@
 package com.accommodation.system.service;
 
 import com.accommodation.system.entity.Post;
+import com.accommodation.system.entity.info.MyPost;
 import com.accommodation.system.entity.info.PostFullInfo;
 import com.accommodation.system.entity.model.SearchResult;
 import com.accommodation.system.entity.request.PostRequest;
@@ -24,4 +25,6 @@ public interface PostService {
     void updatePost(int userId, PostRequest postRequest) throws ApiServiceException, IOException;
 
     void deletePost(int userId, String postId) throws IOException, ApiServiceException;
+
+    MyPost viewMyPost(String postId) throws IOException;
 }

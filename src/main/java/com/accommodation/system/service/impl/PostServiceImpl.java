@@ -2,16 +2,15 @@ package com.accommodation.system.service.impl;
 
 import com.accommodation.system.dao.PostDao;
 import com.accommodation.system.entity.*;
+import com.accommodation.system.entity.info.MyPost;
 import com.accommodation.system.entity.info.PostFullInfo;
 import com.accommodation.system.entity.model.SearchResult;
 import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
 import com.accommodation.system.exception.ApiServiceException;
-import com.accommodation.system.mapper.DistrictMapper;
-import com.accommodation.system.mapper.RoomTypeMapper;
-import com.accommodation.system.mapper.UserMapper;
-import com.accommodation.system.mapper.WardMapper;
+import com.accommodation.system.mapper.*;
 import com.accommodation.system.service.AmazonS3Service;
+import com.accommodation.system.service.CommentService;
 import com.accommodation.system.service.PostService;
 import com.accommodation.system.uitls.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +39,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    CommentService commentService;
 
     @Override
     public String createPost(Integer userId, PostRequest postRequest) {
@@ -120,6 +122,7 @@ public class PostServiceImpl implements PostService {
             postFullInfo.setPhone(user.getPhone());
             postFullInfo.setAvatarUserPost(user.getAvatar());
         }
+        postFullInfo.setCommentInfos(commentService.getListComment(postId));
         return postFullInfo;
     }
 
@@ -140,5 +143,26 @@ public class PostServiceImpl implements PostService {
             throw new ApiServiceException("post not found");
         }
         postDao.deletePost(postId);
+    }
+
+    @Override
+    public MyPost viewMyPost(String postId) throws IOException {
+        Post post = postDao.find(postId);
+        if (Utils.isEmpty(post)) {
+            return null;
+        }
+        MyPost myPost = new MyPost();
+        myPost.setId(postId);
+        myPost.setArea(post.getArea());
+        myPost.setCreatedAt(post.getCreatedAt());
+        myPost.setDescription(post.getDescription());
+        RoomType roomType = roomTypeMapper.find(post.getRoomTypeId());
+        if (Utils.isNotEmpty(roomType))
+            myPost.setRoomType(roomType.getName());
+        myPost.setTitle(post.getTitle());
+        myPost.setPrice(post.getPrice());
+        myPost.setImages(amazonS3Service.listFileImages(postId));
+        myPost.setLocation(post.getLocation());
+        return myPost;
     }
 }

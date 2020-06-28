@@ -2,18 +2,16 @@ package com.accommodation.system.entity.info;
 
 import com.accommodation.system.entity.base.BaseModel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 @Getter
 @Setter
-public class PostFullInfo extends BaseModel {
-    public PostFullInfo() {
-    }
-
+@NoArgsConstructor
+public class MyPost extends BaseModel {
     private String id;
 
     private String title;
@@ -34,13 +32,5 @@ public class PostFullInfo extends BaseModel {
 
     private int area;
 
-    private String usePost;
-
-    private String phone;
-
-    private String avatarUserPost;
-
     List<String> images = new LinkedList<>();
-
-    List<CommentInfo> commentInfos = new ArrayList<>();
 }

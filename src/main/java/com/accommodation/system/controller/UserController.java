@@ -222,6 +222,7 @@ public class UserController extends EzContext {
         return new ResponseEntity<>(responseObject, HttpStatus.OK);
 
     }
+
     @RequestMapping(value = {ContextPath.User.UN_USER_PIN}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> unUserPin(@RequestParam String post_id) throws ApiServiceException, IOException {
@@ -259,6 +260,17 @@ public class UserController extends EzContext {
         Response responseObject = Response.builder()
                 .code(0)
                 .data(postService.doSearch(requestInput))
+                .message(Constant.SUCCESS_MESSAGE)
+                .build();
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {ContextPath.User.VIEW_MY_POST}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> viewMyPost(@RequestParam("post_id") String postId) throws IOException {
+        Response responseObject = Response.builder()
+                .code(0)
+                .data(postService.viewMyPost(postId))
                 .message(Constant.SUCCESS_MESSAGE)
                 .build();
         return new ResponseEntity<>(responseObject, HttpStatus.OK);

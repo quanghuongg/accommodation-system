@@ -254,13 +254,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void uploadImages(int userId, String postId, MultipartFile[] files) throws ApiServiceException {
         try {
             String strPath = Constant.FileUploader.PATH_IMAGES + "/" + postId.replaceAll("-", "");
-            int count = 1;
             for (MultipartFile file : files) {
-                String fileName = count + Constant.FileUploader.MediaType.IMAGE_EXTENSION;
+                String fileName = (int) (Math.random()*1000000) + Constant.FileUploader.MediaType.IMAGE_EXTENSION;
                 File fileUpload = new File(fileName);
                 ImageIO.write(handleImage(file.getInputStream()), "jpg", fileUpload);
                 amazonS3Service.uploadFile(strPath + "/" + fileName, fileUpload);
-                count++;
             }
             postDao.updateImage(postId);
 

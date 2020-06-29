@@ -11,6 +11,4 @@ public interface CommentService {
 
     List<CommentInfo> getListComment(String postId);
 
-    void pushNotification(Comment comment) throws IOException;
-
 }

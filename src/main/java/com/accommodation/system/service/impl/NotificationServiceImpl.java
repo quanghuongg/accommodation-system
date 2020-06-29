@@ -1,13 +1,12 @@
 package com.accommodation.system.service.impl;
 
+import com.accommodation.system.dao.PostDao;
 import com.accommodation.system.entity.*;
 import com.accommodation.system.entity.info.NotificationSettingInfo;
 import com.accommodation.system.entity.model.NotificationMessage;
+import com.accommodation.system.entity.model.SearchResult;
 import com.accommodation.system.entity.request.PostRequest;
-import com.accommodation.system.mapper.DistrictMapper;
-import com.accommodation.system.mapper.NotificationSettingMapper;
-import com.accommodation.system.mapper.RoomTypeMapper;
-import com.accommodation.system.mapper.WardMapper;
+import com.accommodation.system.mapper.*;
 import com.accommodation.system.service.NotificationService;
 import com.accommodation.system.uitls.FirebaseUtil;
 import com.accommodation.system.uitls.Utils;
@@ -40,13 +39,31 @@ public class NotificationServiceImpl implements NotificationService {
     @Autowired
     RoomTypeMapper roomTypeMapper;
 
+    @Autowired
+    UserMapper userMapper;
+
+    @Autowired
+    PostDao postDao;
+
+    @Autowired
+    NotificationsMapper notificationsMapper;
+
     @Override
-    public void saveNotification(NotificationMessage notificationMessage) {
+    public void saveNotification(Notifications notifications) {
+        notificationsMapper.addNotification(notifications);
     }
 
     @Override
-    public Notifications getNotifications(int userId) {
-        return null;
+    public void updateReadAt(int notificationId, long readAt) {
+        notificationsMapper.updateReadAt(notificationId, readAt);
+    }
+
+    @Override
+    public SearchResult listNotification(int userId) {
+        SearchResult searchResult = new SearchResult();
+        searchResult.setCount(notificationsMapper.countNotificationUnread(userId).size());
+        searchResult.setHits(notificationsMapper.listNotificationByUserId(userId));
+        return searchResult;
     }
 
     @Override
@@ -135,6 +152,13 @@ public class NotificationServiceImpl implements NotificationService {
             if (id != userId) {
                 notificationMessage.setTo("/topics/Test");
                 FirebaseUtil.send(notificationMessage);
+                //Save notification MySQL
+                notificationsMapper.addNotification(Notifications.builder()
+                        .userId(id)
+                        .createdAt(System.currentTimeMillis())
+                        .message("Có thông tin phòng trọ phù hợp với bạn!")
+                        .postId(postId)
+                        .build());
             }
         }
     }
@@ -178,5 +202,44 @@ public class NotificationServiceImpl implements NotificationService {
         }
 
         return true;
+    }
+
+    @Override
+    @Async("threadPoolTaskExecutor")
+    public void pushNotificationComment(Comment comment) throws IOException {
+        Post post = postDao.find(comment.getPostId());
+        if (Utils.isNotEmpty(post)) {
+            int ownerPost = post.getUserId();
+            User user = userMapper.findByUserId(comment.getUserId());
+            String postUser = "Có người";
+            if (Utils.isNotEmpty(user)) {
+                postUser = user.getDisplayName();
+            }
+            String content = comment.getContent();
+            if (content.length() > 50) {
+                content.substring(0, 50);
+            }
+            //Send firebase
+            NotificationMessage notificationMessage = NotificationMessage.builder()
+                    .to("/topics/Test")
+                    .userId(comment.getUserId())
+                    .data(NotificationMessage.Data.builder()
+                            .postId(comment.getPostId())
+                            .build())
+                    .notification(NotificationMessage.Notification.builder()
+                            .body("Mô tả: " + content + "...")
+                            .color("green")
+                            .priority("high")
+                            .title(postUser + " bình luận về bài đăng của bạn.")
+                            .build()).build();
+            FirebaseUtil.send(notificationMessage);
+            //Save notification MySQL
+            notificationsMapper.addNotification(Notifications.builder()
+                    .userId(ownerPost)
+                    .createdAt(System.currentTimeMillis())
+                    .message(postUser + " bình luận về bài đăng của bạn.")
+                    .postId(comment.getPostId())
+                    .build());
+        }
     }
 }

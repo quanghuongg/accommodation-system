@@ -15,11 +15,11 @@ import lombok.Setter;
 @Setter
 @Builder
 public class Notifications extends BaseModel {
-    private String id;
+    private int id;
 
     private Integer userId;
 
-    private Integer postId;
+    private String postId;
 
     private String info;
 

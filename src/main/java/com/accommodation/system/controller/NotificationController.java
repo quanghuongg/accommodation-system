@@ -34,7 +34,18 @@ public class NotificationController extends EzContext {
     public ResponseEntity<?> getNotifications() throws ApiServiceException {
         Response responseObject = Response.builder()
                 .code(Constant.SUCCESS_CODE)
-                .data(notificationService.getNotifications(getUserId()))
+                .data(notificationService.listNotification(getUserId()))
+                .message(Constant.SUCCESS_MESSAGE)
+                .build();
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {ContextPath.Notification.UPDATE_READ_AT}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> updateReadAt(@RequestParam("notification_id") int notificationId) {
+        notificationService.updateReadAt(notificationId, System.currentTimeMillis());
+        Response responseObject = Response.builder()
+                .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)
                 .build();
         return new ResponseEntity<>(responseObject, HttpStatus.OK);
@@ -74,4 +85,6 @@ public class NotificationController extends EzContext {
                 .build();
         return new ResponseEntity<>(responseObject, HttpStatus.OK);
     }
+
+
 }

@@ -2,17 +2,15 @@ package com.accommodation.system.service.impl;
 
 import com.accommodation.system.dao.PostDao;
 import com.accommodation.system.entity.Comment;
-import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.User;
 import com.accommodation.system.entity.info.CommentInfo;
-import com.accommodation.system.entity.model.NotificationMessage;
 import com.accommodation.system.mapper.CommentMapper;
+import com.accommodation.system.mapper.NotificationsMapper;
 import com.accommodation.system.mapper.UserMapper;
 import com.accommodation.system.service.CommentService;
-import com.accommodation.system.uitls.FirebaseUtil;
+import com.accommodation.system.service.NotificationService;
 import com.accommodation.system.uitls.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -36,10 +34,16 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     PostDao postDao;
 
+    @Autowired
+    NotificationsMapper notificationsMapper;
+
+    @Autowired
+    NotificationService notificationService;
+
     @Override
     public int addComment(Comment comment) throws IOException {
         commentMapper.insertComment(comment);
-        pushNotification(comment);
+        notificationService.pushNotificationComment(comment);
         return comment.getId();
     }
 
@@ -61,37 +65,5 @@ public class CommentServiceImpl implements CommentService {
             }
         }
         return commentInfos;
-    }
-
-    @Async("threadPoolTaskExecutor")
-    @Override
-    public void pushNotification(Comment comment) throws IOException {
-        Post post = postDao.find(comment.getPostId());
-        if (Utils.isNotEmpty(post)) {
-            int ownerPost = post.getUserId();
-            User user = userMapper.findByUserId(comment.getUserId());
-            String postUser = "Có người";
-            if (Utils.isNotEmpty(user)) {
-                postUser = user.getDisplayName();
-            }
-            String content = comment.getContent();
-            if (content.length() > 50) {
-                content.substring(0, 50);
-            }
-            NotificationMessage notificationMessage = NotificationMessage.builder()
-                    .to("/topics/Test")
-                    .userId(comment.getUserId())
-                    .data(NotificationMessage.Data.builder()
-                            .postId(comment.getPostId())
-                            .build())
-                    .notification(NotificationMessage.Notification.builder()
-                            .body("Mô tả: " + content + "...")
-                            .color("green")
-                            .priority("high")
-                            .title(postUser + " bình luận về bài đăng của bạn.")
-                            .build()).build();
-            FirebaseUtil.send(notificationMessage);
-        }
-
     }
 }

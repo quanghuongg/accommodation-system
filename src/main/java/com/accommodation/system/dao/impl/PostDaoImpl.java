@@ -315,10 +315,12 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public void updateImage(String postId) throws IOException {
-        String path = "https://huongnq.s3-ap-southeast-1.amazonaws.com/images/__POSTID__/1.jpg";
+    public void updateImage(String postId, int first) throws IOException {
+        String path = "https://huongnq.s3-ap-southeast-1.amazonaws.com/images/__POSTID__/__NUMBER__.jpg";
         String post = postId.replaceAll("-", "");
-        path = path.replaceAll("__POSTID__", post);
+        path = path.replaceAll("__POSTID__", post)
+                .replaceAll("__NUMBER__", first + "")
+        ;
         UpdateRequest updateRequest = new UpdateRequest();
         updateRequest.index(indexName);
         updateRequest.type("_doc");

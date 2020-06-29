@@ -22,6 +22,6 @@ public interface PostDao {
 
     void updatePost(PostRequest postRequest) throws IOException;
 
-    void updateImage( String postId) throws IOException;
+    void updateImage( String postId, int first) throws IOException;
 
 }

@@ -252,15 +252,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void uploadImages(int userId, String postId, MultipartFile[] files) throws ApiServiceException {
+        int first = 0;
         try {
             String strPath = Constant.FileUploader.PATH_IMAGES + "/" + postId.replaceAll("-", "");
             for (MultipartFile file : files) {
-                String fileName = (int) (Math.random()*1000000) + Constant.FileUploader.MediaType.IMAGE_EXTENSION;
+                first = (int) (Math.random() * 1000000);
+                String fileName = first + Constant.FileUploader.MediaType.IMAGE_EXTENSION;
                 File fileUpload = new File(fileName);
                 ImageIO.write(handleImage(file.getInputStream()), "jpg", fileUpload);
                 amazonS3Service.uploadFile(strPath + "/" + fileName, fileUpload);
             }
-            postDao.updateImage(postId);
+            postDao.updateImage(postId, first);
 
         } catch (IOException e) {
             e.printStackTrace();

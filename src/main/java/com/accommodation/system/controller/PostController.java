@@ -3,7 +3,6 @@ package com.accommodation.system.controller;
 import com.accommodation.system.define.Constant;
 import com.accommodation.system.define.ContextPath;
 import com.accommodation.system.entity.Comment;
-import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.info.PostFullInfo;
 import com.accommodation.system.entity.model.Response;
 import com.accommodation.system.entity.request.PostRequest;
@@ -43,13 +42,36 @@ public class PostController extends EzContext {
 
     @RequestMapping(value = {ContextPath.Post.CREATE}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> createPost(@RequestBody PostRequest postRequest) throws ApiServiceException, IOException {
+    public ResponseEntity<?> createPost(@RequestParam("title") String title,
+                                        @RequestParam("price") long price,
+                                        @RequestParam("location") String location,
+                                        @RequestParam("description") String description,
+                                        @RequestParam("room_type_id") int roomTypeId,
+                                        @RequestParam("district_id") int districtId,
+                                        @RequestParam("ward_id") int wardId,
+                                        @RequestParam("area") int area,
+                                        @RequestParam("files") MultipartFile[] files) throws ApiServiceException, IOException {
         int userId = getUserId();
-        if (ServiceUtils.isEmpty(postRequest.getLocation()) || ServiceUtils.isEmpty(postRequest.getPrice()) ||
-                ServiceUtils.isEmpty(postRequest.getRoomTypeId())) {
+        if (ServiceUtils.isEmpty(location) || price == 0 || roomTypeId == 0) {
             throw new ApiServiceException(Constant.OBJECT_EMPTY_FIELD);
         }
+        if (Utils.isEmpty(files)) {
+            throw new ApiServiceException("images not found");
+        }
+        if (files.length > 5) {
+            throw new ApiServiceException("num of images <=5");
+        }
+        PostRequest postRequest = new PostRequest();
+        postRequest.setTitle(title);
+        postRequest.setArea(area);
+        postRequest.setDescription(description);
+        postRequest.setDistrictId(districtId);
+        postRequest.setWardId(wardId);
+        postRequest.setLocation(location);
+        postRequest.setPrice(price);
+        postRequest.setRoomTypeId(roomTypeId);
         String postId = postService.createPost(userId, postRequest);
+        userService.uploadImages(userId, postId, files);
         notificationService.pushNotificationsMatching(postRequest, postId, userId);
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)

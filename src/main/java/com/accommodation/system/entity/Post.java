@@ -5,11 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * User: huongnq4
@@ -50,7 +45,7 @@ public class Post extends BaseModel {
 
     private String image;
 
-    List<String> images = new LinkedList<>();
+    String[] images;
 
 
 }

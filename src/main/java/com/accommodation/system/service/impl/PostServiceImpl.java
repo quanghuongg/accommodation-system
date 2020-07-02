@@ -1,14 +1,19 @@
 package com.accommodation.system.service.impl;
 
 import com.accommodation.system.dao.PostDao;
-import com.accommodation.system.entity.*;
+import com.accommodation.system.entity.Post;
+import com.accommodation.system.entity.RoomType;
+import com.accommodation.system.entity.User;
 import com.accommodation.system.entity.info.MyPost;
 import com.accommodation.system.entity.info.PostFullInfo;
 import com.accommodation.system.entity.model.SearchResult;
 import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
 import com.accommodation.system.exception.ApiServiceException;
-import com.accommodation.system.mapper.*;
+import com.accommodation.system.mapper.DistrictMapper;
+import com.accommodation.system.mapper.RoomTypeMapper;
+import com.accommodation.system.mapper.UserMapper;
+import com.accommodation.system.mapper.WardMapper;
 import com.accommodation.system.service.AmazonS3Service;
 import com.accommodation.system.service.CommentService;
 import com.accommodation.system.service.PostService;
@@ -18,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Slf4j
 @Service(value = "postService")
@@ -102,19 +108,13 @@ public class PostServiceImpl implements PostService {
         postFullInfo.setArea(post.getArea());
         postFullInfo.setCreatedAt(post.getCreatedAt());
         postFullInfo.setDescription(post.getDescription());
-//        District district = districtMapper.findDistrict(post.getDistrictId());
-//        if (Utils.isNotEmpty(district))
-//            postFullInfo.setDistrict(district.getName());
-//        Ward ward = wardMapper.findWard(post.getDistrictId());
-//        if (Utils.isNotEmpty(ward))
-//            postFullInfo.setWard(ward.getName());
         RoomType roomType = roomTypeMapper.find(post.getRoomTypeId());
         if (Utils.isNotEmpty(roomType))
             postFullInfo.setRoomType(roomType.getName());
 
         postFullInfo.setTitle(post.getTitle());
         postFullInfo.setPrice(post.getPrice());
-        postFullInfo.setImages(amazonS3Service.listFileImages(postId));
+        postFullInfo.setImages(Arrays.asList(post.getImages()));
         postFullInfo.setLocation(post.getLocation());
         User user = userMapper.findByUserId(post.getUserId());
         if (Utils.isNotEmpty(user)) {
@@ -161,7 +161,7 @@ public class PostServiceImpl implements PostService {
             myPost.setRoomType(roomType.getName());
         myPost.setTitle(post.getTitle());
         myPost.setPrice(post.getPrice());
-        myPost.setImages(amazonS3Service.listFileImages(postId));
+        myPost.setImages(post.getImages());
         myPost.setLocation(post.getLocation());
         return myPost;
     }

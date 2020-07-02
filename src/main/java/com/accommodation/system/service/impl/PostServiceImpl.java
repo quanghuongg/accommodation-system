@@ -114,7 +114,9 @@ public class PostServiceImpl implements PostService {
 
         postFullInfo.setTitle(post.getTitle());
         postFullInfo.setPrice(post.getPrice());
-        postFullInfo.setImages(Arrays.asList(post.getImages()));
+        if (Utils.isNotEmpty(post.getImages())) {
+            postFullInfo.setImages(Arrays.asList(post.getImages()));
+        }
         postFullInfo.setLocation(post.getLocation());
         User user = userMapper.findByUserId(post.getUserId());
         if (Utils.isNotEmpty(user)) {

@@ -108,7 +108,7 @@ public class PostDaoImpl implements PostDao {
         if (searchInput.getWardId() > 0) {
             buildWardQuery(searchInput.getWardId(), mainQueryBuilder);
         }
-        if (searchInput.getMinArea() > 0) {
+        if (searchInput.getMaxArea() > 0) {
             buildAreaQuery(searchInput.getMinArea(), searchInput.getMaxArea(), mainQueryBuilder);
 
         }
@@ -118,7 +118,7 @@ public class PostDaoImpl implements PostDao {
         if (searchInput.getRoomTypeId() > 0) {
             buildRoomTypeQuery(searchInput.getRoomTypeId(), mainQueryBuilder);
         }
-        if (searchInput.getMinPrice() > 0) {
+        if (searchInput.getMaxPrice() > 0) {
             buildPriceQuery(searchInput.getMinPrice(), searchInput.getMaxPrice(), mainQueryBuilder);
         }
         paginateResponse(searchInput, searchSourceBuilder);
@@ -147,7 +147,7 @@ public class PostDaoImpl implements PostDao {
 
     private void buildAreaQuery(int minArea, int maxArea, BoolQueryBuilder mainQueryBuilder) {
         BoolQueryBuilder priceBoolQuery = new BoolQueryBuilder();
-        priceBoolQuery.must(new RangeQueryBuilder(Constant.Post.JsonField.PRICE).gte(minArea).lte(maxArea));
+        priceBoolQuery.must(new RangeQueryBuilder(Constant.Post.JsonField.AREA).gte(minArea).lte(maxArea));
         mainQueryBuilder.must(priceBoolQuery);
     }
 
@@ -316,19 +316,17 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public void updateImage(String postId, int first) throws IOException {
-        String path = "https://huongnq.s3-ap-southeast-1.amazonaws.com/images/__POSTID__/__NUMBER__.jpg";
-        String post = postId.replaceAll("-", "");
-        path = path.replaceAll("__POSTID__", post)
-                .replaceAll("__NUMBER__", first + "")
-        ;
+    public void updateImage(String postId, List<String> images) throws IOException {
         UpdateRequest updateRequest = new UpdateRequest();
         updateRequest.index(indexName);
         updateRequest.type("_doc");
         updateRequest.id(postId);
+        String[] itemsArray = new String[images.size()];
+        itemsArray = images.toArray(itemsArray);
         updateRequest.doc(jsonBuilder()
                 .startObject()
-                .field("image", path)
+                .field("image", images.get(0))
+                .field("images", itemsArray)
                 .endObject());
         this.esClient.update(updateRequest).actionGet();
     }

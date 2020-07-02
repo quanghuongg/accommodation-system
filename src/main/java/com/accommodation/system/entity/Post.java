@@ -1,10 +1,7 @@
 package com.accommodation.system.entity;
 
 import com.accommodation.system.entity.base.BaseModel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * User: huongnq4
@@ -16,6 +13,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Post extends BaseModel {
     private String id;
 

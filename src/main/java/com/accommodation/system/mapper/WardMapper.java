@@ -25,4 +25,8 @@ public interface WardMapper {
     @Select("SELECT * FROM ward WHERE id =#{id}")
     @ResultMap("WardObject")
     Ward findWard(@Param("id") int id);
+
+    @Select("SELECT * FROM ward WHERE name =#{name} AND  district_id =#{district_id} limit 1")
+    @ResultMap("WardObject")
+    Ward findWardByName(@Param("name") String name, @Param("district_id") int district_id);
 }

@@ -13,12 +13,12 @@ public interface NotificationSettingMapper {
             @Result(column = "user_id", property = "userId"),
             @Result(column = "ward_id", property = "wardId"),
             @Result(column = "district_id", property = "districtId"),
-            @Result(column = "location", property = "location"),
-            @Result(column = "room_type_id", property = "roomTypeId"),
             @Result(column = "min_area", property = "minArea"),
             @Result(column = "max_area", property = "maxArea"),
             @Result(column = "min_price", property = "minPrice"),
             @Result(column = "max_price", property = "maxPrice"),
+            @Result(column = "location", property = "location"),
+            @Result(column = "room_type_id", property = "roomTypeId"),
             @Result(column = "created_at", property = "createdAt"),
             @Result(column = "updated_at", property = "updatedAt"),
             @Result(column = "enable", property = "enable"),
@@ -27,7 +27,7 @@ public interface NotificationSettingMapper {
 
 
     @Insert("insert into notification_setting(user_id,ward_id,district_id,min_area,max_area,min_price,max_price,location,room_type_id,created_at,updated_at,enable) " +
-            "values(#{userId},#{wardId},#{districtId},#{minArea},{maxArea},#{minPrice},#{maxPrice},#{location},#{roomTypeId},#{createdAt},#{updatedAt},#{enable})")
+            "values(#{userId},#{wardId},#{districtId},#{minArea},#{maxArea},#{minPrice},#{maxPrice},#{location},#{roomTypeId},#{createdAt},#{updatedAt},#{enable})")
     @SelectKey(statement = "SELECT LAST_INSERT_ID()", keyProperty = "id",
             before = false, resultType = Integer.class)
     @ResultMap("NotificationSettingObject")

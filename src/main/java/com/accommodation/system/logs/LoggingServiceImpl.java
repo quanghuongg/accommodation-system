@@ -39,7 +39,7 @@ public class LoggingServiceImpl implements LoggingService {
         String[] regexs = Constant.Logging.LOGGING_IGNORE;
         for (int i = 0; i < regexs.length; i++) {
             String regex = regexs[i];
-            if (!"".equals(regex) && httpServletRequest.getRequestURI().startsWith(regex)) {
+            if (!"".equals(regex) && httpServletRequest.getRequestURI().startsWith(regex) ||httpServletRequest.getRequestURI().contains("/post/search") ) {
                 ignore = true;
             }
         }

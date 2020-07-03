@@ -2,7 +2,6 @@ package com.accommodation.system.service.impl;
 
 import com.accommodation.system.dao.PostDao;
 import com.accommodation.system.entity.*;
-import com.accommodation.system.entity.info.NotificationSettingInfo;
 import com.accommodation.system.entity.model.NotificationMessage;
 import com.accommodation.system.entity.model.SearchResult;
 import com.accommodation.system.entity.request.PostRequest;
@@ -67,33 +66,12 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public NotificationSettingInfo getNotificationSetting(int userId) {
+    public NotificationSetting getNotificationSetting(int userId) {
         NotificationSetting setting = notificationSettingMapper.findByUser(userId);
-        if (setting == null) {
-            return null;
-        }
-        NotificationSettingInfo notificationSettingInfo = NotificationSettingInfo.builder()
-                .id(setting.getId())
-                .area(setting.getArea())
-                .location(setting.getLocation())
-                .price(setting.getPrice())
-                .enable(setting.getEnable())
-                .build();
-        Ward ward = wardMapper.findWard(setting.getWardId());
-        if (ward != null) {
-            notificationSettingInfo.setWard(ward.getName());
-        }
-        District district = districtMapper.findDistrict(setting.getDistrictId());
-        if (district != null) {
-            notificationSettingInfo.setDistrict(district.getName());
-        }
-        RoomType roomType = roomTypeMapper.find(setting.getRoomTypeId());
-        if (roomType != null) {
-            notificationSettingInfo.setRoomType(roomType.getName());
-        }
-        return notificationSettingInfo;
+        return setting;
     }
 
+    @Async("threadPoolTaskExecutor")
     @Override
     public boolean createNotificationSetting(NotificationSetting notificationSetting) {
         if (Utils.isNotEmpty(notificationSettingMapper.findByUser(notificationSetting.getUserId()))) {
@@ -107,8 +85,9 @@ public class NotificationServiceImpl implements NotificationService {
     public boolean updateNotificationSetting(NotificationSetting update) {
         NotificationSetting record = notificationSettingMapper.findByUser(update.getUserId());
         if (record != null) {
-            if (update.getArea() > 0) {
-                record.setArea(update.getArea());
+            if (update.getMaxArea() > 0) {
+                record.setMaxArea(update.getMaxArea());
+                record.setMinArea(update.getMinArea());
             }
             if (update.getDistrictId() > 0) {
                 record.setDistrictId(update.getDistrictId());
@@ -116,8 +95,9 @@ public class NotificationServiceImpl implements NotificationService {
             if (update.getWardId() > 0) {
                 record.setWardId(update.getWardId());
             }
-            if (update.getPrice() > 0) {
-                record.setPrice(update.getPrice());
+            if (update.getMaxPrice() > 0) {
+                record.setMaxPrice(update.getMaxPrice());
+                record.setMinPrice(update.getMinPrice());
             }
             if (update.getRoomTypeId() > 0) {
                 record.setRoomTypeId(update.getRoomTypeId());
@@ -180,13 +160,13 @@ public class NotificationServiceImpl implements NotificationService {
                 return false;
             }
         }
-        if (setting.getPrice() > 0) {
-            if (postRequest.getPrice() < setting.getPrice() * 0.8 || postRequest.getPrice() > setting.getPrice() * 1.2) {
+        if (setting.getMaxPrice() > 0) {
+            if (postRequest.getPrice() < setting.getMinPrice() || postRequest.getPrice() > setting.getMaxPrice()) {
                 return false;
             }
         }
-        if (setting.getArea() > 0) {
-            if (postRequest.getArea() < setting.getArea() * 0.8 || postRequest.getArea() > setting.getArea() * 1.2) {
+        if (setting.getMaxArea() > 0) {
+            if (postRequest.getArea() < setting.getMinArea() || postRequest.getArea() > setting.getMaxArea()) {
                 return false;
             }
         }

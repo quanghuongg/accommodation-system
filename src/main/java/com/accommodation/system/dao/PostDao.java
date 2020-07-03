@@ -6,6 +6,7 @@ import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface PostDao {
     Post find(String id) throws IOException;
@@ -22,6 +23,6 @@ public interface PostDao {
 
     void updatePost(PostRequest postRequest) throws IOException;
 
-    void updateImage( String postId, int first) throws IOException;
+    void updateImage( String postId, List<String> images) throws IOException;
 
 }

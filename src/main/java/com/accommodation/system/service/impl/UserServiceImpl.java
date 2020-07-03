@@ -30,6 +30,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -253,7 +254,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void uploadImages(int userId, String postId, MultipartFile[] files) throws ApiServiceException {
         int first = 0;
+        String host = "https://huongnq.s3-ap-southeast-1.amazonaws.com/";
         try {
+            List<String> images = new ArrayList<>();
             String strPath = Constant.FileUploader.PATH_IMAGES + "/" + postId.replaceAll("-", "");
             for (MultipartFile file : files) {
                 first = (int) (Math.random() * 1000000);
@@ -261,8 +264,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 File fileUpload = new File(fileName);
                 ImageIO.write(handleImage(file.getInputStream()), "jpg", fileUpload);
                 amazonS3Service.uploadFile(strPath + "/" + fileName, fileUpload);
+                images.add(host + strPath + "/" + fileName);
             }
-            postDao.updateImage(postId, first);
+            postDao.updateImage(postId, images);
 
         } catch (IOException e) {
             e.printStackTrace();

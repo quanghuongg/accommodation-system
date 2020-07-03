@@ -24,9 +24,17 @@ public class SearchInput extends BaseModel {
 
     private long price;
 
+    private long minPrice;
+
+    private long maxPrice;
+
     private String location;
 
     private int area;
+
+    private int minArea;
+
+    private int maxArea;
 
     private int roomTypeId;
 

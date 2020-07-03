@@ -109,4 +109,8 @@ public class Constant {
 
         }
     }
+
+    public static final class Logging {
+        public static final String[] LOGGING_IGNORE = ConfigurationLoader.getInstance().getAsString("logging.ignore", "").split(";");
+    }
 }

@@ -16,7 +16,7 @@ public interface NotificationService {
 
     SearchResult listNotification(int userId);
 
-    NotificationSettingInfo getNotificationSetting(int userId);
+    NotificationSetting getNotificationSetting(int userId);
 
     boolean createNotificationSetting(NotificationSetting notificationSetting);
 

@@ -98,6 +98,10 @@ public class PostDaoImpl implements PostDao {
         searchSourceBuilder.trackTotalHits(true);
         BoolQueryBuilder mainQueryBuilder = new BoolQueryBuilder();
 
+
+        mainQueryBuilder.filter(QueryBuilders.termQuery(Constant.Post.JsonField.STATUS,
+                1));
+
         if (searchInput.getUserId() > 0) {
             buildUserQuery(searchInput.getUserId(), mainQueryBuilder);
         }
@@ -311,6 +315,19 @@ public class PostDaoImpl implements PostDao {
                 .field("price", postRequest.getPrice())
                 .field("title", postRequest.getTitle())
                 .field("description", postRequest.getDescription())
+                .endObject());
+        this.esClient.update(updateRequest).actionGet();
+    }
+
+    @Override
+    public void updateStatus(PostRequest postRequest) throws IOException {
+        UpdateRequest updateRequest = new UpdateRequest();
+        updateRequest.index(indexName);
+        updateRequest.type("_doc");
+        updateRequest.id(postRequest.getPostId());
+        updateRequest.doc(jsonBuilder()
+                .startObject()
+                .field("status", postRequest.getStatus())
                 .endObject());
         this.esClient.update(updateRequest).actionGet();
     }

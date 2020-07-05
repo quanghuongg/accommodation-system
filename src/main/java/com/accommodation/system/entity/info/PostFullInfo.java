@@ -40,6 +40,8 @@ public class PostFullInfo extends BaseModel {
 
     private String avatarUserPost;
 
+    private Integer status;
+
     List<String> images = new LinkedList<>();
 
     List<CommentInfo> commentInfos = new ArrayList<>();

@@ -25,4 +25,6 @@ public class PostRequest extends BaseModel {
     private int wardId;
 
     private int area;
+
+    private Integer status;
 }

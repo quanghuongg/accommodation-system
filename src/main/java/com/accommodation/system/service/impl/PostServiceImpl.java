@@ -77,6 +77,7 @@ public class PostServiceImpl implements PostService {
                 .wardId(postRequest.getWardId())
                 .area(postRequest.getArea())
                 .title(postRequest.getTitle())
+                .status(1)
                 .build();
         return postDao.createPost(post);
     }
@@ -111,7 +112,11 @@ public class PostServiceImpl implements PostService {
         RoomType roomType = roomTypeMapper.find(post.getRoomTypeId());
         if (Utils.isNotEmpty(roomType))
             postFullInfo.setRoomType(roomType.getName());
-
+        if (post.getStatus() == null) {
+            postFullInfo.setStatus(1);
+        } else {
+            postFullInfo.setStatus(post.getStatus());
+        }
         postFullInfo.setTitle(post.getTitle());
         postFullInfo.setPrice(post.getPrice());
         if (Utils.isNotEmpty(post.getImages())) {
@@ -136,6 +141,16 @@ public class PostServiceImpl implements PostService {
             throw new ApiServiceException("post not found");
         }
         postDao.updatePost(postRequest);
+    }
+
+    @Override
+    public void updatePostStatus(int userId, PostRequest postRequest) throws ApiServiceException, IOException {
+        String postId = postRequest.getPostId();
+        Post post = postDao.findByUser(postId, userId);
+        if (Utils.isEmpty(post)) {
+            throw new ApiServiceException("post not found");
+        }
+        postDao.updateStatus(postRequest);
     }
 
     @Override

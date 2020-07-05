@@ -24,6 +24,8 @@ public interface PostService {
 
     void updatePost(int userId, PostRequest postRequest) throws ApiServiceException, IOException;
 
+    void updatePostStatus(int userId, PostRequest postRequest) throws ApiServiceException, IOException;
+
     void deletePost(int userId, String postId) throws IOException, ApiServiceException;
 
     MyPost viewMyPost(String postId) throws IOException;

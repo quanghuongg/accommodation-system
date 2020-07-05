@@ -207,7 +207,7 @@ public class NotificationServiceImpl implements NotificationService {
                             .postId(comment.getPostId())
                             .build())
                     .notification(NotificationMessage.Notification.builder()
-                            .body("Mô tả: " + content + "...")
+                            .body("😄: " + content + "...")
                             .color("green")
                             .priority("high")
                             .title(postUser + " bình luận về bài đăng của bạn.")

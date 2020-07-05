@@ -48,9 +48,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry());
+        http.sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//        http.sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry());
         // Pages to be permitted (NO ROLE)
-        http.authorizeRequests().antMatchers("/", "/login", "/logout", "/register", "/get-token","/home/*",
+        http.authorizeRequests().antMatchers("/", "/login", "/logout", "/register", "/get-token", "/home/*",
                 "/confirm-register", "/reset-password", "/social-login").permitAll();
 
         http.cors().and().csrf().disable()

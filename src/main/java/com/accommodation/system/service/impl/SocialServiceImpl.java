@@ -1,5 +1,6 @@
 package com.accommodation.system.service.impl;
 
+import com.accommodation.system.entity.User;
 import com.accommodation.system.entity.model.SocialAccountInfo;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.security.TokenProvider;
@@ -7,6 +8,7 @@ import com.accommodation.system.service.SocialService;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.ServiceUtils;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -70,33 +72,27 @@ public class SocialServiceImpl implements SocialService {
 
     @Override
     public String googleLogin(SocialAccountInfo socialAccountInfo) throws FirebaseAuthException, ApiServiceException {
-//        UserRecord firebaseUser = ServiceUtils.getUserRecordByFirebaseIdToken(socialAccountInfo.getIdToken());
-//        if (firebaseUser == null) {
-//            log.error("Login google fail because firebaseUser null !");
-//            throw new ApiServiceException("Login fail");
-//        }
-//        com.google.firebase.auth.UserInfo firebaseUserInfo = firebaseUser.getProviderData()[0];
-//        String googleUid = firebaseUserInfo.getUid();
-//        UserInfo currentUser = (UserInfo) userService.findByUsername(googleUid);
-//        if (currentUser == null) {
-//            log.info("Add new user google!");
-//            currentUser = new UserInfo();
-//            currentUser.setGoogleUid(googleUid);
-//            currentUser.setPassword(googleUid);
-//            currentUser.setEmail(firebaseUserInfo.getEmail());
-//            currentUser.setFullName(firebaseUserInfo.getDisplayName());
-//            currentUser.setAvatar(firebaseUserInfo.getPhotoUrl());
-//            currentUser.setRoleId(socialAccountInfo.getRoleId());
-////            int userId = userService.save(currentUser);
-//            int userId = 0;
-//            if (userId == 0 || String.valueOf(userId).equals("null")) {
-//                log.error("Login by social google fail because add new user fail!");
-//                throw new ApiServiceException("Login fail");
-//            }
-//            log.info("Add new user google  success {}!", currentUser.getFullName());
-//        }
-//        return currentUser.getGoogleUid();
-        return null;
+        UserRecord firebaseUser = ServiceUtils.getUserRecordByFirebaseIdToken(socialAccountInfo.getIdToken());
+        if (firebaseUser == null) {
+            log.error("Id_token invalid !");
+            throw new ApiServiceException("Login fail");
+        }
+        com.google.firebase.auth.UserInfo firebaseUserInfo = firebaseUser.getProviderData()[0];
+        String googleUid = firebaseUserInfo.getUid();
+        User googleUser = userService.findByUsername(googleUid);
+        if (googleUser == null) {
+            log.info("Add new user google!");
+            googleUser = new User();
+            googleUser.setUsername(googleUid);
+            googleUser.setPassword(ServiceUtils.encodePassword(googleUid));
+            googleUser.setEmail(firebaseUserInfo.getEmail());
+            googleUser.setDisplayName(firebaseUserInfo.getDisplayName());
+            googleUser.setAvatar(firebaseUserInfo.getPhotoUrl());
+            googleUser.setPhone(firebaseUserInfo.getPhoneNumber());
+            userService.save(googleUser);
+            log.info("Add new user google  success {}!", googleUser.getDisplayName());
+        }
+        return googleUser.getUsername();
     }
 
     @Override

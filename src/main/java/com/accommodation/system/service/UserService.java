@@ -16,6 +16,9 @@ public interface UserService {
 
     int save(RegisterRequest user);
 
+    int save(User user);
+
+
     void update(User existedUser, User user) throws ApiServiceException;
 
     void update(User user) throws ApiServiceException;

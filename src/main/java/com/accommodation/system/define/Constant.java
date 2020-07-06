@@ -115,4 +115,8 @@ public class Constant {
     public static final class Logging {
         public static final String[] LOGGING_IGNORE = ConfigurationLoader.getInstance().getAsString("logging.ignore", "").split(";");
     }
+
+    public class FirebaseProject {
+        public static final String SERVICE_ACCOUNT_FILE_NAME = "doantotnghiep-2a3f4-firebase-adminsdk-l04p9-5914e07409.json";
+    }
 }

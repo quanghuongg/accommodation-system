@@ -99,6 +99,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public int save(User user) {
+        user.setStatus(1);
+        user.setCreatedAt(System.currentTimeMillis());
+        userMapper.insertUser(user);
+        Role role = userMapper.findRoleById(1);
+        UserRole userRole = new UserRole(user.getId(), role.getId());
+        userMapper.insertUserRole(userRole);
+        log.info("Create user {} success!", user.getUsername());
+        return user.getId();
+    }
+
+    @Override
     public void update(User existedUser, User user) throws ApiServiceException {
         if (ServiceUtils.isNotEmpty(user.getDisplayName())) {
             existedUser.setDisplayName(user.getDisplayName());

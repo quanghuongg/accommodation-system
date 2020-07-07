@@ -23,7 +23,11 @@ public interface NotificationSettingMapper {
             @Result(column = "updated_at", property = "updatedAt"),
             @Result(column = "enable", property = "enable"),
     })
-    List<NotificationSetting> findNotificationSetting(int district_id);
+    List<NotificationSetting> findNotificationSettingByDistrict(int district_id);
+
+    @Select("SELECT * FROM notification_setting WHERE  enable =1")
+    @ResultMap("NotificationSettingObject")
+    List<NotificationSetting> findNotificationSetting();
 
 
     @Insert("insert into notification_setting(user_id,ward_id,district_id,min_area,max_area,min_price,max_price,location,room_type_id,created_at,updated_at,enable) " +

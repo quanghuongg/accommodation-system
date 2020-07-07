@@ -1,0 +1,16 @@
+{
+  "web": {
+    "client_id": "649195066861-l3kdb6478u61317jvt0vrn9qdaspufjo.apps.googleusercontent.com",
+    "project_id": "newprj-1537943071205",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret": "sLXQbWWBReQq91i6NvUSr1Yq",
+    "redirect_uris": [
+      "https://hoaidien93.github.io/"
+    ],
+    "javascript_origins": [
+      "https://hoaidien93.github.io"
+    ]
+  }
+}

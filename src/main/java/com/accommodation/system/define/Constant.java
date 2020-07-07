@@ -117,6 +117,6 @@ public class Constant {
     }
 
     public class FirebaseProject {
-        public static final String SERVICE_ACCOUNT_FILE_NAME = "doantotnghiep-2a3f4-firebase-adminsdk-l04p9-5914e07409.json";
+        public static final String SERVICE_ACCOUNT_FILE_NAME = "accommodation-app.json";
     }
 }

@@ -102,7 +102,6 @@ public class SocialServiceImpl implements SocialService {
         }
         String loginType = socialAccountInfo.getType();
         if (!loginType.equals("facebook") && !loginType.equals("google") || socialAccountInfo.getIdToken() == null) {
-            log.error("Login social fail because without login type social!");
             throw new ApiServiceException("Login type social invalid");
         }
     }

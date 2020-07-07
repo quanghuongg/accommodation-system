@@ -145,7 +145,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     List<Integer> listUserMatching(PostRequest postRequest) {
         List<Integer> userIds = new ArrayList<>();
-        List<NotificationSetting> list = notificationSettingMapper.findNotificationSetting(postRequest.getDistrictId());
+        List<NotificationSetting> list = notificationSettingMapper.findNotificationSetting();
         for (NotificationSetting notificationSetting : list) {
             if (isMatching(postRequest, notificationSetting)) {
                 userIds.add(notificationSetting.getUserId());
@@ -155,6 +155,11 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     boolean isMatching(PostRequest postRequest, NotificationSetting setting) {
+        if (setting.getDistrictId() > 0) {
+            if (postRequest.getDistrictId() != setting.getDistrictId()) {
+                return false;
+            }
+        }
         if (setting.getWardId() > 0) {
             if (postRequest.getWardId() != setting.getWardId()) {
                 return false;
@@ -167,12 +172,6 @@ public class NotificationServiceImpl implements NotificationService {
         }
         if (setting.getMaxArea() > 0) {
             if (postRequest.getArea() < setting.getMinArea() || postRequest.getArea() > setting.getMaxArea()) {
-                return false;
-            }
-        }
-
-        if (setting.getRoomTypeId() > 0) {
-            if (postRequest.getRoomTypeId() != setting.getRoomTypeId()) {
                 return false;
             }
         }

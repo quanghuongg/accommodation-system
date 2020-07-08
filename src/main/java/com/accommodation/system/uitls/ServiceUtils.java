@@ -19,6 +19,28 @@ import java.util.regex.Pattern;
 @Slf4j
 public class ServiceUtils {
 
+    public static UserRecord getUserRecordByFirebaseIdToken(String firebaseIdToken) throws FirebaseAuthException {
+        FirebaseToken decodedToken = decodeFirebaseIdToken(firebaseIdToken);
+        if (decodedToken == null) {
+            return null;
+        }
+        UserRecord userRecord = FirebaseAuth.getInstance().getUser(decodedToken.getUid());
+        return userRecord;
+    }
+
+    public static FirebaseToken decodeFirebaseIdToken(String firebaseIdToken) {
+        log.info("[Get GG User] Decode firebase token");
+        FirebaseToken decodedToken;
+        try {
+            decodedToken = FirebaseAuth.getInstance().verifyIdToken(firebaseIdToken);
+        } catch (Exception e) {
+            log.error("[Get GG User] Fail verifyIdToken, {}", e.getMessage());
+            return null;
+        }
+
+        return decodedToken;
+    }
+
     public static File multipartToFile(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());
         convFile.createNewFile();
@@ -116,25 +138,4 @@ public class ServiceUtils {
         return T.subList(fromIndex, Math.min(fromIndex + pageSize, T.size()));
     }
 
-    public static UserRecord getUserRecordByFirebaseIdToken(String firebaseIdToken) throws FirebaseAuthException {
-        FirebaseToken decodedToken;
-
-        try {
-            decodedToken = FirebaseAuth.getInstance().verifyIdToken(firebaseIdToken);
-        } catch (Exception e) {
-            log.error("Fail verifyIdToken");
-            e.printStackTrace();
-            return null;
-        }
-
-        String uid = decodedToken.getUid();
-
-        log.info("User id {}", uid);
-
-        UserRecord userRecord = FirebaseAuth.getInstance().getUser(uid);
-
-        log.info("Firebase user record {}", userRecord);
-
-        return userRecord;
-    }
 }

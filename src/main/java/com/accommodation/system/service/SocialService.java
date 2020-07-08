@@ -12,4 +12,6 @@ public interface SocialService {
     void checkValidInput(SocialAccountInfo socialAccountInfo) throws ApiServiceException;
 
     String generateToken(String userSocial);
+
+    String phoneLogin(String firebaseIdToken) throws ApiServiceException;
 }

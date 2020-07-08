@@ -18,7 +18,6 @@ public interface UserService {
 
     int save(User user);
 
-
     void update(User existedUser, User user) throws ApiServiceException;
 
     void update(User user) throws ApiServiceException;

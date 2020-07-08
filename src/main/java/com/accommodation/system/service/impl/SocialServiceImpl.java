@@ -7,8 +7,15 @@ import com.accommodation.system.security.TokenProvider;
 import com.accommodation.system.service.SocialService;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.ServiceUtils;
+import com.accommodation.system.uitls.Utils;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+import com.restfb.DefaultFacebookClient;
+import com.restfb.FacebookClient;
+import com.restfb.Version;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,39 +41,27 @@ public class SocialServiceImpl implements SocialService {
 
     @Override
     public String facebookLogin(SocialAccountInfo socialAccountInfo) throws ApiServiceException {
-//        User facebookUser = null;
-//        try {
-//            FacebookClient facebookClient = new DefaultFacebookClient(socialAccountInfo.getIdToken(), Version.VERSION_4_0);
-//            facebookUser = facebookClient.fetchObject("me", User.class);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new ApiServiceException("Login fail");
-//        }
-//
-//        if (facebookUser == null) {
-//            log.error("Login facebook fail because facebookUser null!");
-//            throw new ApiServiceException("Login fail");
-//        }
-//
-//        String facebookUserId = facebookUser.getId();
-//        UserInfo currentUser = (UserInfo) userService.findByUsername(facebookUserId);
-//        if (currentUser == null) {
-//            log.info("Add new user facebook!");
-//            currentUser = new UserInfo();
-//            currentUser.setFacebookUid(facebookUserId);
-//            currentUser.setPassword(facebookUserId);
-//            currentUser.setRoleId(socialAccountInfo.getRoleId());
-//            currentUser.setFullName(facebookUser.getName());
-////            int userId = userService.save(currentUser);
-//            int userId =0;
-//            if (userId == 0 || String.valueOf(userId).equals("null")) {
-//                log.error("Login by social facebook fail because add new user fail!");
-//                throw new ApiServiceException("Login fail");
-//            }
-//            log.info("Add new user facebook  success {}!", currentUser.getFullName());
-//        }
-//        return currentUser.getFacebookUid();
-        return null;
+        User facebookUser = null;
+        try {
+            FacebookClient facebookClient = new DefaultFacebookClient(socialAccountInfo.getIdToken(), Version.VERSION_4_0);
+            facebookUser = facebookClient.fetchObject("me", User.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ApiServiceException("Login fail");
+        }
+        if (facebookUser == null) {
+            throw new ApiServiceException("Login fail");
+        }
+        String facebookUserId = facebookUser.getUsername();
+        User fbUser = userService.findByUsername(facebookUserId);
+        if (Utils.isEmpty(fbUser)) {
+            fbUser = new User();
+            fbUser.setUsername(facebookUserId);
+            fbUser.setPassword(ServiceUtils.encodePassword(facebookUserId));
+            fbUser.setDisplayName(facebookUser.getDisplayName());
+            userService.save(fbUser);
+        }
+        return fbUser.getUsername();
     }
 
 
@@ -104,6 +99,33 @@ public class SocialServiceImpl implements SocialService {
         if (!loginType.equals("facebook") && !loginType.equals("google") || socialAccountInfo.getIdToken() == null) {
             throw new ApiServiceException("Login type social invalid");
         }
+    }
+
+
+    @Override
+    public String phoneLogin(String firebaseIdToken) throws ApiServiceException {
+        FirebaseToken firebaseToken = ServiceUtils.decodeFirebaseIdToken(firebaseIdToken);
+        if (firebaseToken == null) {
+            throw new ApiServiceException(" Can't get firebaseUser!");
+        }
+        String phoneString = firebaseToken.getClaims().get("phone_number").toString();
+        PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+        long phoneNumber = 0;
+        try {
+            Phonenumber.PhoneNumber numberProto = phoneNumberUtil.parse(phoneString, "");
+            phoneNumber = numberProto.getNationalNumber();
+        } catch (Exception e) {
+            throw new ApiServiceException("Can't get country code!");
+        }
+        User user = userService.findByUsername(String.valueOf(phoneNumber));
+        if (Utils.isEmpty(user)) {
+            User userAdd = new User();
+            userAdd.setPhone(phoneString);
+            userAdd.setPassword(ServiceUtils.encodePassword(String.valueOf(phoneNumber)));
+            userAdd.setDisplayName(phoneString);
+            userService.save(userAdd);
+        }
+        return String.valueOf(phoneNumber);
     }
 
     @Override

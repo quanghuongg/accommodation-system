@@ -56,4 +56,9 @@ public class ContextPath {
 
         }
     }
+
+    public static class Login {
+        public static final String SOCIAL_LOGIN = "/social-login";
+        public static final String PHONE_LOGIN = "/phone-login";
+    }
 }

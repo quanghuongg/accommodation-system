@@ -18,7 +18,10 @@ public class Constant {
 
 
     public static final String HOST_STATIC_WEB  ="http://huongnq.s3-website-ap-southeast-1.amazonaws.com/";
+    public static final String HOST_STATIC_WEB_NEW  ="http://huongnq4.s3-website-ap-southeast-1.amazonaws.com/";
+
     public static final String BUCKET_NAME ="huongnq";
+    public static final String BUCKET_NAME_NEW ="huongnq4";
 
     public static final String SDF_FORMAT = "yyyy/MM/dd HH:mm:ss";
     public static final int FAILED_CODE = 1;

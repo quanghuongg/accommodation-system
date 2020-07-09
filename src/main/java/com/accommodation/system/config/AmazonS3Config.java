@@ -24,6 +24,10 @@ public class AmazonS3Config {
                 "AKIA2DIUBXATOSND4UJS",
                 "QbE/m91mNOei8X6+9z2M78ljZMH7IFDCXTNedsp/"
         );
+//                AWSCredentials credentials = new BasicAWSCredentials(
+//                "AKIA5FTVWSYGWC6KQPPV",
+//                "yIKbzqNwhlv74PT5qYNeVvMKjvsRbsj9r2SVCqQL"
+//        );
         return AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))

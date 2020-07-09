@@ -210,7 +210,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             File fileUpload = new File(fileName);
             ImageIO.write(handleImage(file.getInputStream()), "jpg", fileUpload);
             amazonS3Service.uploadFile(strPath + "/" + fileName, fileUpload);
-            String avatarPathToSave = "https://huongnq.s3-ap-southeast-1.amazonaws.com/avatars/" + fileName;
+            String avatarPathToSave = Constant.HOST_STATIC_WEB + "avatars/" + fileName;
             currentUser.setAvatar(avatarPathToSave);
             userMapper.update(currentUser);
             return avatarPathToSave;

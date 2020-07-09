@@ -7,6 +7,8 @@ import com.accommodation.system.security.TokenProvider;
 import com.accommodation.system.service.SocialService;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.ServiceUtils;
+import com.accommodation.system.uitls.Utils;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import lombok.extern.slf4j.Slf4j;
@@ -111,5 +113,27 @@ public class SocialServiceImpl implements SocialService {
     public String generateToken(String userSocial) {
         Authentication socialAuthentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userSocial, userSocial, Collections.emptyList()));
         return jwtTokenProvider.generateToken(socialAuthentication);
+    }
+
+    @Override
+    public String googleLoginNew(GoogleIdToken.Payload payload) {
+        String username = payload.getSubject();
+        User user = userService.findByUsername(username);
+        if (Utils.isEmpty(user)) {
+            String email = payload.getEmail();
+            String name = (String) payload.get("name");
+            String pictureUrl = (String) payload.get("picture");
+            String locale = (String) payload.get("locale");
+            User googleUser = new User();
+            googleUser.setUsername(username);
+            googleUser.setPassword(ServiceUtils.encodePassword(username));
+            googleUser.setEmail(email);
+            googleUser.setAvatar(pictureUrl);
+            googleUser.setAddress(locale);
+            googleUser.setDisplayName(name);
+            userService.save(googleUser);
+            log.info("Add new user google  success {}!", googleUser.getDisplayName());
+        }
+        return username;
     }
 }

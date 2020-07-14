@@ -39,7 +39,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping(value = {ContextPath.User.USER})
-@Api(tags = {"UserController API"})
 public class UserController extends EzContext {
 
     private final MailSendingService mailSendingService;

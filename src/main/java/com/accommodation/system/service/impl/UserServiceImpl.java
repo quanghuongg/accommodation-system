@@ -172,6 +172,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .username(user.getUsername())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
+                .phone(user.getPhone())
                 .build();
         Role role = findRoleByUserId(user.getId());
         userFullInfo.setRoleId(role.getId());

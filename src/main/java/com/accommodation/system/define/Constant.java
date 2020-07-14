@@ -22,7 +22,7 @@ public class Constant {
     public static final boolean ALLOW_NO_INDICES = false;
     public static final boolean EXPAND_TO_OPEN_INDICES = true;
     public static final boolean EXPAND_TO_CLOSED_INDICES = true;
-
+    public static final String DEFAULT_AVATAR = "https://huongnq4.s3-ap-southeast-1.amazonaws.com/avatars/defaut.jpg";
     public static final String SDF_FORMAT = "yyyy/MM/dd HH:mm:ss";
     public static final int FAILED_CODE = 1;
     public static final String LOGIN_FAIL = "login fail";

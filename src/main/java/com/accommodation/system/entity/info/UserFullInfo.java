@@ -31,4 +31,6 @@ public class UserFullInfo extends BaseModel {
     private String avatar;
 
     private int roleId;
+
+    private String phone;
 }

@@ -3,7 +3,6 @@ package com.accommodation.system.config;
 import com.accommodation.system.controller.UserController;
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -51,8 +50,8 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.any())
                 .paths(paths())
                 .build()
-                .securitySchemes(Lists.newArrayList(apiKey()))
-                .securityContexts(Lists.newArrayList(securityContext()))
+                .securitySchemes(newArrayList(apiKey()))
+                .securityContexts(newArrayList(securityContext()))
                 .apiInfo(DEFAULT_API_INFO)
                 .pathMapping("/")
                 .directModelSubstitute(LocalDate.class, String.class)
@@ -89,7 +88,7 @@ public class SwaggerConfig {
                 = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        return Lists.newArrayList(
+        return newArrayList(
                 new SecurityReference("JWT", authorizationScopes));
     }
 

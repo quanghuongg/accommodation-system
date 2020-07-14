@@ -4,6 +4,13 @@ import com.accommodation.system.uitls.ConfigurationLoader;
 
 public class Constant {
 
+    public static final String ELASTIC_HOST = ConfigurationLoader.getInstance().getAsString("elastic.host", "13.228.25.205");
+    public static final String ACCESS_KEY = ConfigurationLoader.getInstance().getAsString("access.key", "AKIA2DIUBXATOSND4UJS");
+    public static final String SECRET_KEY = ConfigurationLoader.getInstance().getAsString("secret.key", "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");
+    public static final String HOST_STATIC = ConfigurationLoader.getInstance().getAsString("host.static", "http://huongnq.s3-website-ap-southeast-1.amazonaws.com/");
+    public static final String BUCKET_NAME = ConfigurationLoader.getInstance().getAsString("bucket.name", "huongnq");
+
+
     public static final String FIREBASE_SEND_MESSAGE_ADDRESS = ConfigurationLoader.getInstance().getAsString("firebase.send.message.address", "https://fcm.googleapis.com/fcm/send");
     public static final String FIREBASE_LEGACY_SERVER_KEY = ConfigurationLoader.getInstance().getAsString("firebase.legacy.server.key", "AAAArG3WICw:APA91bF5w6MgDfwP91POgHlX6tHxDNb4MfIP1gioR1ZHKKTMZF16zAicsCVmabBedBiOHdthZpRHlFnG4FY5ktU1DB5xR1s7WdsQpzZlmhH6a98b0cTdcnNMfjp6VYVzxRLSO-o5NN80");
     public static final String FIREBASE_TOPIC_SUBSCRIBE_ADDRESS = ConfigurationLoader.getInstance().getAsString("firebase.topic.subscribe.address", "https://iid.googleapis.com/iid/v1:batchAdd");
@@ -15,13 +22,6 @@ public class Constant {
     public static final boolean ALLOW_NO_INDICES = false;
     public static final boolean EXPAND_TO_OPEN_INDICES = true;
     public static final boolean EXPAND_TO_CLOSED_INDICES = true;
-
-
-    public static final String HOST_STATIC_WEB  ="http://huongnq.s3-website-ap-southeast-1.amazonaws.com/";
-    public static final String HOST_STATIC_WEB_NEW  ="http://huongnq4.s3-website-ap-southeast-1.amazonaws.com/";
-
-    public static final String BUCKET_NAME ="huongnq";
-    public static final String BUCKET_NAME_NEW ="huongnq4";
 
     public static final String SDF_FORMAT = "yyyy/MM/dd HH:mm:ss";
     public static final int FAILED_CODE = 1;
@@ -63,6 +63,7 @@ public class Constant {
             public static final String ROLE_ID = "role_id";
         }
     }
+
     public static final class FileUploader {
         public static final String PATH_AVATARS = ConfigurationLoader.getInstance().getAsString("path.avatars", "avatars");
         public static final String PATH_IMAGES = ConfigurationLoader.getInstance().getAsString("path.avatars", "images");
@@ -79,6 +80,7 @@ public class Constant {
             public static final String SUBSCRIBE = "/subscribe";
             public static final String UNSUBSCRIBE = "/unsubscribe";
         }
+
         public static final class ReadType {
             public static final int READ = 1;
             public static final int UNREAD = 0;
@@ -119,7 +121,4 @@ public class Constant {
         public static final String[] LOGGING_IGNORE = ConfigurationLoader.getInstance().getAsString("logging.ignore", "").split(";");
     }
 
-    public class FirebaseProject {
-        public static final String SERVICE_ACCOUNT_FILE_NAME = "doantotnghiep-2a3f4-firebase-adminsdk-l04p9-5914e07409.json";
-    }
 }

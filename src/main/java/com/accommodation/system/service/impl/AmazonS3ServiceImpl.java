@@ -38,7 +38,7 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
         List<S3ObjectSummary> summaries = listing.getObjectSummaries();
         List<String> list = new ArrayList<>();
         for (S3ObjectSummary objectSummary : summaries) {
-            list.add(Constant.HOST_STATIC_WEB + objectSummary.getKey());
+            list.add(Constant.HOST_STATIC + objectSummary.getKey());
         }
         return list;
     }

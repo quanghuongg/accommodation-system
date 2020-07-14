@@ -1,5 +1,6 @@
 package com.accommodation.system.config;
 
+import com.accommodation.system.define.Constant;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -21,13 +22,10 @@ public class AmazonS3Config {
     @Bean
     public AmazonS3 initAmazonS3() {
         AWSCredentials credentials = new BasicAWSCredentials(
-                "AKIA2DIUBXATOSND4UJS",
-                "QbE/m91mNOei8X6+9z2M78ljZMH7IFDCXTNedsp/"
+                Constant.ACCESS_KEY,
+                Constant.SECRET_KEY
         );
-//                AWSCredentials credentials = new BasicAWSCredentials(
-//                "AKIA5FTVWSYGWC6KQPPV",
-//                "yIKbzqNwhlv74PT5qYNeVvMKjvsRbsj9r2SVCqQL"
-//        );
+
         return AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))

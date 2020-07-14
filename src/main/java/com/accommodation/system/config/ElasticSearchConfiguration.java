@@ -1,5 +1,6 @@
 package com.accommodation.system.config;
 
+import com.accommodation.system.define.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
@@ -17,7 +18,7 @@ public class ElasticSearchConfiguration {
     @Bean
     public Client client() {
         try {
-            String host = "ec2-13-228-25-205.ap-southeast-1.compute.amazonaws.com";
+            String host = Constant.ELASTIC_HOST;
             Settings settings = Settings.builder().put("cluster.name", "elasticsearch")
                     .put("client.transport.ping_timeout", "5s")
                     .put("transport.connect_timeout", "5s")

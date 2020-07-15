@@ -59,8 +59,13 @@ public class SocialLoginController {
 
     @PostMapping
     @RequestMapping("/phone-code")
-    public void sendSms(@Valid @RequestBody SmsRequest smsRequest) {
+    public ResponseEntity<?> sendSms(@Valid @RequestBody SmsRequest smsRequest) {
         smsService.sendSms(smsRequest);
+        Response response = Response.builder()
+                .code(Constant.SUCCESS_CODE)
+                .message(Constant.SUCCESS_MESSAGE)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/phone-login")

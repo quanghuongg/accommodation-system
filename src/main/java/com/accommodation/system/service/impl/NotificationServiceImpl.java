@@ -138,6 +138,7 @@ public class NotificationServiceImpl implements NotificationService {
                         .createdAt(System.currentTimeMillis())
                         .message("Có thông tin phòng trọ phù hợp với bạn!")
                         .postId(postId)
+                        .type(0)
                         .build());
             }
         }
@@ -219,6 +220,7 @@ public class NotificationServiceImpl implements NotificationService {
                     .createdAt(System.currentTimeMillis())
                     .message(postUser + " bình luận về bài đăng của bạn.")
                     .postId(comment.getPostId())
+                    .type(1)
                     .build());
         }
     }

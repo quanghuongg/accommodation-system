@@ -30,4 +30,6 @@ public class Notifications extends BaseModel {
     private long createdAt;
 
     private long updatedAt;
+
+    private int type;
 }

@@ -16,12 +16,13 @@ public interface NotificationsMapper {
             @Result(column = "read_at", property = "readAt"),
             @Result(column = "created_at", property = "createdAt"),
             @Result(column = "updated_at", property = "updatedAt"),
+            @Result(column = "type", property = "type"),
     })
     List<Notifications> listNotificationByUserId(@Param("userId") int userId);
 
 
-    @Insert("insert into notifications(user_id,post_id,info,message,read_at,created_at,updated_at) " +
-            "values(#{userId},#{postId},#{info},#{message},#{readAt},#{createdAt},#{updatedAt})")
+    @Insert("insert into notifications(user_id,post_id,info,message,read_at,created_at,updated_at,type) " +
+            "values(#{userId},#{postId},#{info},#{message},#{readAt},#{createdAt},#{updatedAt},#{type})")
     @SelectKey(statement = "SELECT LAST_INSERT_ID()", keyProperty = "id",
             before = false, resultType = Integer.class)
     @ResultMap("NotificationObject")

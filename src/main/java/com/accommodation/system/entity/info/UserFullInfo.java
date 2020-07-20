@@ -33,4 +33,6 @@ public class UserFullInfo extends BaseModel {
     private int roleId;
 
     private String phone;
+
+    private String address;
 }

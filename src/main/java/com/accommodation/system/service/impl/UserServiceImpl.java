@@ -90,6 +90,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .build();
 
         user.setPassword(ServiceUtils.encodePassword(registerInfo.getPassword()));
+        user.setAddress("Hồ Chí Minh");
         userMapper.insertUser(user);
         Role role = userMapper.findRoleById(registerInfo.getRoleId());
         UserRole userRole = new UserRole(user.getId(), role.getId());
@@ -100,6 +101,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public int save(User user) {
+        user.setAddress("Hồ Chí Minh");
         user.setStatus(1);
         user.setCreatedAt(System.currentTimeMillis());
         userMapper.insertUser(user);
@@ -173,6 +175,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
                 .phone(user.getPhone())
+                .address(user.getAddress())
                 .build();
         Role role = findRoleByUserId(user.getId());
         userFullInfo.setRoleId(role.getId());

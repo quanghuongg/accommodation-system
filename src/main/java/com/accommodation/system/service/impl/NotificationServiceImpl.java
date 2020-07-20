@@ -1,6 +1,7 @@
 package com.accommodation.system.service.impl;
 
 import com.accommodation.system.dao.PostDao;
+import com.accommodation.system.define.Constant;
 import com.accommodation.system.entity.*;
 import com.accommodation.system.entity.model.NotificationMessage;
 import com.accommodation.system.entity.model.SearchResult;
@@ -130,7 +131,7 @@ public class NotificationServiceImpl implements NotificationService {
                         .build()).build();
         for (Integer id : userIds) {
             if (id != userId) {
-                notificationMessage.setTo("/topics/Test");
+                notificationMessage.setTo(Constant.FIREBASE_USER_TOPIC_PATTERN + id);
                 FirebaseUtil.send(notificationMessage);
                 //Save notification MySQL
                 notificationsMapper.addNotification(Notifications.builder()
@@ -202,7 +203,7 @@ public class NotificationServiceImpl implements NotificationService {
             }
             //Send firebase
             NotificationMessage notificationMessage = NotificationMessage.builder()
-                    .to("/topics/Test")
+                    .to(Constant.FIREBASE_USER_TOPIC_PATTERN + post.getUserId())
                     .userId(comment.getUserId())
                     .data(NotificationMessage.Data.builder()
                             .postId(comment.getPostId())

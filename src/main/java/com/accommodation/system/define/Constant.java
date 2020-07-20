@@ -16,7 +16,7 @@ public class Constant {
     public static final String FIREBASE_TOPIC_SUBSCRIBE_ADDRESS = ConfigurationLoader.getInstance().getAsString("firebase.topic.subscribe.address", "https://iid.googleapis.com/iid/v1:batchAdd");
     public static final String FIREBASE_TOPIC_UNSUBSCRIBE_ADDRESS = ConfigurationLoader.getInstance().getAsString("firebase.topic.unsubscribe.address", "https://iid.googleapis.com/iid/v1:batchRemove");
 
-    public static final String FIREBASE_USER_TOPIC_PATTERN = ConfigurationLoader.getInstance().getAsString("firebase_user_topic_pattern", "/topics/orm.notification.user.%s");
+    public static final String FIREBASE_USER_TOPIC_PATTERN = ConfigurationLoader.getInstance().getAsString("firebase_user_topic_pattern", "/topics/notification.user.");
 
     public static final boolean IGNORE_UNAVAILABLE = true;
     public static final boolean ALLOW_NO_INDICES = false;

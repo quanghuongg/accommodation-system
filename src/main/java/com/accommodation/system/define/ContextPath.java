@@ -46,7 +46,7 @@ public class ContextPath {
         public static final String VIEW_DETAIL = "/view-detail";
         public static final String DELETE = "/delete";
         public static final String UPDATE = "/update";
-        public static final String UPDATE_STATUS= "/update-status";
+        public static final String UPDATE_STATUS= "/update/status";
 
 
         public static class Comment {

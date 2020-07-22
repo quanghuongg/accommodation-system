@@ -98,9 +98,9 @@ public class PostDaoImpl implements PostDao {
         searchSourceBuilder.trackTotalHits(true);
         BoolQueryBuilder mainQueryBuilder = new BoolQueryBuilder();
 
-
-        mainQueryBuilder.filter(QueryBuilders.termQuery(Constant.Post.JsonField.STATUS,
-                1));
+        if (searchInput.getUserId() == 0)
+            mainQueryBuilder.filter(QueryBuilders.termQuery(Constant.Post.JsonField.STATUS,
+                    1));
 
         if (searchInput.getUserId() > 0) {
             buildUserQuery(searchInput.getUserId(), mainQueryBuilder);

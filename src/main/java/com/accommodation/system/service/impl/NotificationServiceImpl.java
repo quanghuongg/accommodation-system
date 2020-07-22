@@ -192,37 +192,39 @@ public class NotificationServiceImpl implements NotificationService {
         Post post = postDao.find(comment.getPostId());
         if (Utils.isNotEmpty(post)) {
             int ownerPost = post.getUserId();
-            User user = userMapper.findByUserId(comment.getUserId());
-            String postUser = "Có người";
-            if (Utils.isNotEmpty(user)) {
-                postUser = user.getDisplayName();
+            if (comment.getUserId() != ownerPost) {
+                User user = userMapper.findByUserId(comment.getUserId());
+                String postUser = "Có người";
+                if (Utils.isNotEmpty(user)) {
+                    postUser = user.getDisplayName();
+                }
+                String content = comment.getContent();
+                if (content.length() > 50) {
+                    content.substring(0, 50);
+                }
+                //Send firebase
+                NotificationMessage notificationMessage = NotificationMessage.builder()
+                        .to(Constant.FIREBASE_USER_TOPIC_PATTERN + post.getUserId())
+                        .userId(comment.getUserId())
+                        .data(NotificationMessage.Data.builder()
+                                .postId(comment.getPostId())
+                                .build())
+                        .notification(NotificationMessage.Notification.builder()
+                                .body(" ✍️: " + content + "...")
+                                .color("green")
+                                .priority("high")
+                                .title(postUser + " bình luận về bài đăng của bạn.")
+                                .build()).build();
+                FirebaseUtil.send(notificationMessage);
+                //Save notification MySQL
+                notificationsMapper.addNotification(Notifications.builder()
+                        .userId(ownerPost)
+                        .createdAt(System.currentTimeMillis())
+                        .message(postUser + " bình luận về bài đăng của bạn.")
+                        .postId(comment.getPostId())
+                        .type(1)
+                        .build());
             }
-            String content = comment.getContent();
-            if (content.length() > 50) {
-                content.substring(0, 50);
-            }
-            //Send firebase
-            NotificationMessage notificationMessage = NotificationMessage.builder()
-                    .to(Constant.FIREBASE_USER_TOPIC_PATTERN + post.getUserId())
-                    .userId(comment.getUserId())
-                    .data(NotificationMessage.Data.builder()
-                            .postId(comment.getPostId())
-                            .build())
-                    .notification(NotificationMessage.Notification.builder()
-                            .body(" ✍️: " + content + "...")
-                            .color("green")
-                            .priority("high")
-                            .title(postUser + " bình luận về bài đăng của bạn.")
-                            .build()).build();
-            FirebaseUtil.send(notificationMessage);
-            //Save notification MySQL
-            notificationsMapper.addNotification(Notifications.builder()
-                    .userId(ownerPost)
-                    .createdAt(System.currentTimeMillis())
-                    .message(postUser + " bình luận về bài đăng của bạn.")
-                    .postId(comment.getPostId())
-                    .type(1)
-                    .build());
         }
     }
 }

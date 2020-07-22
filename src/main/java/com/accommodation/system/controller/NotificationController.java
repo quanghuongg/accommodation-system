@@ -66,9 +66,9 @@ public class NotificationController extends EzContext {
     @ResponseBody
     public ResponseEntity<?> createNotificationSetting(@RequestBody NotificationSetting notificationSetting) throws ApiServiceException {
         notificationSetting.setUserId(getUserId());
+        notificationService.createNotificationSetting(notificationSetting);
         Response responseObject = Response.builder()
                 .code(Constant.SUCCESS_CODE)
-                .data(notificationService.createNotificationSetting(notificationSetting))
                 .message(Constant.SUCCESS_MESSAGE)
                 .build();
         return new ResponseEntity<>(responseObject, HttpStatus.OK);

@@ -18,7 +18,7 @@ public interface NotificationService {
 
     NotificationSetting getNotificationSetting(int userId);
 
-    boolean createNotificationSetting(NotificationSetting notificationSetting);
+    void createNotificationSetting(NotificationSetting notificationSetting);
 
     boolean updateNotificationSetting(NotificationSetting notificationSetting);
 

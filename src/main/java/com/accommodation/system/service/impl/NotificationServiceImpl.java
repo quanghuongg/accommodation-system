@@ -74,12 +74,11 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Async("threadPoolTaskExecutor")
     @Override
-    public boolean createNotificationSetting(NotificationSetting notificationSetting) {
+    public void createNotificationSetting(NotificationSetting notificationSetting) {
         if (Utils.isNotEmpty(notificationSettingMapper.findByUser(notificationSetting.getUserId()))) {
-            return true;
+            return;
         }
         notificationSettingMapper.createNotificationSetting(notificationSetting);
-        return true;
     }
 
     @Override

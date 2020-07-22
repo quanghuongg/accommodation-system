@@ -1,10 +1,12 @@
 package com.accommodation.system.service.impl;
 
 import com.accommodation.system.define.Constant;
+import com.accommodation.system.entity.NotificationSetting;
 import com.accommodation.system.entity.PhoneCode;
 import com.accommodation.system.entity.User;
 import com.accommodation.system.entity.request.SmsRequest;
 import com.accommodation.system.mapper.PhoneCodeMapper;
+import com.accommodation.system.service.NotificationService;
 import com.accommodation.system.service.SmsSender;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.ServiceUtils;
@@ -14,7 +16,6 @@ import com.twilio.rest.api.v2010.account.MessageCreator;
 import com.twilio.type.PhoneNumber;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -23,7 +24,8 @@ import java.util.Random;
 @Slf4j
 public class TwilioSmsSender implements SmsSender {
 
-
+    @Autowired
+    private NotificationService notificationService;
     @Autowired
     PhoneCodeMapper codeMapper;
 
@@ -84,6 +86,13 @@ public class TwilioSmsSender implements SmsSender {
             phoneUser.setPhone(phone);
             userService.save(phoneUser);
             log.info("Add new user phone  success {}!", phoneUser.getDisplayName());
+            //add notification setting
+            NotificationSetting setting = NotificationSetting.builder()
+                    .createdAt(System.currentTimeMillis())
+                    .enable(0)
+                    .userId(phoneUser.getId())
+                    .build();
+            notificationService.createNotificationSetting(setting);
         }
         return username;
     }

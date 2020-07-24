@@ -6,6 +6,7 @@ import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.model.SearchResult;
 import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
+import com.accommodation.system.uitls.Highlighter;
 import com.accommodation.system.uitls.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -28,10 +29,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
@@ -57,11 +55,19 @@ public class PostDaoImpl implements PostDao {
     }
 
 
-    private List getSearchResultList(SearchHit[] searchHitArr) throws IOException {
+    private List<Post> getSearchResultList(SearchHit[] searchHitArr, Highlighter highlighter) throws IOException {
         List<Post> posts = new LinkedList<>();
         for (SearchHit searchHit : searchHitArr) {
             String source = searchHit.getSourceAsString();
             Post post = this.objectMapper.readValue(source, Post.class);
+            if (highlighter != null) {
+                String highlighterStr = highlighter.getHighlighted(post.getDescription());
+                String highlighterTitle = highlighter.getHighlighted(post.getTitle());
+                String highlighterLocation = highlighter.getHighlighted(post.getLocation());
+                post.setDescription(highlighterStr);
+                post.setTitle(highlighterTitle);
+                post.setLocation(highlighterLocation);
+            }
             posts.add(post);
         }
         return posts;
@@ -69,9 +75,17 @@ public class PostDaoImpl implements PostDao {
 
     public SearchResult getSearchResponse(SearchInput input, SearchHits searchHits) throws
             IOException {
+        Set<String> highlighters = new LinkedHashSet<>();
+        if (Utils.isNotEmpty(input.getLocation())) {
+            highlighters.addAll(Arrays.asList(input.getLocation().split(",")));
+        }
         long total = searchHits.getTotalHits().value;
         int count = searchHits.getHits().length;
-        List post = getSearchResultList(searchHits.getHits());
+        Highlighter highlighter = null;
+        if (highlighters.size() > 0) {
+            highlighter = new Highlighter(highlighters);
+        }
+        List<Post> post = getSearchResultList(searchHits.getHits(), highlighter);
         SearchResult searchResult = SearchResult.builder()
                 .total(total)
                 .count(count)
@@ -146,7 +160,11 @@ public class PostDaoImpl implements PostDao {
     }
 
     private void buildLocationQuery(String location, BoolQueryBuilder mainQueryBuilder) {
-        mainQueryBuilder.filter(QueryBuilders.matchPhraseQuery(Constant.Post.JsonField.LOCATION, location));
+        BoolQueryBuilder matchQueryBuilder = QueryBuilders.boolQuery();
+        matchQueryBuilder.should(QueryBuilders.matchPhraseQuery(Constant.Post.JsonField.LOCATION, location));
+        matchQueryBuilder.should(QueryBuilders.matchPhraseQuery(Constant.Post.JsonField.TITLE, location));
+        matchQueryBuilder.should(QueryBuilders.matchPhraseQuery(Constant.Post.JsonField.DESCRIPTION, location));
+        mainQueryBuilder.must(matchQueryBuilder);
     }
 
     private void buildAreaQuery(int minArea, int maxArea, BoolQueryBuilder mainQueryBuilder) {

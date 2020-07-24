@@ -24,6 +24,8 @@ public class ContextPath {
         public static final String LIST_USER_PIN = "/list-user-pin";
         public static final String LIST_POST = "/list-post";
         public static final String VIEW_MY_POST = "/my-post";
+        public static final String FEED_BACK = "/feedback";
+
 
     }
 

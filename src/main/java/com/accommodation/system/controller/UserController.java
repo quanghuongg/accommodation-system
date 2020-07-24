@@ -2,23 +2,16 @@ package com.accommodation.system.controller;
 
 import com.accommodation.system.define.Constant;
 import com.accommodation.system.define.ContextPath;
-import com.accommodation.system.entity.NotificationSetting;
-import com.accommodation.system.entity.Post;
-import com.accommodation.system.entity.User;
-import com.accommodation.system.entity.UserPin;
+import com.accommodation.system.entity.*;
 import com.accommodation.system.entity.model.Response;
 import com.accommodation.system.entity.request.RegisterRequest;
 import com.accommodation.system.entity.request.SearchInput;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.security.TokenProvider;
-import com.accommodation.system.service.MailSendingService;
-import com.accommodation.system.service.NotificationService;
-import com.accommodation.system.service.PostService;
-import com.accommodation.system.service.UserService;
+import com.accommodation.system.service.*;
 import com.accommodation.system.uitls.AESUtil;
 import com.accommodation.system.uitls.ServiceUtils;
 import com.accommodation.system.uitls.Utils;
-import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -283,6 +276,30 @@ public class UserController extends EzContext {
                 .build();
         return new ResponseEntity<>(responseObject, HttpStatus.OK);
     }
+
+    @Autowired
+    PointService pointService;
+
+    @RequestMapping(value = {ContextPath.User.FEED_BACK}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> feedBack(@RequestBody Feedback feedback) throws Exception {
+        feedback.setUserFeedBackId(getUserId());
+        feedback.setCreatedAt(System.currentTimeMillis());
+        pointService.insertFeedback(feedback);
+        UserPoint userPoint = pointService.findByUserId(feedback.getUserPostId());
+        if (Utils.isNotEmpty(userPoint)) {
+            pointService.updatePoint(userPoint.getUserId(), userPoint.getPoint() - 1);
+        }
+        User userPost = userService.findByUserId(feedback.getUserPostId());
+        User userFb = userService.findByUserId(feedback.getUserFeedBackId());
+        mailSendingService.mailToAdmin(userFb.getDisplayName(), userPost.getDisplayName(), feedback.getUserPostId() + "", feedback.getPostId());
+        Response responseObject = Response.builder()
+                .code(0)
+                .message(Constant.SUCCESS_MESSAGE)
+                .build();
+        return new ResponseEntity<>(responseObject, HttpStatus.OK);
+    }
+
 
 }
 

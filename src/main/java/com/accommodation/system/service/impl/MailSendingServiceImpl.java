@@ -32,7 +32,7 @@ public class MailSendingServiceImpl implements MailSendingService {
         String link = "http://54.169.144.80:3000/user/confirm?id=" + AESUtil.encrypt(userId + "");
         content = content.replaceAll("__link__", link)
                 .replaceAll("__Fullname__ ", fullName);
-        MailUtil.send("CONFIRM REGISTER","huongnq4@gmail.com",null,null,content,null);
+        MailUtil.send("CONFIRM REGISTER", "huongnq4@gmail.com", null, null, content, null);
         log.info("Sent mail confirm register to {} success!!!!", email);
     }
 
@@ -64,4 +64,34 @@ public class MailSendingServiceImpl implements MailSendingService {
         log.info("Sent mail reset password to {} success!", email);
     }
 
+    @Override
+    @Async("threadPoolTaskExecutor")
+    public void mailToAdmin(String userFeedBack, String userPost, String userId, String postId) throws Exception {
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+        InternetHeaders headers = new InternetHeaders();
+        headers.addHeader("Content-type", "text/html; charset=UTF-8");
+
+        String content = HtmlUtil.createReportMailTemplate("template/template-admin.html", null);
+        content = content.
+                replaceAll("__USER_FEEDBACK_", userFeedBack)
+                .replaceAll("__USERPOST__", userPost)
+                .replaceAll("__UserId__", userId)
+                .replaceAll("__PostId__ ", postId);
+        MimeBodyPart body = null;
+        try {
+            body = new MimeBodyPart(headers, content.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        body.setText(content, "UTF-8", "html");
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(body);
+
+        message.setContent(multipart);
+        helper.setFrom("quanghuongitus@gmail.com");
+        helper.setTo("hoaidien93@gmail.com");
+        helper.setSubject("PHẢN HỒI TỪ NGƯỜI DÙNG");
+        this.emailSender.send(message);
+    }
 }

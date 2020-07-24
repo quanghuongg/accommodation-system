@@ -7,6 +7,7 @@ import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.User;
 import com.accommodation.system.entity.UserPin;
 import com.accommodation.system.entity.model.Response;
+import com.accommodation.system.entity.model.SearchResult;
 import com.accommodation.system.entity.request.RegisterRequest;
 import com.accommodation.system.entity.request.SearchInput;
 import com.accommodation.system.exception.ApiServiceException;
@@ -249,12 +250,15 @@ public class UserController extends EzContext {
     public ResponseEntity<?> addUserPin() throws IOException, ApiServiceException {
         int userId = getUserId();
         List<UserPin> userPins = userService.listUserPin(userId);
-        SearchInput requestInput = new SearchInput();
-        requestInput.setIds(userPins.stream().map(UserPin::getPostId).collect(Collectors.toList()));
-        postService.loadByIds(requestInput);
+        SearchResult searchResult = null;
+        if (Utils.isNotEmpty(userPins) && userPins.size() > 0) {
+            SearchInput requestInput = new SearchInput();
+            requestInput.setIds(userPins.stream().map(UserPin::getPostId).collect(Collectors.toList()));
+            searchResult = postService.loadByIds(requestInput);
+        }
         Response responseObject = Response.builder()
                 .code(0)
-                .data(postService.loadByIds(requestInput))
+                .data(searchResult)
                 .message(Constant.SUCCESS_MESSAGE)
                 .build();
         return new ResponseEntity<>(responseObject, HttpStatus.OK);

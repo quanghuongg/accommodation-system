@@ -18,8 +18,8 @@ public class Highlighter {
     private final String regex;
     Pattern pat;
     Matcher mat;
-    private String preHighlight = "<b>";
-    private String postHighlight = "</b>";
+    private String preHighlight = "<span style=\"color:#526AE7\">";
+    private String postHighlight = "</span>";
 
     /**
      * @param searchString

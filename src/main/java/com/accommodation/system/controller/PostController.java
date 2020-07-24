@@ -115,8 +115,8 @@ public class PostController extends EzContext {
 
     @RequestMapping(value = {ContextPath.Post.VIEW_DETAIL}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> viewDetail(@RequestParam("post_id") String postId) throws IOException {
-        PostFullInfo post = postService.viewDetail(postId);
+    public ResponseEntity<?> viewDetail(@RequestParam("post_id") String postId, @RequestParam("location") String location) throws IOException {
+        PostFullInfo post = postService.viewDetail(postId, location);
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .data(post)

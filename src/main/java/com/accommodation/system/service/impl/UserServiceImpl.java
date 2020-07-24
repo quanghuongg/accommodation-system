@@ -2,15 +2,13 @@ package com.accommodation.system.service.impl;
 
 import com.accommodation.system.dao.PostDao;
 import com.accommodation.system.define.Constant;
-import com.accommodation.system.entity.Role;
-import com.accommodation.system.entity.User;
-import com.accommodation.system.entity.UserPin;
-import com.accommodation.system.entity.UserRole;
+import com.accommodation.system.entity.*;
 import com.accommodation.system.entity.info.UserFullInfo;
 import com.accommodation.system.entity.request.RegisterRequest;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.mapper.UserMapper;
 import com.accommodation.system.mapper.UserPinMapper;
+import com.accommodation.system.mapper.UserPointMapper;
 import com.accommodation.system.service.AmazonS3Service;
 import com.accommodation.system.service.UserService;
 import com.accommodation.system.uitls.ServiceUtils;
@@ -99,6 +97,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return user.getId();
     }
 
+    @Autowired
+    UserPointMapper userPointMapper;
+
     @Override
     public int save(User user) {
         user.setAddress("Hồ Chí Minh");
@@ -109,6 +110,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         UserRole userRole = new UserRole(user.getId(), role.getId());
         userMapper.insertUserRole(userRole);
         log.info("Create user {} success!", user.getUsername());
+        userPointMapper.insertPoint(UserPoint.builder()
+                .userId(user.getId())
+                .point(10)
+                .createdAt(System.currentTimeMillis())
+                .build());
         return user.getId();
     }
 

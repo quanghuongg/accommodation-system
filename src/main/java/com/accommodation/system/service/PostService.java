@@ -20,7 +20,7 @@ public interface PostService {
 
     SearchResult doSearch(SearchInput searchInput) throws IOException;
 
-    PostFullInfo viewDetail(String postId) throws IOException;
+    PostFullInfo viewDetail(String postId, String location) throws IOException;
 
     void updatePost(int userId, PostRequest postRequest) throws ApiServiceException, IOException;
 

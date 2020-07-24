@@ -17,6 +17,7 @@ import com.accommodation.system.mapper.WardMapper;
 import com.accommodation.system.service.AmazonS3Service;
 import com.accommodation.system.service.CommentService;
 import com.accommodation.system.service.PostService;
+import com.accommodation.system.uitls.Highlighter;
 import com.accommodation.system.uitls.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Slf4j
 @Service(value = "postService")
@@ -99,7 +102,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostFullInfo viewDetail(String postId) throws IOException {
+    public PostFullInfo viewDetail(String postId, String location) throws IOException {
         Post post = postDao.find(postId);
         if (Utils.isEmpty(post)) {
             return null;
@@ -128,6 +131,17 @@ public class PostServiceImpl implements PostService {
             postFullInfo.setUsePost(user.getDisplayName());
             postFullInfo.setPhone(user.getPhone());
             postFullInfo.setAvatarUserPost(user.getAvatar());
+        }
+        Set<String> highlighters = new LinkedHashSet<>();
+        if (Utils.isNotEmpty(location)) {
+            highlighters.addAll(Arrays.asList(location.split(",")));
+            Highlighter highlighter = new Highlighter(highlighters);
+            String highlighterStr = highlighter.getHighlighted(post.getDescription());
+            String highlighterTitle = highlighter.getHighlighted(post.getTitle());
+            String highlighterLocation = highlighter.getHighlighted(post.getLocation());
+            postFullInfo.setDescription(highlighterStr);
+            postFullInfo.setTitle(highlighterTitle);
+            postFullInfo.setLocation(highlighterLocation);
         }
         postFullInfo.setCommentInfos(commentService.getListComment(postId));
         return postFullInfo;

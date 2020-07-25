@@ -129,6 +129,18 @@ public class PostController extends EzContext {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @RequestMapping(value = {ContextPath.Post.VIEW_DETAIL}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> viewDetail2(@RequestParam("post_id") String postId) throws IOException {
+        PostFullInfo post = postService.viewDetail(postId, null);
+        Response response = Response.builder()
+                .code(Constant.SUCCESS_CODE)
+                .data(post)
+                .message(Constant.SUCCESS_MESSAGE)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @RequestMapping(value = {ContextPath.Post.UPDATE}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> updatePost(@RequestBody PostRequest postRequest) throws ApiServiceException, IOException {

@@ -52,7 +52,7 @@ public class DevController {
         JSONParser parser = new JSONParser();
         int count = 0;
         try {
-            Object obj = parser.parse(new FileReader("quan7.json"));
+            Object obj = parser.parse(new FileReader("quanbt.json"));
             JSONObject jsonObject = (JSONObject) obj;
             JSONArray companyList = (JSONArray) jsonObject.get("data");
 
@@ -72,14 +72,14 @@ public class DevController {
 
                 Map fullWard = (Map) post.get("full_address_object");
                 Map wardinfo = (Map) fullWard.get("ward");
-                Ward ward = wardMapper.findWardByName(wardinfo.get("text").toString().trim(), 7);
+                Ward ward = wardMapper.findWardByName(wardinfo.get("text").toString().trim(), 14);
                 if (Utils.isNotEmpty(ward)) {
                     entity.setWardId(ward.getId());
                 } else {
-                    int x = (int) (Math.random() * (90 - 81 + 1) + 81);
+                    int x = (int) (Math.random() * (191 - 172 + 1) + 172);
                     entity.setWardId(x);
                 }
-                entity.setDistrictId(7);
+                entity.setDistrictId(14);
                 ArrayList<String> image = (ArrayList<String>) post.get("upload_room_images");
                 String[] array = image.toArray(new String[image.size()]);
                 if (array.length > 5) {
@@ -87,8 +87,13 @@ public class DevController {
                 }
                 entity.setImages(array);
                 entity.setImage(array[0]);
+                entity.setStatus(1);
                 postDao.createPost(entity);
                 count++;
+                if(count==100)
+                {
+                    break;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

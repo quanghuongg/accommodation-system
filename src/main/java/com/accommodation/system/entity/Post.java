@@ -45,5 +45,7 @@ public class Post extends BaseModel {
 
     String[] images;
 
+    int status;
+
 
 }

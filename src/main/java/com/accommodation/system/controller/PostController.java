@@ -52,6 +52,9 @@ public class PostController extends EzContext {
                                         @RequestParam("area") int area,
                                         @RequestParam("files") MultipartFile[] files) throws ApiServiceException, IOException {
         int userId = getUserId();
+        if (userService.isNotHandlePost(userId)) {
+            throw new ApiServiceException("user locked");
+        }
         if (ServiceUtils.isEmpty(location) || price == 0 || roomTypeId == 0) {
             throw new ApiServiceException(Constant.OBJECT_EMPTY_FIELD);
         }
@@ -129,6 +132,9 @@ public class PostController extends EzContext {
     @ResponseBody
     public ResponseEntity<?> updatePost(@RequestBody PostRequest postRequest) throws ApiServiceException, IOException {
         int userId = getUserId();
+        if (userService.isNotHandlePost(userId)) {
+            throw new ApiServiceException("user locked");
+        }
         postService.updatePost(userId, postRequest);
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
@@ -141,6 +147,9 @@ public class PostController extends EzContext {
     @ResponseBody
     public ResponseEntity<?> updatePostStatus(@RequestBody PostRequest postRequest) throws ApiServiceException, IOException {
         int userId = getUserId();
+        if (userService.isNotHandlePost(userId)) {
+            throw new ApiServiceException("user locked");
+        }
         if (Utils.isNotEmpty(postRequest.getStatus())) {
             postService.updatePostStatus(userId, postRequest);
         }
@@ -155,6 +164,9 @@ public class PostController extends EzContext {
     @ResponseBody
     public ResponseEntity<?> deletePost(@RequestParam("post_id") String postId) throws ApiServiceException, IOException {
         int userId = getUserId();
+        if (userService.isNotHandlePost(userId)) {
+            throw new ApiServiceException("user locked");
+        }
         postService.deletePost(userId, postId);
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
@@ -187,6 +199,17 @@ public class PostController extends EzContext {
                 .code(Constant.SUCCESS_CODE)
                 .message(Constant.SUCCESS_MESSAGE)
                 .data(commentService.getListComment(postId))
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = {"/test"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> test() throws ApiServiceException, IOException {
+        postService.hideAllPost(getUserId());
+        Response response = Response.builder()
+                .code(Constant.SUCCESS_CODE)
+                .message(Constant.SUCCESS_MESSAGE)
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

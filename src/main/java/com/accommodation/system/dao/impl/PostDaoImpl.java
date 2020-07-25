@@ -10,14 +10,21 @@ import com.accommodation.system.uitls.Highlighter;
 import com.accommodation.system.uitls.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.support.IndicesOptions;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.index.reindex.UpdateByQueryAction;
+import org.elasticsearch.index.reindex.UpdateByQueryRequestBuilder;
+import org.elasticsearch.script.Script;
+import org.elasticsearch.script.ScriptType;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -364,5 +371,52 @@ public class PostDaoImpl implements PostDao {
                 .field("images", itemsArray)
                 .endObject());
         this.esClient.update(updateRequest).actionGet();
+    }
+
+    public static final String CHANGE_SCRIPT = "if (ctx._source.object_field != null) { if(!ctx._source.object_field.contains(params.value))\n" +
+            "\t{ctx._source.object_field.add(params.value)}\n" +
+            "else\n" +
+            "\t{ctx._source.object_field.removeAll(Collections.singleton(params.value))} } else {ctx._source.object_field=[params.value]}";
+
+    public static String buildChangeStatusScript() {
+        return CHANGE_SCRIPT
+                .replaceAll("object_field", "status");
+    }
+
+    @Override
+    public void updateStatusByQuery(int userId) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("value", 0);
+        QueryBuilder queryBuilder = QueryBuilders.matchPhraseQuery("user_id", userId);
+        Script script = new Script(ScriptType.INLINE, "painless", buildChangeStatusScript(), parameters);
+        this.updateByQuery(indexName, queryBuilder, script);
+    }
+
+    @Override
+    public void updateByQuery(String index, QueryBuilder queryBuilder, Script script) {
+        UpdateByQueryRequestBuilder updateByQuery =
+                new UpdateByQueryRequestBuilder(this.esClient, UpdateByQueryAction.INSTANCE);
+        updateByQuery
+                .source(index)
+                .filter(queryBuilder)
+                .script(script)
+                .abortOnVersionConflict(false)
+                .refresh(true)
+                .setMaxRetries(1)
+                .execute(new ActionListener<BulkByScrollResponse>() {
+                    @Override
+                    public void onResponse(BulkByScrollResponse bulkByScrollResponse) {
+                        long updated = bulkByScrollResponse.getUpdated();
+                        if (updated == 0) {
+                            log.info(String.valueOf(bulkByScrollResponse));
+                        }
+                        log.info("index: {},update result: {}", index, updated);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        log.error("Error while updateByQuery, reason: {}", e.getMessage(), e);
+                    }
+                });
     }
 }

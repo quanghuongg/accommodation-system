@@ -37,61 +37,15 @@ public class MailSendingServiceImpl implements MailSendingService {
     }
 
     @Override
-    public void mailResetPassword(String email, String display_name, String newPassword) throws Exception {
-        MimeMessage message = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-        InternetHeaders headers = new InternetHeaders();
-        headers.addHeader("Content-type", "text/html; charset=UTF-8");
-
-        String content = HtmlUtil.createReportMailTemplate("template/template-reset.html", null);
-        content = content.replaceAll("__PASSWORD__", newPassword)
-                .replaceAll("__Fullname__ ", display_name);
-        MimeBodyPart body = null;
-        try {
-            body = new MimeBodyPart(headers, content.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        body.setText(content, "UTF-8", "html");
-        Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(body);
-
-        message.setContent(multipart);
-        helper.setFrom("quanghuongitus@gmail.com");
-        helper.setTo(email);
-        helper.setSubject("RESET PASSWORD");
-        this.emailSender.send(message);
-        log.info("Sent mail reset password to {} success!", email);
-    }
-
-    @Override
     @Async("threadPoolTaskExecutor")
-    public void mailToAdmin(String userFeedBack, String userPost, String userId, String postId) throws Exception {
-        MimeMessage message = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
-        InternetHeaders headers = new InternetHeaders();
-        headers.addHeader("Content-type", "text/html; charset=UTF-8");
-
-        String content = HtmlUtil.createReportMailTemplate("template/template-admin.html", null);
-        content = content.
+    public void mailToAdmin(String userFeedBack, String userPost, String userId, String postId, String content) throws Exception {
+        String contentMail = HtmlUtil.createReportMailTemplate("template/template-admin.html", null);
+        contentMail = contentMail.
                 replaceAll("__USER_FEEDBACK_", userFeedBack)
                 .replaceAll("__USERPOST__", userPost)
                 .replaceAll("__UserId__", userId)
+                .replaceAll("__CONTENT__ ", content)
                 .replaceAll("__PostId__ ", postId);
-        MimeBodyPart body = null;
-        try {
-            body = new MimeBodyPart(headers, content.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        body.setText(content, "UTF-8", "html");
-        Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(body);
-
-        message.setContent(multipart);
-        helper.setFrom("quanghuongitus@gmail.com");
-        helper.setTo("hoaidien93@gmail.com");
-        helper.setSubject("PHẢN HỒI TỪ NGƯỜI DÙNG");
-        this.emailSender.send(message);
+        MailUtil.send("PHẢN HỒI TỪ NGƯỜI DÙNG", "huongnq4@gmail.com", null, null, contentMail, null);
     }
 }

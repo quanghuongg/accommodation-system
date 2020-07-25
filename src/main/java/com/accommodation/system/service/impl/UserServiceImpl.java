@@ -246,6 +246,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userPinMapper.unUserPin(userId, post_id);
     }
 
+
+    @Override
+    public boolean isNotHandlePost(int userId) {
+        UserPoint userPoint = userPointMapper.findByUserId(userId);
+        return userPoint.getPoint() <= 0;
+    }
+
     @Override
     public List<UserPin> listUserPin(int userId) {
         return userPinMapper.listUserPin(userId);

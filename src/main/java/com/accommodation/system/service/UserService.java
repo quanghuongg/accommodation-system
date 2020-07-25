@@ -44,4 +44,7 @@ public interface UserService {
     void uploadImages(int userId, String postId, MultipartFile[] files) throws ApiServiceException;
 
     void unUserPin(int userId, String post_id);
+
+    boolean isNotHandlePost(int userId);
+
 }

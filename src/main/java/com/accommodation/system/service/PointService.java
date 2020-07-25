@@ -11,4 +11,7 @@ public interface PointService {
     UserPoint findByUserId(int userId);
 
     void updatePoint(int userId, int point);
+
+    Feedback findByPostId(int userId ,String postId);
+
 }

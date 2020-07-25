@@ -29,4 +29,6 @@ public interface PostService {
     void deletePost(int userId, String postId) throws IOException, ApiServiceException;
 
     MyPost viewMyPost(String postId) throws IOException;
+
+    void hideAllPost(int  userId) throws IOException;
 }

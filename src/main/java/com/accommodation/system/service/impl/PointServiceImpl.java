@@ -44,4 +44,9 @@ public class PointServiceImpl implements PointService {
         log.info("update point of userId {}", userId);
         userPointMapper.updatePoint(userId, point);
     }
+
+    @Override
+    public Feedback findByPostId(int userId, String postId) {
+        return feedbackMapper.findByPostId(userId, postId);
+    }
 }

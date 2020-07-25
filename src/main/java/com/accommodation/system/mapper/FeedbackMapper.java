@@ -22,7 +22,6 @@ public interface FeedbackMapper {
     UserPoint findById(@Param("id") int id);
 
 
-
     @Insert("insert into feedback(post_id,user_feedback_id,user_post_id,content,create_at,update_at) " +
             "values(#{postId},#{userFeedBackId},#{userPostId},#{content},#{createdAt},#{updatedAt})")
     @ResultMap("FbObject")
@@ -30,5 +29,8 @@ public interface FeedbackMapper {
             before = false, resultType = Integer.class)
     void insertFeedback(Feedback feedback);
 
+    @Select("SELECT * FROM feedback WHERE user_id =#{userId} AND post_id =#{postId}")
+    @ResultMap("FbObject")
+    Feedback findByPostId(@Param("userId") int userId, @Param("postId") String postId);
 
 }

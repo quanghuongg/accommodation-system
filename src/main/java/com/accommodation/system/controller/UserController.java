@@ -103,25 +103,6 @@ public class UserController extends EzContext {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @RequestMapping(value = {ContextPath.User.USER_RESET_PASSWORD}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<?> resetPassword(@RequestParam String email) throws Exception {
-        User user = userService.findByEmail(email);
-        if (ServiceUtils.isEmpty(user)) {
-            throw new ApiServiceException(Constant.USER_NOT_EXITED);
-        }
-        String newPassword = ServiceUtils.generateRandomString();
-        log.info("New password: {}", newPassword);
-        user.setPassword(ServiceUtils.encodePassword(newPassword));
-        userService.update(user);
-        mailSendingService.mailResetPassword(user.getEmail(), user.getDisplayName(), newPassword);
-        Response response = Response.builder()
-                .code(Constant.SUCCESS_CODE)
-                .message(Constant.SUCCESS_MESSAGE)
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
     @RequestMapping(value = {ContextPath.User.REGISTER}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerInfo) throws Exception {
@@ -287,16 +268,29 @@ public class UserController extends EzContext {
     @RequestMapping(value = {ContextPath.User.FEED_BACK}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> feedBack(@RequestBody Feedback feedback) throws Exception {
-        feedback.setUserFeedBackId(getUserId());
-        feedback.setCreatedAt(System.currentTimeMillis());
-        pointService.insertFeedback(feedback);
-        UserPoint userPoint = pointService.findByUserId(feedback.getUserPostId());
-        if (Utils.isNotEmpty(userPoint)) {
-            pointService.updatePoint(userPoint.getUserId(), userPoint.getPoint() - 1);
+        int userId = getUserId();
+        feedback.setUserFeedBackId(userId);
+        Feedback check = pointService.findByPostId(userId, feedback.getPostId());
+        if (Utils.isEmpty(check)) {
+            feedback.setCreatedAt(System.currentTimeMillis());
+            Post post = postService.findPost(feedback.getPostId());
+            if (Utils.isNotEmpty(post)) {
+                feedback.setUserPostId(post.getUserId());
+            }
+            pointService.insertFeedback(feedback);
+            UserPoint userPoint = pointService.findByUserId(feedback.getUserPostId());
+            if (Utils.isNotEmpty(userPoint)) {
+                pointService.updatePoint(userPoint.getUserId(), userPoint.getPoint() - 1);
+                //if point == 0
+                //hidden all post of user post
+                if (userPoint.getPoint() - 1 == 0) {
+
+                }
+            }
+            User userPost = userService.findByUserId(feedback.getUserPostId());
+            User userFb = userService.findByUserId(feedback.getUserFeedBackId());
+            mailSendingService.mailToAdmin(userFb.getDisplayName(), userPost.getDisplayName(), feedback.getUserPostId() + "", feedback.getPostId(), feedback.getContent());
         }
-        User userPost = userService.findByUserId(feedback.getUserPostId());
-        User userFb = userService.findByUserId(feedback.getUserFeedBackId());
-        mailSendingService.mailToAdmin(userFb.getDisplayName(), userPost.getDisplayName(), feedback.getUserPostId() + "", feedback.getPostId());
         Response responseObject = Response.builder()
                 .code(0)
                 .message(Constant.SUCCESS_MESSAGE)

@@ -19,6 +19,7 @@ import com.accommodation.system.service.CommentService;
 import com.accommodation.system.service.PostService;
 import com.accommodation.system.uitls.Highlighter;
 import com.accommodation.system.uitls.Utils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Slf4j
@@ -195,5 +197,22 @@ public class PostServiceImpl implements PostService {
         myPost.setImages(post.getImages());
         myPost.setLocation(post.getLocation());
         return myPost;
+    }
+
+    @Override
+    public void hideAllPost(int userId) throws IOException {
+        ObjectMapper oMapper = new ObjectMapper();
+        SearchInput requestInput = new SearchInput();
+        requestInput.setUserId(userId);
+        SearchResult searchResult = postDao.loadBySearchRequest(requestInput);
+        if (Utils.isEmpty(searchResult)) {
+            for (Object post : searchResult.getHits()) {
+                PostRequest postRequest = new PostRequest();
+                Map map = oMapper.convertValue(post, Map.class);
+                postRequest.setPostId(map.get("id").toString());
+                postRequest.setStatus(0);
+                postDao.updateStatus(postRequest);
+            }
+        }
     }
 }

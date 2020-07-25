@@ -289,7 +289,7 @@ public class UserController extends EzContext {
                     //send mail
                     mailSendingService.mailFeedback(userPost.getDisplayName(), userPost.getEmail());
                     //push notify
-                    notificationService.pushNotificationFeedback(userPost.getDisplayName(), 24);
+                    notificationService.pushNotificationFeedback(userPost.getDisplayName(), userPost.getId());
                 }
 
             }

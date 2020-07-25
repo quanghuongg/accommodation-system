@@ -4,8 +4,6 @@ import com.accommodation.system.entity.Post;
 import com.accommodation.system.entity.model.SearchResult;
 import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.script.Script;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,7 +27,4 @@ public interface PostDao {
 
     void updateImage( String postId, List<String> images) throws IOException;
 
-    void updateByQuery(String index, QueryBuilder queryBuilder, Script script);
-
-    void updateStatusByQuery(int userId);
 }

@@ -1,11 +1,13 @@
 package com.accommodation.system.uitls;
-import com.accommodation.system.uitls.ConfigurationLoader;
+import lombok.extern.slf4j.Slf4j;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.util.Properties;
 
+@Slf4j
 public class MailUtil {
     static final int PORT = 465;
     private static Session getSession() throws IOException {
@@ -28,7 +30,7 @@ public class MailUtil {
         });
     }
     static final String FROM = "huongnq4@gmail.com";
-    static final String FROMNAME = "Sender Name";
+    static final String FROMNAME = "HD System";
 
     public static void send(String subject, String toUsers, String ccUsers, String bccUsers, String content, String[] files) throws MessagingException, IOException {
         Session session = getSession();
@@ -39,9 +41,9 @@ public class MailUtil {
         msg.setContent(content, "text/html; charset=UTF-8");
 
         try {
-            System.out.println("Sending...");
+            log.info("Sending...");
             Transport.send(msg, msg.getAllRecipients());
-            System.out.println("Email sent!");
+            log.info("Email sent: {}!", JsonUtil.toJsonString(msg.getAllRecipients()));
         } catch (Exception ex) {
             System.out.println("The email was not sent.");
             System.out.println("Error message: " + ex.getMessage());

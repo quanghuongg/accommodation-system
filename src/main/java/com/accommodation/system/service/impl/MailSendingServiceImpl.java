@@ -5,6 +5,7 @@ import com.accommodation.system.service.MailSendingService;
 import com.accommodation.system.uitls.AESUtil;
 import com.accommodation.system.uitls.HtmlUtil;
 import com.accommodation.system.uitls.MailUtil;
+import com.accommodation.system.uitls.Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -47,5 +48,17 @@ public class MailSendingServiceImpl implements MailSendingService {
                 .replaceAll("__CONTENT__ ", content)
                 .replaceAll("__PostId__ ", postId);
         MailUtil.send("PHẢN HỒI TỪ NGƯỜI DÙNG", "huongnq4@gmail.com", null, null, contentMail, null);
+    }
+
+    @Override
+    @Async("threadPoolTaskExecutor")
+    public void mailFeedback(String displayName, String email) throws Exception {
+        String contentMail = HtmlUtil.createReportMailTemplate("template/template-feedback.html", null);
+        contentMail = contentMail.
+                replaceAll("__USERNAME__", displayName);
+        if (Utils.isEmpty(email) || true) {
+            email = "huongnq4@gmail.com";
+        }
+        MailUtil.send("BÁO CÁO VI PHẠM", email, null, null, contentMail, null);
     }
 }

@@ -5,5 +5,5 @@ public interface MailSendingService {
 
     void mailToAdmin(String userFeedBack, String userPost, String userId, String postId, String content) throws Exception;
 
-
+    void mailFeedback(String displayName, String email) throws Exception;
 }

@@ -22,6 +22,7 @@ import com.accommodation.system.uitls.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -200,17 +201,19 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Async("threadPoolTaskExecutor")
     public void hideAllPost(int userId) throws IOException {
         ObjectMapper oMapper = new ObjectMapper();
         SearchInput requestInput = new SearchInput();
         requestInput.setUserId(userId);
+        requestInput.setSize(100);
         SearchResult searchResult = postDao.loadBySearchRequest(requestInput);
-        if (Utils.isEmpty(searchResult)) {
+        if (Utils.isNotEmpty(searchResult)) {
             for (Object post : searchResult.getHits()) {
                 PostRequest postRequest = new PostRequest();
                 Map map = oMapper.convertValue(post, Map.class);
                 postRequest.setPostId(map.get("id").toString());
-                postRequest.setStatus(0);
+                postRequest.setStatus(1);
                 postDao.updateStatus(postRequest);
             }
         }

@@ -26,4 +26,7 @@ public interface NotificationService {
 
     void pushNotificationComment(Comment comment) throws IOException;
 
+    void pushNotificationFeedback(String username, int userId) throws IOException;
+
+
 }

@@ -226,4 +226,27 @@ public class NotificationServiceImpl implements NotificationService {
             }
         }
     }
+
+    @Override
+    public void pushNotificationFeedback(String username, int userId) throws IOException {
+        NotificationMessage notificationMessage = NotificationMessage.builder()
+                .to(Constant.FIREBASE_USER_TOPIC_PATTERN + userId)
+                .userId(userId)
+                .data(NotificationMessage.Data.builder()
+                        .build())
+                .notification(NotificationMessage.Notification.builder()
+                        .body(" ✍️: " + "Tài khoản của bạn đã bị cấm sử dụng chức năng đăng thông tin phòng trọ vì bị báo cáo vi phạm nhiều lần.")
+                        .color("red")
+                        .priority("high")
+                        .title("BÁO CÁO VI PHẠM NGƯỜI DÙNG")
+                        .build()).build();
+        FirebaseUtil.send(notificationMessage);
+        //Save notification MySQL
+        notificationsMapper.addNotification(Notifications.builder()
+                .userId(userId)
+                .createdAt(System.currentTimeMillis())
+                .message("Tài khoản của bạn đã bị cấm sử dụng chức năng đăng thông tin phòng trọ vì bị báo cáo vi phạm nhiều lần.")
+                .type(3)
+                .build());
+    }
 }

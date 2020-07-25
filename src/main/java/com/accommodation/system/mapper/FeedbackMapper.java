@@ -29,8 +29,8 @@ public interface FeedbackMapper {
             before = false, resultType = Integer.class)
     void insertFeedback(Feedback feedback);
 
-    @Select("SELECT * FROM feedback WHERE user_id =#{userId} AND post_id =#{postId}")
+    @Select("SELECT * FROM feedback WHERE user_feedback_id =#{user_id} AND post_id =#{post_id}")
     @ResultMap("FbObject")
-    Feedback findByPostId(@Param("userId") int userId, @Param("postId") String postId);
+    Feedback findByPostId(@Param("user_id") int userId, @Param("post_id") String postId);
 
 }

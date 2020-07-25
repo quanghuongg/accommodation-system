@@ -203,15 +203,4 @@ public class PostController extends EzContext {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @RequestMapping(value = {"/test"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public ResponseEntity<?> test() throws ApiServiceException, IOException {
-        postService.hideAllPost(getUserId());
-        Response response = Response.builder()
-                .code(Constant.SUCCESS_CODE)
-                .message(Constant.SUCCESS_MESSAGE)
-                .build();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
 }

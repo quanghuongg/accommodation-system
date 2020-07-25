@@ -7,6 +7,7 @@ import com.accommodation.system.entity.info.PostFullInfo;
 import com.accommodation.system.entity.model.Response;
 import com.accommodation.system.entity.request.PostRequest;
 import com.accommodation.system.entity.request.SearchInput;
+import com.accommodation.system.entity.request.ViewDetailRequest;
 import com.accommodation.system.exception.ApiServiceException;
 import com.accommodation.system.service.CommentService;
 import com.accommodation.system.service.NotificationService;
@@ -116,10 +117,10 @@ public class PostController extends EzContext {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @RequestMapping(value = {ContextPath.Post.VIEW_DETAIL}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = {ContextPath.Post.VIEW_DETAIL}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> viewDetail(@RequestParam("post_id") String postId, @RequestParam("location") String location) throws IOException {
-        PostFullInfo post = postService.viewDetail(postId, location);
+    public ResponseEntity<?> viewDetail(@RequestBody ViewDetailRequest viewDetailRequest) throws IOException {
+        PostFullInfo post = postService.viewDetail(viewDetailRequest.getPostId(), viewDetailRequest.getLocation());
         Response response = Response.builder()
                 .code(Constant.SUCCESS_CODE)
                 .data(post)

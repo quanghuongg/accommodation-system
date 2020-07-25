@@ -284,12 +284,12 @@ public class UserController extends EzContext {
                 pointService.updatePoint(userPoint.getUserId(), userPoint.getPoint() - 1);
                 //if point == 0
                 //hidden all post of user post
-                if (userPoint.getPoint() - 1 == 0 || true) {
+                if (userPoint.getPoint() - 1 == 0) {
                     postService.hideAllPost(userPoint.getUserId());
                     //send mail
                     mailSendingService.mailFeedback(userPost.getDisplayName(), userPost.getEmail());
                     //push notify
-                    notificationService.pushNotificationFeedback(userPost.getDisplayName(),24);
+                    notificationService.pushNotificationFeedback(userPost.getDisplayName(), 24);
                 }
 
             }

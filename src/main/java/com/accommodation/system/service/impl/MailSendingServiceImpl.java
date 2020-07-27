@@ -56,7 +56,7 @@ public class MailSendingServiceImpl implements MailSendingService {
         String contentMail = HtmlUtil.createReportMailTemplate("template/template-feedback.html", null);
         contentMail = contentMail.
                 replaceAll("__USERNAME__", displayName);
-        if (Utils.isEmpty(email) || true) {
+        if (Utils.isEmpty(email) ) {
             email = "huongnq4@gmail.com";
         }
         MailUtil.send("BÁO CÁO VI PHẠM", email, null, null, contentMail, null);

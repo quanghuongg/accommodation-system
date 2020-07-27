@@ -213,7 +213,7 @@ public class PostServiceImpl implements PostService {
                 PostRequest postRequest = new PostRequest();
                 Map map = oMapper.convertValue(post, Map.class);
                 postRequest.setPostId(map.get("id").toString());
-                postRequest.setStatus(1);
+                postRequest.setStatus(0);
                 postDao.updateStatus(postRequest);
             }
         }
